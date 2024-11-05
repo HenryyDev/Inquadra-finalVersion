@@ -1,6 +1,9 @@
 import "./Css/NavBar.css"
 import logo from "../assets/logo.png"
+import {Link} from "react-router-dom"
+import 'bootstrap/dist/js/bootstrap.min.js'
 import lupa from "../assets/lupa.png"
+import menu from "../assets/menu.svg"
 const NavBar=()=>{
 
 
@@ -19,11 +22,11 @@ const NavBar=()=>{
        
         
         
-        <button class="login login01">
-          <a href="pags/login/index.html" target="_self">Login</a> 
+        <button class="login-link login01">
+          <Link to={"/login"}>Login</Link>
           </button>
-        <button class="login login02">
-          <a href="pags/cadastro-anuncio/index.html">Anuncie-aqui</a>
+        <button class="login-link login02">
+          <Link to={"/cadastro-anuncio"}>Anuncie-aqui</Link>
         </button>
         <div class="foto-user"><img src="assets/foto-padrao.png" alt="" /></div>
         <div class="dropdown">
@@ -34,20 +37,15 @@ const NavBar=()=>{
             data-bs-toggle="dropdown"
             aria-expanded="false"
           >
-            <img src="assets/menu.svg" alt="" />
+            <img src={menu} alt="" />
           </button>
           <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
             <li><a class="dropdown-item" href="pags/conta/index.html">Configurações</a></li>
             <li>
-              <a class="dropdown-item" href="pags/cadastro-anuncio/index.html"
-                >Anuncie-aqui</a>
+            <Link to={"/cadastro-anuncio"}className="dropdown-item">Anuncie-aqui</Link>
             </li>
             <li>
-              <a
-                class="dropdown-item"
-                href="pags/login/index.html"
-                target="_self"
-                >Login</a>
+              <Link to={"/login"}className="dropdown-item">Login</Link>
             </li>
             <li>
               <a class="dropdown-item" href="pags/cadastro/index.html"

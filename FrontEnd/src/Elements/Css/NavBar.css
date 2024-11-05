@@ -51,7 +51,7 @@
     background-color: var(--blue-secondary) !important;
     box-shadow: rgba(17, 17, 26, 0.1) 0px 1px 0px, rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 48px;
   }
-  .login{
+  .login-link{
    
     display: block;
     border: none;
@@ -62,7 +62,7 @@
     transition: all 200ms linear;
   
   }
-  .login:hover{
+  .login-link:hover{
     transition: all 200ms linear;
     box-shadow: rgba(17, 17, 26, 0.1) 0px 1px 0px, rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 48px;
     background-color:#cacaca;
@@ -112,4 +112,14 @@
   a{
     text-decoration: none !important;
     color: #000000 !important;
+  }
+
+  @media (max-width:1200px) {
+    
+    .foto-user{
+      display: none;
+    }
+    .login-link{
+      display: none;
+    }
   }
