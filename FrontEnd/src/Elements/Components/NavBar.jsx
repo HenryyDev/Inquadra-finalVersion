@@ -1,9 +1,9 @@
-import "./Css/NavBar.css"
-import logo from "../assets/logo.png"
+import "../Css/NavBar.css"
+import logo from "../../assets/logo.png"
 import {Link} from "react-router-dom"
 import 'bootstrap/dist/js/bootstrap.min.js'
-import lupa from "../assets/lupa.png"
-import menu from "../assets/menu.svg"
+import lupa from "../../assets/lupa.png"
+import menu from "../../assets/menu.svg"
 const NavBar=()=>{
 
 
@@ -48,8 +48,7 @@ const NavBar=()=>{
               <Link to={"/login"}className="dropdown-item">Login</Link>
             </li>
             <li>
-              <a class="dropdown-item" href="pags/cadastro/index.html"
-                >Criar conta</a>
+              <Link to={"/cadastro-usuario"} className="dropdown-item">Criar conta</Link>
             </li>
             <li><a class="dropdown-item" href="#">Sair</a></li> 
           </ul>

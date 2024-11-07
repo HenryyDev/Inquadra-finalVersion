@@ -4,7 +4,7 @@
     box-sizing: border-box;
     scroll-behavior: smooth;
   }
-.container-anuncio{
+.body-user{
     width: 100%;
     display: flex;
     justify-content: center;
@@ -19,8 +19,8 @@
   --blue-secondary:#3A8FD7;
   --transparence-primary:#cacaca;
   }
-.anuncio-form{
-    padding: 20px;
+.login{
+    background-color: var(--blue-secondary) ;
     margin: 20px;
     display: flex;
     justify-content: center;
@@ -31,27 +31,29 @@
     border-radius: 25px;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
-.logo-anuncio{
+.logo{
     display: flex;
     justify-content: center;
     align-items: center;
 }
 form{
+    padding: 10px;
     display: flex !important;
     flex-direction: column;
-}
-
-.check-list{
-    display: grid;
+    align-items: center;
 }
 .mb-3{
     width: 100% !important;
 }
-
-
-.error-text{
-    color:#D32F2F;
-    font-weight: 700;
+.h2-txt{
+    margin-bottom: 40px;
+}
+.nome{
+    margin-bottom: 20px;
+}
+.txt{
+    margin-top: 20px;
+    text-align: center;
 }
 a{
     text-decoration: none;
@@ -65,7 +67,8 @@ a{
     margin-bottom: 20px;
 }
 .btn-primary:hover{
-    background-color:var(--blue-secondary);
+    background-color: var(--blue-secondary);
     border: none;
     color: #ffffff;
 }
+
