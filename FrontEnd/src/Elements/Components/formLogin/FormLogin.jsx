@@ -2,8 +2,8 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import React, { useState } from "react";
 import {Link} from "react-router-dom"
-import logo from "../assets/logo.png" 
-import "../Elements/Css/login.css"
+import logo from "../../../assets/logo.png"
+import "../../../Elements/Css/login.css"
 
 const Login=()=>{
     const [values, setValues]=useState({
@@ -20,7 +20,7 @@ const Login=()=>{
     return(
         <>
     <div className='login-container'>
-        <div className="login">
+        <div className="login-form">
           <form onSubmit={handleSubmit}>
         
             
@@ -82,10 +82,10 @@ const Login=()=>{
                 Lembrar de mim
               </label>
               <p className="txt">
-                Não possui conta?{' '}
-                <a href="../cadastro/index.html" className="criar-conta">
-                  Criar conta
-                </a>
+                Não possui conta?
+                <Link to={"/Cadastro-usuario"}><span style={{color:" #0000FF"}}> Criar conta</span></Link>
+                  
+                
               </p>
             </div>
         

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import "../Elements/Css/CadUsuario.css"
-import logo from "../assets/logo.png";
+import "../../Css/CadUsuario.css"
+import logo from "../../../assets/logo.png";
 import { Link } from "react-router-dom";
 
 const CadUsuario = ()=>{
@@ -8,7 +8,7 @@ const CadUsuario = ()=>{
 
     return (
         <div className="body-user">
-            <div class="login">
+            <div class="cad-user">
             <form>
                 <Link to={"/"}><img src={logo} alt="" width="180px" class="logo"/></Link>
                 <h2 class="h2-txt">Crie sua conta. É grátis!</h2>

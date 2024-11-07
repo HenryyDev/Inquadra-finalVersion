@@ -1,8 +1,10 @@
 import * as React from "react";
 import App from "./App"
-import Login from "./pags/Login";
-import CadUsuario from "./pags/CadUsuario";
-import PageCadAnuncio from "./pags/CadAnuncio";
+import Login from "./pags/PageLogin";
+import CadUsuario from "./pags/PageCadUsuario";
+import PageGerenciarConta from "./pags/PageGerenciarConta";
+import PageAnuncio from "./pags/PageAnuncio";
+import PageCadAnuncio from "./pags/PageCadAnuncio";
 import { createRoot } from "react-dom/client";
 import {
   createBrowserRouter,
@@ -28,6 +30,15 @@ const router = createBrowserRouter([
   {
     path:"/cadastro-usuario",
     element:<CadUsuario/>
+  },
+  {
+    path:"/gerenciar-conta",
+    element:<PageGerenciarConta/>
+  },
+  {
+    path:"/anuncio",
+    element:<PageAnuncio/>
+
   }
 ]);
 

@@ -2,7 +2,7 @@ footer{
   
  
     background-color: var(--blue-secondary);
-    height:70%;
+    height:auto;
   }
   footer .footer-container{
     display: flex;

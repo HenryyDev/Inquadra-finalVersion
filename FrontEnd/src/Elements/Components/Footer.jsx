@@ -9,10 +9,9 @@ const Footer=()=>{
         <ul class="my-4">
           <h3>INquadra</h3>
           <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Modi
-            consectetur saepe sequi neque explicabo quod, mollitia earum
-            reprehenderit incidunt repudiandae delectus omnis deserunt, numquam
-            tenetur, in velit iste quam provident.
+          <h5>Seu espaço para o esporte e a diversão!</h5>
+   Oferecemos quadras de alta qualidade para você praticar seu esporte favorito com conforto e praticidade. Seja para treino, lazer ou competição, nosso objetivo é proporcionar momentos inesquecíveis e cheios de energia positiva.
+Alugue sua quadra de forma rápida e fácil e venha viver a paixão pelo esporte!
           </p>
         </ul>
         <ul class="link my-4">

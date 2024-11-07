@@ -10,6 +10,7 @@
     justify-content: center;
     align-items: center;
     margin: 0;
+    height: 100vh;
     background-color: var(--transparence-primary)
 }
 :root{
@@ -19,7 +20,7 @@
   --blue-secondary:#3A8FD7;
   --transparence-primary:#cacaca;
   }
-.login{
+.cad-user{
     background-color: var(--blue-secondary) ;
     margin: 20px;
     display: flex;

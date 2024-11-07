@@ -12,7 +12,7 @@ const NavBar=()=>{
 <header>
       <div class="header-container">
         
-        <img src={logo} alt="" width="96" class="logo-img" />
+        <Link to={"/"}><img src={logo} alt="" width="96" class="logo-img" /></Link>
         <div class="search">
           <label for="searchInput"
             ><img class="lupa" src={lupa} alt="" width="24px"
@@ -40,7 +40,9 @@ const NavBar=()=>{
             <img src={menu} alt="" />
           </button>
           <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-            <li><a class="dropdown-item" href="pags/conta/index.html">Configurações</a></li>
+            <li>
+              <Link to={"/gerenciar-conta"}className="dropdown-item">Gerenciar conta</Link>
+              </li>
             <li>
             <Link to={"/cadastro-anuncio"}className="dropdown-item">Anuncie-aqui</Link>
             </li>

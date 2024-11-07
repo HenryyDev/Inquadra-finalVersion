@@ -75,7 +75,7 @@ const CadAnuncio = () => {
 
   return (
     <div className="container-anuncio">
-      <div className="login anuncio-form">
+      <div className="anuncio-form">
         <form onSubmit={handleSubmit} encType='multipart/form-data'>
           <Link to={"/"} className='logo-anuncio'>
             <img src={logo} alt="logo" width={"200px"} />

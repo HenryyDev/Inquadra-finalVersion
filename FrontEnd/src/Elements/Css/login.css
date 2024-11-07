@@ -21,7 +21,7 @@
     margin: 0;
     background-color: var(--transparence-primary);
 }
-.login{
+.login-form{
     margin: 10px;
     display: flex;
     justify-content: center;
