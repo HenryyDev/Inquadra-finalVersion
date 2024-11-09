@@ -4,8 +4,11 @@ import Login from "./pags/PageLogin";
 import CadUsuario from "./pags/PageCadUsuario";
 import PageGerenciarConta from "./pags/PageGerenciarConta";
 import PageAnuncio from "./pags/PageAnuncio";
+import PageLoginEseguranca from "./pags/PageloginEseguranca";
 import PageCadAnuncio from "./pags/PageCadAnuncio";
 import { createRoot } from "react-dom/client";
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 import {
   createBrowserRouter,
   RouterProvider,
@@ -34,6 +37,10 @@ const router = createBrowserRouter([
   {
     path:"/gerenciar-conta",
     element:<PageGerenciarConta/>
+  },
+  {
+    path:"/gerenciar-conta/login-seguranca",
+    element:<PageLoginEseguranca/>
   },
   {
     path:"/anuncio",

@@ -3,6 +3,7 @@ import IconInfoPessoal from "../../../assets/info-pessoal.svg"
 import IconLogin from "../../../assets/escudo.png"
 import IconAnuncios from "../../../assets/megafone.png"
 import IconGerenciarReserva from "../../../assets/sino-do-hotel (1).png"
+import { Link } from "react-router-dom"
 
 const GerenciarConta = ()=>{
 
@@ -16,7 +17,9 @@ const GerenciarConta = ()=>{
        <div class="config">
         <ul>
           <li><img src={IconInfoPessoal} alt="" width="95px"/><h5><b>Informações Pessoais</b></h5><p>Forneça detalhes e informações de contato</p></li>
-          <li><img src={IconLogin} alt="" width="70px" /><h5><b>Login e Segurança</b></h5>Atualize sua conta e mantenha ela segura</li>
+          <li>
+            <Link to={"/gerenciar-conta/login-seguranca"}><img src={IconLogin} alt="" width="70px" /><h5><b>Login e Segurança</b></h5>Atualize sua conta e mantenha ela segura</Link>
+            </li>
         </ul>
        </div>
        <div class="config">

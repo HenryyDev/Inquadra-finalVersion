@@ -1,6 +1,6 @@
 import "../Css/footer.css"
 
-const Footer=()=>{
+function Footer(){
 
     return (
         <>

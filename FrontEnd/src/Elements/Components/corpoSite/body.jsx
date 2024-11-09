@@ -1,6 +1,6 @@
 // Imports de bibliotecas externas
 import 'bootstrap/dist/css/bootstrap.min.css';
-
+import {Link} from "react-router-dom"
 
 
 // Imports de arquivos de estilo
@@ -10,17 +10,9 @@ import "../../Css/app.css"
 
 
 // Imports de imagens/ativos
-import bilhar from "../../../assets/de-bilhar.png";
-import basquete from '../../../assets/basquetebol 1.svg';
-import futebol from "../../../assets/bola.png";
-import golfe from "../../../assets/golfe.png";
-import natacao from "../../../assets/oculos-de-natacao.png";
-import volei from "../../../assets/voleibol.png";
-import tenis from "../../../assets/tenis.png";
-import pong from "../../../assets/pingue-pongue.png";
-import skate from "../../../assets/patim.png";
-import futsal from "../../../assets/objetivo.png";
+import Modalidades from '../Modalidades';
 import golfimg from "../../../assets/golf.jpg"
+
 
 import React, { useState } from 'react';
 
@@ -38,72 +30,8 @@ const Body=()=>{
     const [quadras, setQuadras] = useState(quadrasData);
 return(
 <>
-<section className="modalidade"> 
-        <div className="retangulo my-4"> 
-          <ul className="links"> 
-            <li>
-              <a href="">
-                <img src={basquete} alt="" width="40px" />
-                <p>basquete</p>
-              </a>
-            </li>
-            <li>
-              <a href=""
-                ><img src={futebol} alt="" width="40px" />
-                <p>Futebol</p>
-              </a>
-            </li>
-            <li>
-              <a href=""
-                ><img src={bilhar} alt="" width="40px" />
-                <p>Bilhar</p></a
-              >
-            </li>
-            <li>
-              <a href=""
-                ><img src={golfe} alt="" width="40px" />
-                <p>golfe</p>
-              </a>
-            </li>
-            <li>
-              <a href=""
-                ><img src={natacao} alt="" width="40px" />
-                <p>Natação</p></a
-              >
-            </li>
-            <li>
-              <a href=""
-                ><img src={volei}alt="" width="40px"/>
-                <p>vôlei</p></a
-              >
-            </li>
-            <li>
-              <a href="">
-                <img src={tenis} alt="" width="40px" />
-                <p>tênis</p></a
-              >
-            </li>
-            <li>
-              <a href=""
-                ><img src={pong} alt="" width="40px" />
-                <p>Pong</p></a
-              >
-            </li>
-            <li>
-              <a href=""
-                ><img src={skate} alt="" width="40px" />
-                <p>Skate</p></a
-              >
-            </li>
-            <li>
-              <a href=""
-                ><img src={futsal} alt="" width="40px" />
-                <p>Futsal</p>
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+     
+     <Modalidades/>
 
       <h2 className="h2-melhores-avaliados"><b>Melhores Avaliados</b></h2> 
       <section className="melhores-avaliados"> 
