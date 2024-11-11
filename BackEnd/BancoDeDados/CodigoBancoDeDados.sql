@@ -7,8 +7,8 @@ CREATE TABLE Quadra (
     id_quadra INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
     nome VARCHAR(90),
     preco_hora DECIMAL(10, 2),
-    id_endereco INT,
-    id_administrador INT
+    fk_endereco INT,
+    fk_administrador INT
 );
 
 CREATE TABLE Endereco (
@@ -23,8 +23,8 @@ CREATE TABLE Endereco (
 
 CREATE TABLE Relacao (
     id_relacao INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
-    id_esporte INT,
-    id_quadra INT
+    fk_esporte INT,
+    fk_quadra INT
 );
 
 CREATE TABLE Esporte (
@@ -44,8 +44,8 @@ CREATE TABLE Avaliacao (
     id_avaliacao INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
     qualificacao INT,
     data_avaliacao DATE,
-    id_quadra INT, 
-    id_usuario INT
+    fk_quadra INT, 
+    fk_usuario INT
 );
 
 CREATE TABLE Reserva (
@@ -54,8 +54,8 @@ CREATE TABLE Reserva (
     horario_inicio TIME,
     horario_final TIME,
     estado BOOLEAN,
-    id_quadra INT, 
-    id_usuario INT
+    fk_quadra INT, 
+    fk_usuario INT
 );
 
 CREATE TABLE Pago (
@@ -64,7 +64,7 @@ CREATE TABLE Pago (
     metodo VARCHAR(90),
     data_pago DATE,
     estado BOOLEAN,
-    id_reserva INT
+    fk_reserva INT
 );
 
 CREATE TABLE Administrador (
@@ -78,33 +78,33 @@ CREATE TABLE Telefone (
     id_telefone INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
     ddd INT,
     numero VARCHAR(50),
-    id_administrador INT,
-    id_usuario INT
+    fk_administrador INT,
+    fk_usuario INT
 );
 
 -- Necessario Adicionar as chaves estrangeiras depois pois se eu não realisase isso imposibilitaria a criação das tabelas  -- 
 ALTER TABLE Quadra
-ADD CONSTRAINT FK_Quadra_Endereco FOREIGN KEY (id_endereco) REFERENCES Endereco(id_endereco),
-ADD CONSTRAINT FK_Quadra_Administrador FOREIGN KEY (id_administrador) REFERENCES Administrador(id_administrador);
+ADD CONSTRAINT FK_Quadra_Endereco FOREIGN KEY (fk_endereco) REFERENCES Endereco(fk_endereco),
+ADD CONSTRAINT FK_Quadra_Administrador FOREIGN KEY (fk_administrador) REFERENCES Administrador(fk_administrador);
 
 ALTER TABLE Relacao
-ADD CONSTRAINT FK_Relacao_Esporte FOREIGN KEY (id_esporte) REFERENCES Esporte(id_esporte),
-ADD CONSTRAINT FK_Relacao_Quadra FOREIGN KEY (id_quadra) REFERENCES Quadra(id_quadra);
+ADD CONSTRAINT FK_Relacao_Esporte FOREIGN KEY (fk_esporte) REFERENCES Esporte(fk_esporte),
+ADD CONSTRAINT FK_Relacao_Quadra FOREIGN KEY (fk_quadra) REFERENCES Quadra(fk_quadra);
 
 ALTER TABLE Avaliacao
-ADD CONSTRAINT FK_Avaliacao_Quadra FOREIGN KEY (id_quadra) REFERENCES Quadra(id_quadra),
-ADD CONSTRAINT FK_Avaliacao_Usuario FOREIGN KEY (id_usuario) REFERENCES Usuario(id_usuario);
+ADD CONSTRAINT FK_Avaliacao_Quadra FOREIGN KEY (fk_quadra) REFERENCES Quadra(fk_quadra),
+ADD CONSTRAINT FK_Avaliacao_Usuario FOREIGN KEY (fk_usuario) REFERENCES Usuario(fk_usuario);
 
 ALTER TABLE Reserva
-ADD CONSTRAINT FK_Reserva_Quadra FOREIGN KEY (id_quadra) REFERENCES Quadra(id_quadra),
-ADD CONSTRAINT FK_Reserva_Usuario FOREIGN KEY (id_usuario) REFERENCES Usuario(id_usuario);
+ADD CONSTRAINT FK_Reserva_Quadra FOREIGN KEY (fk_quadra) REFERENCES Quadra(fk_quadra),
+ADD CONSTRAINT FK_Reserva_Usuario FOREIGN KEY (fk_usuario) REFERENCES Usuario(fk_usuario);
 
 ALTER TABLE Pago
-ADD CONSTRAINT FK_Pago_Reserva FOREIGN KEY (id_reserva) REFERENCES Reserva(id_reserva);
+ADD CONSTRAINT FK_Pago_Reserva FOREIGN KEY (fk_reserva) REFERENCES Reserva(fk_reserva);
 
 ALTER TABLE Telefone
-ADD CONSTRAINT FK_Telefone_Administrador FOREIGN KEY (id_administrador) REFERENCES Administrador(id_administrador),
-ADD CONSTRAINT FK_Telefone_Usuario FOREIGN KEY (id_usuario) REFERENCES Usuario(id_usuario);
+ADD CONSTRAINT FK_Telefone_Administrador FOREIGN KEY (fk_administrador) REFERENCES Administrador(fk_administrador),
+ADD CONSTRAINT FK_Telefone_Usuario FOREIGN KEY (fk_usuario) REFERENCES Usuario(fk_usuario);
 
 
 select * from Quadra;
