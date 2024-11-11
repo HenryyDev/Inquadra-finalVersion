@@ -23,7 +23,7 @@ function LoginEseguranca () {
           <Link to={"/gerenciar-conta"} ><span style={{color:"#0000FF"}}>conta</span></Link> &#62; Login e segurança
         </h2>
         <div>
-          <h1>Login e segurança</h1>
+          <h1 className="my-4">Login e segurança</h1>
         </div>
       </div>
       <div className="wrap02">

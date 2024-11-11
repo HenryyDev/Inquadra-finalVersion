@@ -11,12 +11,12 @@ const GerenciarConta = ()=>{
         <>
     <div class="conta ms-5 my-4">
           <h5>Conta</h5>
-          <p>NomeUser, emailUser, <a href="" class="acesso-perfil">Acessar perfil</a></p>
+          <p>NomeUser, emailUser,<Link to={"/perfil"} className="acesso-perfil"> Acessar perfil</Link></p>
         </div>
 
        <div class="config">
         <ul>
-          <li><img src={IconInfoPessoal} alt="" width="95px"/><h5><b>Informações Pessoais</b></h5><p>Forneça detalhes e informações de contato</p></li>
+          <li><Link to={"/gerenciar-conta/info-pessoal"}><img src={IconInfoPessoal} alt="" width="95px"/><h5><b>Informações Pessoais</b></h5><p>Forneça detalhes e informações de contato</p></Link></li>
           <li>
             <Link to={"/gerenciar-conta/login-seguranca"}><img src={IconLogin} alt="" width="70px" /><h5><b>Login e Segurança</b></h5>Atualize sua conta e mantenha ela segura</Link>
             </li>

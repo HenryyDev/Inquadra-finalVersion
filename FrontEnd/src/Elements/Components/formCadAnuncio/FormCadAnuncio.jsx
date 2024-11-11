@@ -173,7 +173,17 @@ const CadAnuncio = () => {
           />
 
           {/* Outros campos */}
-          <label htmlFor="endereco" className="form-label">Endereço<span className='error-text'>*</span></label>
+          <label htmlFor="endereco" className="form-label">Rua<span className='error-text'>*</span></label>
+          {errors.endereco && <span className="error-text">{errors.endereco}</span>}
+          <input
+            type="text"
+            className="form-control mb-4"
+            name="endereco"
+            value={formData.endereco}
+            onChange={handleChange}
+            placeholder="Digite o Endereço da quadra"
+          />
+           <label htmlFor="endereco" className="form-label">Numero<span className='error-text'>*</span></label>
           {errors.endereco && <span className="error-text">{errors.endereco}</span>}
           <input
             type="text"

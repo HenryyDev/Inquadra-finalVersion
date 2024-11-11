@@ -7,6 +7,7 @@ import Footer from "../Footer.jsx";
 import "../../../Elements/Css/anuncio.css";
 import "bootstrap/dist/js/bootstrap.min.js";
 import { useState } from "react";
+import Carrossel from "../CarrosselImg/Carrossel.jsx";
 
 function Anuncio() {
   const [data, setData] = useState(new Date());
@@ -15,7 +16,7 @@ function Anuncio() {
 
   // Horário atual
   const horario = new Date();
-  horario.setHours(horario.getHours() + 2); // Adiciona 2 horas ao horário atual
+  horario.setHours(horario.getHours() + 1); // Adiciona 2 horas ao horário atual
   horario.setSeconds(0);
   horario.setMilliseconds(0);
 
@@ -52,43 +53,9 @@ function Anuncio() {
     <>
       <NavBar />
       <div className="imagem-anuncio">
-        <div
-          id="carouselExampleControlsNoTouching"
-          className="carousel slide"
-          data-bs-touch="false"
-          data-bs-interval="false"
-        >
-          <div className="carousel-inner">
-            <div className="carousel-item active">
-              <img src={golfimg} className="d-block w-100" alt="..." />
-            </div>
-            <div className="carousel-item">
-              <img src={golfimg} className="d-block w-100" alt="..." />
-            </div>
-            <div className="carousel-item">
-              <img src={golfimg} className="d-block w-100" alt="..." />
-            </div>
-          </div>
-          <button
-            className="carousel-control-prev"
-            type="button"
-            data-bs-target="#carouselExampleControlsNoTouching"
-            data-bs-slide="prev"
-          >
-            <span className="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span className="visually-hidden">Previous</span>
-          </button>
-          <button
-            className="carousel-control-next"
-            type="button"
-            data-bs-target="#carouselExampleControlsNoTouching"
-            data-bs-slide="next"
-          >
-            <span className="carousel-control-next-icon" aria-hidden="true"></span>
-            <span className="visually-hidden">Next</span>
-          </button>
-        </div>
-      </div>
+        <Carrossel/>
+       
+      </div>  
 
       <div className="desc-checkin">
         <div className="desc">
