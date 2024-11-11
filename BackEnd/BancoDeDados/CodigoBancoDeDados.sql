@@ -119,9 +119,6 @@ select * from Reserva;
 select * from Pago;
 
 
-
-
-
 --Explicações
 -- Chave Estrangeira id_usuario:
 -- FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario)
