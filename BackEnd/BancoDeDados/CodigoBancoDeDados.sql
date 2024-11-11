@@ -1,40 +1,124 @@
 -- Codigo banco de dados so para salvar mesmo pois não sei um lugar melhor
 
-create database Inquadra;
-use Inquadra;
+CREATE DATABASE Inquadra;
+USE Inquadra;
 
--- Criação da tabela Usuario
+CREATE TABLE Quadra (
+    id_quadra INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    nome VARCHAR(90),
+    preco_hora DECIMAL(10, 2),
+    id_endereco INT,
+    id_administrador INT
+);
+
+CREATE TABLE Endereco (
+    id_endereco INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    cep VARCHAR(20),
+    uf CHAR(2),
+    municipio VARCHAR(100),
+    bairro VARCHAR(100),
+    logradouro VARCHAR(200),
+    numero INT
+);
+
+CREATE TABLE Relacao (
+    id_relacao INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    id_esporte INT,
+    id_quadra INT
+);
+
+CREATE TABLE Esporte (
+    id_esporte INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    esporte VARCHAR(60)
+);
+
 CREATE TABLE Usuario (
-    id_usuario INT AUTO_INCREMENT PRIMARY KEY,
-    Nome_usuario VARCHAR(255) NOT NULL,
-    CPF_usuario VARCHAR(14) NOT NULL UNIQUE,
-    Email_usuario VARCHAR(255) NOT NULL UNIQUE,
-    Senha_usuario VARCHAR(255) NOT NULL
+    id_usuario INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    nome VARCHAR(90),
+    email VARCHAR(255),
+    senha VARCHAR(50)
 );
 
--- Criação da tabela Usuario_Admin
-CREATE TABLE Usuario_Admin (
-    id_usuario_admin INT AUTO_INCREMENT PRIMARY KEY,
-    Nome_admin VARCHAR(255) NOT NULL,
-    CPF_admin VARCHAR(14) NOT NULL UNIQUE,
-    email_admin VARCHAR(255) NOT NULL UNIQUE,
-    Senha_admin VARCHAR(255) NOT NULL
+
+CREATE TABLE Avaliacao (
+    id_avaliacao INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    qualificacao INT,
+    data_avaliacao DATE,
+    id_quadra INT, 
+    id_usuario INT
 );
 
--- Criação da tabela Quadras
-CREATE TABLE Quadras (
-    id_quadra INT AUTO_INCREMENT PRIMARY KEY,
-    Titulo_Anuncio_Quadra VARCHAR(255) NOT NULL,
-    Descricao_Quadra TEXT,
-    Preco_Quadra DECIMAL(10, 2) NOT NULL,
-    Endereco_Quadra VARCHAR(255) NOT NULL,
-    Cep_Quadra VARCHAR(10) NOT NULL,
-    Numero_Quadra INT NOT NULL,
-    id_usuario INT,
-    id_usuario_admin INT,
-    FOREIGN KEY (id_usuario) REFERENCES Usuario(id_usuario),
-    FOREIGN KEY (id_usuario_admin) REFERENCES Usuario_Admin(id_usuario_admin)
+CREATE TABLE Reserva (
+    id_reserva INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    data_reserva DATE,
+    horario_inicio TIME,
+    horario_final TIME,
+    estado BOOLEAN,
+    id_quadra INT, 
+    id_usuario INT
 );
+
+CREATE TABLE Pago (
+    id_pago INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    quantia DECIMAL(10, 2),
+    metodo VARCHAR(90),
+    data_pago DATE,
+    estado BOOLEAN,
+    id_reserva INT
+);
+
+CREATE TABLE Administrador (
+    id_administrador INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    nome VARCHAR(90),
+    email VARCHAR(255),
+    senha VARCHAR(100)
+);
+
+CREATE TABLE Telefone (
+    id_telefone INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    ddd INT,
+    numero VARCHAR(50),
+    id_administrador INT,
+    id_usuario INT
+);
+
+-- Necessario Adicionar as chaves estrangeiras depois pois se eu não realisase isso imposibilitaria a criação das tabelas  -- 
+ALTER TABLE Quadra
+ADD CONSTRAINT FK_Quadra_Endereco FOREIGN KEY (id_endereco) REFERENCES Endereco(id_endereco),
+ADD CONSTRAINT FK_Quadra_Administrador FOREIGN KEY (id_administrador) REFERENCES Administrador(id_administrador);
+
+ALTER TABLE Relacao
+ADD CONSTRAINT FK_Relacao_Esporte FOREIGN KEY (id_esporte) REFERENCES Esporte(id_esporte),
+ADD CONSTRAINT FK_Relacao_Quadra FOREIGN KEY (id_quadra) REFERENCES Quadra(id_quadra);
+
+ALTER TABLE Avaliacao
+ADD CONSTRAINT FK_Avaliacao_Quadra FOREIGN KEY (id_quadra) REFERENCES Quadra(id_quadra),
+ADD CONSTRAINT FK_Avaliacao_Usuario FOREIGN KEY (id_usuario) REFERENCES Usuario(id_usuario);
+
+ALTER TABLE Reserva
+ADD CONSTRAINT FK_Reserva_Quadra FOREIGN KEY (id_quadra) REFERENCES Quadra(id_quadra),
+ADD CONSTRAINT FK_Reserva_Usuario FOREIGN KEY (id_usuario) REFERENCES Usuario(id_usuario);
+
+ALTER TABLE Pago
+ADD CONSTRAINT FK_Pago_Reserva FOREIGN KEY (id_reserva) REFERENCES Reserva(id_reserva);
+
+ALTER TABLE Telefone
+ADD CONSTRAINT FK_Telefone_Administrador FOREIGN KEY (id_administrador) REFERENCES Administrador(id_administrador),
+ADD CONSTRAINT FK_Telefone_Usuario FOREIGN KEY (id_usuario) REFERENCES Usuario(id_usuario);
+
+
+select * from Quadra;
+select * from Avaliacao;
+select * from  Usuario;
+select * from Telefone;
+select * from Administrador;
+select * from Endereco;
+select * from Relacao;
+select * from Esporte;
+select * from Reserva;
+select * from Pago;
+
+
 
 
 
