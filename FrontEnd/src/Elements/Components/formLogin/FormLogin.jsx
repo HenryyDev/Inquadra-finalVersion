@@ -4,8 +4,11 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import logo from "../../../assets/logo.png";
 import "../../../Elements/Css/login.css";
+import ocultar from "../../../assets/ocultar.png"
+import ver from "../../../assets/ver.png"
 
 const Login = () => {
+  const [viewSenha, setViewSenha] = useState(true);
   const [values, setValues] = useState({
     email: "",
     senha: "",
@@ -42,19 +45,31 @@ const Login = () => {
               </div>
             </div>
 
-            <div className="mb-3">
-              <label htmlFor="password" className="form-label">
-                Senha
-              </label>
-              <input
-                type="password"
-                className="form-control"
-                id="password"
-                value={values.senha} // Estado da senha
-                onChange={(e) =>
-                  setValues({ ...values, senha: e.target.value })
-                }
-              />
+            <div className="mb-3" style={{ position: "relative" }}>
+              <label htmlFor="senha" className="form-label" >Senha</label>
+
+              <div className="senha">
+                <input
+                  type={viewSenha ? "password" : "text"}
+                  style={{ width: "100%" }}
+                  className="form-control"
+                  id="senha"
+                  value={values.senha}
+                  onChange={(e) => setValues({ ...values, senha: e.target.value })}
+                />
+                <img
+                  src={viewSenha ? ver : ocultar}
+                  alt="Ícone de visibilidade"
+                  width="40px"
+                  height="40px"
+                  style={{
+                    position: "absolute",
+                    right: "10px",
+                    cursor: "pointer"
+                  }}
+                  onClick={() => setViewSenha((estado) => !estado)}
+                />
+              </div>
             </div>
 
             <div className="mb-3 form-check">

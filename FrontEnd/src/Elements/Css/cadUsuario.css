@@ -4,13 +4,14 @@
     box-sizing: border-box;
     scroll-behavior: smooth;
   }
-.body-user{
+
+.wrap-user{
     width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
     margin: 0;
-    height: 100vh;
+    height: 100%;
     background-color: var(--transparence-primary)
 }
 :root{
@@ -21,7 +22,7 @@
   --transparence-primary:#cacaca;
   }
 .cad-user{
-    background-color: var(--blue-secondary) ;
+    
     margin: 20px;
     display: flex;
     justify-content: center;
@@ -73,3 +74,7 @@ a{
     color: #ffffff;
 }
 
+.senha{
+    display: flex;
+    flex-direction: row;
+}

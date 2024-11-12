@@ -69,3 +69,7 @@ a{
     border: none;
     color: #ffffff;
 }
+.senha{
+    display: flex;
+    flex-direction: row;
+}

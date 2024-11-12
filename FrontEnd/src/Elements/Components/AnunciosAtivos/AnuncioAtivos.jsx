@@ -1,5 +1,6 @@
 import "../../Css/AnuncioAtivos.css"
 import React,{ useState } from "react";
+import { Link } from "react-router-dom";
 import golfimg from "../../../assets/golf.jpg"
 const quadrasData = [
     { id: 1, nome: "Quadra 1", descricao: "Quadra de Futebol", imagem: "./assets/golf.jpg" , preco:29.25 },
@@ -13,24 +14,33 @@ const quadrasData = [
     const [quadras, setQuadras] = useState(quadrasData);
     return (
       <>
-        <h1 className="nome-user" style={{ marginLeft: "40px", marginTop: "40px" }}>
-          Anuncios ativo
+      <h2 style={{marginLeft: "40px", marginTop: "40px"}}>
+          <Link to={"/gerenciar-conta"} ><span style={{color:"#0000FF",marginTop:"40px"}}>Conta</span></Link> &#62; Anúncios ativos
+        </h2>
+        <h1  style={{ marginLeft: "40px", marginTop: "10px" }}>
+          Anúncios ativos
         </h1>
-        <h5 style={{ marginLeft: "40px" }}>cidade</h5>
-        <p style={{ margin: "40px" }}>Anuncios do perfil</p>
+        
   
         <div className="wrap-anuncio-ativo">
           <ul className="anuncio-ativo">
             {quadras.slice(0, 4).map((quadra) => (
               <li key={quadra.id}>
-                <a href="pags/anuncio/index.html">
-                  <img src={golfimg} alt="" />
+                
                   
-                    <h1 className="txt-anuncio">R$ {quadra.preco}/H</h1>
-                    <h5 className="txt-anuncio">{quadra.nome}</h5>
-                    <p className="txt-anuncio">{quadra.descricao}</p>
-                 
-                </a>
+                    <div className="card-anuncio">
+                      <img src={golfimg} alt=""  width={"200px"} style={{borderRadius:"25px"}}/>
+                        <h5 className="txt-card">R$ {quadra.preco}/H</h5>
+                        <h5 className="txt-card">{quadra.nome}</h5>
+                        <p className="txt-card">{quadra.descricao}</p>
+                        <div className="wrap-btn">
+                          
+                          <button className=" btn btn-primary btn-card">Excluir</button>
+                        </div>
+                    </div>
+                  
+                
+                
               </li>
             ))}
           </ul>

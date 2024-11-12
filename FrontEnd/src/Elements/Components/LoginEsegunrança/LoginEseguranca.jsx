@@ -20,7 +20,7 @@ function LoginEseguranca () {
       <NavBar />
       <div className="wrap">
         <h2>
-          <Link to={"/gerenciar-conta"} ><span style={{color:"#0000FF"}}>conta</span></Link> &#62; Login e segurança
+          <Link to={"/gerenciar-conta"} ><span style={{color:"#0000FF"}}>Conta</span></Link> &#62; Login e segurança
         </h2>
         <div>
           <h1 className="my-4">Login e segurança</h1>

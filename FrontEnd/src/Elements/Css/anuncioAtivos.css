@@ -1,5 +1,31 @@
-.anuncio-ativo a{
+.card-anuncio{
     display: flex;
     flex-direction: row;
     margin-bottom: 40px;
+    border-radius: 25px;
+    background-color: #cacaca;
+}
+.anuncio-ativo{
+    width: 800px;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    
+    list-style-type: none;
+}
+.txt-card{
+    width: 50%;
+    margin: 20px;
+    display: flex;
+    text-align: center;
+}
+.wrap-btn{
+    display: flex;
+    flex-direction: column;
+    margin: 20px;
+   
+}
+.btn-card{
+    margin-bottom: 10px !important;
+    padding: 10 !important;
 }
