@@ -11,6 +11,9 @@ CREATE TABLE Quadra (
     fk_administrador INT
 );
 
+ALTER TABLE Quadra
+ADD COLUMN Descricao VARCHAR(2000); 
+
 CREATE TABLE Endereco (
     id_endereco INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
     cep VARCHAR(20),
@@ -38,7 +41,6 @@ CREATE TABLE Usuario (
     email VARCHAR(255),
     senha VARCHAR(50)
 );
-
 
 CREATE TABLE Avaliacao (
     id_avaliacao INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
@@ -81,6 +83,51 @@ CREATE TABLE Telefone (
     fk_administrador INT,
     fk_usuario INT
 );
+
+-- Adicionando as chaves estrangeiras após a criação das tabelas
+ALTER TABLE Quadra
+ADD CONSTRAINT FK_Quadra_Endereco FOREIGN KEY (fk_endereco) REFERENCES Endereco(id_endereco),
+ADD CONSTRAINT FK_Quadra_Administrador FOREIGN KEY (fk_administrador) REFERENCES Administrador(id_administrador);
+
+ALTER TABLE Relacao
+ADD CONSTRAINT FK_Relacao_Esporte FOREIGN KEY (fk_esporte) REFERENCES Esporte(id_esporte),
+ADD CONSTRAINT FK_Relacao_Quadra FOREIGN KEY (fk_quadra) REFERENCES Quadra(id_quadra);
+
+ALTER TABLE Avaliacao
+ADD CONSTRAINT FK_Avaliacao_Quadra FOREIGN KEY (fk_quadra) REFERENCES Quadra(id_quadra),
+ADD CONSTRAINT FK_Avaliacao_Usuario FOREIGN KEY (fk_usuario) REFERENCES Usuario(id_usuario);
+
+ALTER TABLE Reserva
+ADD CONSTRAINT FK_Reserva_Quadra FOREIGN KEY (fk_quadra) REFERENCES Quadra(id_quadra),
+ADD CONSTRAINT FK_Reserva_Usuario FOREIGN KEY (fk_usuario) REFERENCES Usuario(id_usuario);
+
+ALTER TABLE Pago
+ADD CONSTRAINT FK_Pago_Reserva FOREIGN KEY (fk_reserva) REFERENCES Reserva(id_reserva);
+
+ALTER TABLE Telefone
+ADD CONSTRAINT FK_Telefone_Administrador FOREIGN KEY (fk_administrador) REFERENCES Administrador(id_administrador),
+ADD CONSTRAINT FK_Telefone_Usuario FOREIGN KEY (fk_usuario) REFERENCES Usuario(id_usuario);
+
+ALTER TABLE Quadra CHANGE Descricao descricao varchar(2000);
+
+ALTER TABLE Endereco CHANGE numero numero_e int;
+
+ALTER TABLE Telefone CHANGE numero numero_t int;
+
+
+-- Consultas para exibir os dados das tabelas
+SELECT * FROM Quadra;
+SELECT * FROM Avaliacao;
+SELECT * FROM Usuario;
+SELECT * FROM Telefone;
+SELECT * FROM Administrador;
+SELECT * FROM Endereco;
+SELECT * FROM Relacao;
+SELECT * FROM Esporte;
+SELECT * FROM Reserva;
+SELECT * FROM Pago;
+
+drop database Inquadra
 
 -- Necessario Adicionar as chaves estrangeiras depois pois se eu não realisase isso imposibilitaria a criação das tabelas  -- 
 ALTER TABLE Quadra
