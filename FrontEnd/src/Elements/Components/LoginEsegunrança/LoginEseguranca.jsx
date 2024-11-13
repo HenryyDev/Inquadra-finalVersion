@@ -17,6 +17,7 @@ function LoginEseguranca () {
 
   return (
     <>
+    
       <NavBar />
       <div className="wrap">
         <h2>

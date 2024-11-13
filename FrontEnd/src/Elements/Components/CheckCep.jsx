@@ -13,7 +13,9 @@ const CheckCEP = (e,setFormData, setErrors) => {
     // Faz a requisição para o ViaCEP
     fetch(`https://viacep.com.br/ws/${cep}/json/`)
       .then((res) => res.json())
+     
       .then((data) => {
+        console.log(data)
         if (data.erro) {
           setErrors((prevState) => ({
             ...prevState,
@@ -21,6 +23,7 @@ const CheckCEP = (e,setFormData, setErrors) => {
             
           }));
         } else {
+          
           setFormData((prevState) => ({
             ...prevState,
             rua: data.logradouro || "", // Atualiza a rua se o CEP for válido

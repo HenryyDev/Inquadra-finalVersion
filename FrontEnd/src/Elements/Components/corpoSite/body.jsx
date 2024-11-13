@@ -1,6 +1,6 @@
 // Imports de bibliotecas externas
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {Link} from "react-router-dom"
+import { Link } from "react-router-dom"
 
 
 // Imports de arquivos de estilo
@@ -15,7 +15,6 @@ import golfimg from "../../../assets/golf.jpg"
 
 
 import React, { useState } from 'react';
-
 
 const quadrasData = [
   {
@@ -152,64 +151,65 @@ const quadrasData = [
   }
 ];
 
-const Body=()=>{
+const Body = () => {
 
-    const [quadras, setQuadras] = useState(quadrasData);
-return(
-<>
-     
-     <Modalidades/>
+  const [quadras, setQuadras] = useState(quadrasData);
+  return (
+    <>
 
-      <h2 className="h2-melhores-avaliados"><b>Melhores Avaliados</b></h2> 
-      <section className="melhores-avaliados"> 
+      <Modalidades />
+
+      <h2 className="h2-melhores-avaliados"><b>Melhores Avaliados</b></h2>
+      <section className="melhores-avaliados">
         <ul>
-        {quadras.slice(0,4).map((quadra)=>(
-          <li key={quadra.id}>
-            
-            <Link to={`/anuncio/${quadra.id}`}>
-              <img src={golfimg} alt="" />
-              <h5 className="txt-anuncio">{quadra.titulo}</h5>
-              <p className="txt-anuncio" >{ quadra.descricao.length> 90 ? quadra.descricao.substring(0, 87) + "..." : quadra.descricao}</p>
-            </Link>
+          {quadras.slice(0, 4).map((quadra) => (
+            <li key={quadra.id}>
+
+              <Link to={`/anuncio/${quadra.id}`}>
+                <img src={golfimg} alt="" />
+                <h5 className="txt-anuncio">{quadra.titulo}</h5>
+                <p className="txt-anuncio" >{quadra.descricao.length > 90 ? quadra.descricao.substring(0, 87) + "..." : quadra.descricao}</p>
+              </Link>
             </li>
-             ))}
-          </ul>
-    
-        
-  
+          ))}
+        </ul>
+
+
+
       </section>
 
-      <h2 className="h2-mais-populares"><b>Mais Populares</b></h2> 
-      <section className="mais-populares"> 
-      <ul>
-        {quadras.slice(0,4).map((quadra)=>(
-          <li key={quadra.id}>
-            
-            <Link to={`/anuncio/${quadra.id}`}>
-              <img src={golfimg} alt="" />
-              <h5 className="txt-anuncio">{quadra.titulo}</h5>
-              <p className="txt-anuncio" >{ quadra.descricao.length> 90 ? quadra.descricao.substring(0, 87) + "..." : quadra.descricao}</p>
-            </Link>
+      <h2 className="h2-mais-populares"><b>Mais Populares</b></h2>
+      <section className="mais-populares">
+        <ul>
+          {quadras.slice(0, 4).map((quadra) => (
+            <li key={quadra.id}>
+
+              <Link to={`/anuncio/${quadra.id}`}>
+                <img src={golfimg} alt="" />
+                <h5 className="txt-anuncio">{quadra.titulo}</h5>
+                <p className="txt-anuncio" >{quadra.descricao.length > 90 ? quadra.descricao.substring(0, 87) + "..." : quadra.descricao}</p>
+              </Link>
             </li>
-             ))}
-          </ul>
+          ))}
+        </ul>
       </section>
 
       <h2 className="h2-menor-custo"><b>Menor custo</b></h2>
-      <section className="menor-custo"> 
-      <ul>
-        {quadras.slice(0,4).map((quadra)=>(
-          <li key={quadra.id}>
-            
-            <Link to={`/anuncio/${quadra.id}`}>
-              <img src={golfimg} alt="" />
-              <h5 className="txt-anuncio">{quadra.titulo}</h5>
-              <p className="txt-anuncio" >{ quadra.descricao.length> 90 ? quadra.descricao.substring(0, 87) + "..." : quadra.descricao}</p>
-            </Link>
+      <section className="menor-custo">
+        <ul>
+          {quadras.slice(0, 4).map((quadra) => (
+            <li key={quadra.id}>
+
+              <Link to={`/anuncio/${quadra.id}`}>
+                <img src={golfimg} alt="" />
+                <h5 className="txt-anuncio">{quadra.titulo}</h5>
+                <p className="txt-anuncio" >{quadra.descricao.length > 90 ? quadra.descricao.substring(0, 87) + "..." : quadra.descricao}</p>
+              </Link>
             </li>
-             ))}
-          </ul>
+          ))}
+        </ul>
       </section>
-      </>
-      )}
-      export default Body;
+    </>
+  )
+}
+export default Body;

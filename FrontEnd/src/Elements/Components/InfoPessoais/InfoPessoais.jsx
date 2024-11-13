@@ -7,7 +7,9 @@ import 'bootstrap/dist/js/bootstrap.min.js'
 
 function InfoPessoal() {
   return (
+    
     <>
+    
       <div className="wrap">
         <h2>
           <Link to={"/gerenciar-conta"} ><span style={{color:"#0000FF"}}>Conta</span></Link> &#62; Informações Pessoais

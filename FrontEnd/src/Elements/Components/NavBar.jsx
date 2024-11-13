@@ -12,26 +12,26 @@ const NavBar=()=>{
 <header>
       <div class="header-container">
         
-        <Link to={"/"}><img src={logo} alt="" width="96" class="logo-img" /></Link>
-        <div class="search">
-          <label for="searchInput"
-            ><img class="lupa" src={lupa} alt="" width="24px"
+        <Link to={"/"}><img src={logo} alt="" width="96" className="logo-img" /></Link>
+        <div className="search">
+          <label htmlFor="searchInput"
+            ><img className="lupa" src={lupa} alt="" width="24px"
           /></label>
           <input type="text" id="searchInput" placeholder="Pesquisar" /> 
         </div>
        
         
         
-        <button class="login-link login01">
+        <button className="login-link login01">
           <Link to={"/login"}>Login</Link>
           </button>
-        <button class="login-link login02">
+        <button className="login-link login02">
           <Link to={"/cadastro-anuncio"}>Anuncie-aqui</Link>
         </button>
-        <div class="foto-user"><img src="assets/foto-padrao.png" alt="" /></div>
-        <div class="dropdown">
+        <div className="foto-user"><img src="assets/foto-padrao.png" alt="" /></div>
+        <div className="dropdown">
           <button
-            class="btn btn-secondary dropdown-toggle"
+            className="btn btn-secondary dropdown-toggle"
             type="button"
             id="dropdownMenuButton1"
             data-bs-toggle="dropdown"
@@ -52,7 +52,7 @@ const NavBar=()=>{
             <li>
               <Link to={"/cadastro-usuario"} className="dropdown-item">Criar conta</Link>
             </li>
-            <li><a class="dropdown-item" href="#">Sair</a></li> 
+            <li><a className="dropdown-item" href="#">Sair</a></li> 
           </ul>
         </div>
       </div>

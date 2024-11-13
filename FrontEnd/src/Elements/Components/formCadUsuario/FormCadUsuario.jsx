@@ -14,6 +14,7 @@ const CadUsuario = () => {
     confirmarSenha: "",
     termos: false
   });
+
   const [errors, setErrors] = useState({});
   const [viewSenha, setViewSenha] = useState(true);
 

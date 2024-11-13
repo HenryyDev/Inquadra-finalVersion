@@ -7,6 +7,7 @@ import PageAnuncio from "./pags/PageAnuncio";
 import PageLoginEseguranca from "./pags/PageloginEseguranca";
 import PageInfoPessoal from "./pags/PageInfoPessoal";
 import PageCadAnuncio from "./pags/PageCadAnuncio";
+import PageGerenciarReserva from "./pags/PageGerenciarReserva";
 import PageAnunciosAtivos from "./pags/PageAnunciosAtivos";
 import PagePerfilUser from "./pags/PagePerfilUser";
 import { createRoot } from "react-dom/client";
@@ -52,6 +53,10 @@ const router = createBrowserRouter([
   {
     path:"/gerenciar-conta/anuncios-ativos",
     element:<PageAnunciosAtivos/>
+  },
+  {
+    path:"/gerenciar-conta/gerenciar-reserva",
+    element:<PageGerenciarReserva/>
   },
   
   {

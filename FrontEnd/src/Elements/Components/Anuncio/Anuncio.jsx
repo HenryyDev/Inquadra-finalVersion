@@ -146,14 +146,14 @@ function Anuncio() {
       telefone: "(11) 95678-9012"
     }
   ];
-    const { id } = useParams(); // Captura o ID da URL
-    const quadra = quadrasData.find((quadra) => quadra.id === parseInt(id)); // Busca a quadra no array
-    
-    const getEsportesAtivos = (esportes) => {
-      return Object.keys(esportes)
-        .filter((esporte) => esportes[esporte]) // Filtra apenas os esportes com valor true
-        .map((esporte) => esporte.charAt(0).toUpperCase() + esporte.slice(1)); // Capitaliza a primeira letra do nome do esporte
-    };
+  const { id } = useParams(); // Captura o ID da URL
+  const quadra = quadrasData.find((quadra) => quadra.id === parseInt(id)); // Busca a quadra no array
+
+  const getEsportesAtivos = (esportes) => {
+    return Object.keys(esportes)
+      .filter((esporte) => esportes[esporte]) // Filtra apenas os esportes com valor true
+      .map((esporte) => esporte.charAt(0).toUpperCase() + esporte.slice(1)); // Capitaliza a primeira letra do nome do esporte
+  };
 
   const [data, setData] = useState(new Date());
   const [checkinTime, setCheckinTime] = useState(null);
@@ -188,10 +188,10 @@ function Anuncio() {
   // Função para determinar o minTime do check-out
   const getMinTimeForCheckout = () => {
     if (checkinTime) {
-     
+
       return new Date(checkinTime.getTime() + 60 * 60000);
     }
-    return horario; 
+    return horario;
   };
 
   if (!quadra) {
@@ -200,29 +200,29 @@ function Anuncio() {
 
   return (
     <>
-      <NavBar />
+
       <h1 className="title-quadra">{quadra.titulo}</h1>
       <div className="imagem-anuncio">
-        <Carrossel imagens={quadra.fotos}/> 
-        
-      </div>  
-      
-       
+        <Carrossel imagens={quadra.fotos} />
+
+      </div>
+
+
       <div className="desc-checkin">
         <div className="desc">
-        
+
           <h2 id="h2-desc">Descrição</h2>
           <span id="txt-desc">
             {quadra.descricao}
           </span>
           <h3>Esportes que podem ser feitos na quadra:</h3>
-          <ul style={{listStyleType:"none",display:"flex",textAlign:"center",justifyContent:"center"}}>
-            {getEsportesAtivos(quadra.esportes).map((esporte,index)=>{
-              return <li key={index} style={{margin: "0 10px"}}> {esporte} </li>
+          <ul style={{ listStyleType: "none", display: "flex", textAlign: "center", justifyContent: "center" }}>
+            {getEsportesAtivos(quadra.esportes).map((esporte, index) => {
+              return <li key={index} style={{ margin: "0 10px" }}> {esporte} </li>
             })}
           </ul>
           <h3>Localização</h3>
-          <p>{quadra.cep}</p>
+          <p>{quadra.endereco} | Cep: {quadra.cep}</p>
         </div>
         <div className="check-in">
           <h2>R${quadra.preco}/hora</h2>
@@ -248,7 +248,7 @@ function Anuncio() {
               onChange={(time) => setCheckinTime(time)}
               showTimeSelect
               showTimeSelectOnly
-              timeIntervals={60} 
+              timeIntervals={60}
               timeFormat="HH:mm"
               dateFormat="HH:mm"
               minTime={getMinTimeForCheckin(data)} // Limita o horário de check-in
@@ -265,7 +265,7 @@ function Anuncio() {
               onChange={(time) => setCheckoutTime(time)}
               showTimeSelect
               showTimeSelectOnly
-              timeIntervals={60} 
+              timeIntervals={60}
               timeFormat="HH:mm"
               dateFormat="HH:mm"
               placeholderText="Selecione o horário"
@@ -287,7 +287,7 @@ function Anuncio() {
           </button>
         </div>
       </div>
-      <Footer />
+
     </>
   );
 }

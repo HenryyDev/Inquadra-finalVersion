@@ -9,6 +9,7 @@ const Carrossel = ({ imagens }) => {
       data-bs-touch="false"
       data-bs-interval="false"
     >
+      
       <div className="carousel-inner">
         {imagens.length > 0 ? (
           imagens.map((img, index) => (

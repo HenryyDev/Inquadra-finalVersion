@@ -21,7 +21,7 @@ const quadrasData = [
           Anúncios ativos
         </h1>
         
-  
+       
         <div className="wrap-anuncio-ativo">
           <ul className="anuncio-ativo">
             {quadras.slice(0, 4).map((quadra) => (

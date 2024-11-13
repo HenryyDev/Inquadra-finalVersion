@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import InputMask from 'react-input-mask';
 import "../../Css/CadAnuncio.css";
 import logo from "../../../assets/logo.png";
 import { Link } from "react-router-dom";
@@ -31,33 +32,35 @@ const CadAnuncio = () => {
   const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {
+    console.log(formData.cep)
     const { name, value, type, checked, files } = e.target;
+
     if (type === "checkbox") {
-      // Se o campo for checkbox (para selecionar esportes)
+
       setFormData({
         ...formData,
         esportes: {
           ...formData.esportes,
-          [name]: checked, // Atualiza o valor do esporte específico
+          [name]: checked,
         },
       });
     } else if (type === "file") {
-      // Se o campo for de arquivo (para carregar fotos)
-      const fileList = Array.from(files); // Converte a lista de arquivos em array
+
+      const fileList = Array.from(files);
       setFormData({
         ...formData,
         fotos: fileList, // Atualiza as fotos
       });
     } else {
-      // Para outros tipos de input (como texto ou número)
+
       setFormData({
         ...formData,
-        [name]: value, // Atualiza o campo correspondente no estado
+        [name]: value,
       });
     }
   };
 
-  // Função para validar os dados do formulário antes de enviar
+
   const validateForm = () => {
     const newErrors = {}; // Objeto para armazenar os erros de validação
     if (!formData.titulo) newErrors.titulo = "Título é obrigatório."; // Verifica se o título está vazio
@@ -75,22 +78,29 @@ const CadAnuncio = () => {
       newErrors.esportes = "Selecione pelo menos um esporte."; // Se não, adiciona erro
 
     if (formData.fotos.length === 0)
-      newErrors.fotos = "Carregue pelo menos uma imagem."; // Verifica se há fotos carregadas
+      newErrors.fotos = "Carregue pelo menos uma imagem.";
 
     setErrors(newErrors); // Atualiza o estado de erros com os erros encontrados
     return Object.keys(newErrors).length === 0; // Retorna true se não houver erros, caso contrário, false
   };
 
-  const handleBLurCEP=(e)=>{
+  const handleBLurCEP = (e) => {
     CheckCEP(e, setFormData, setErrors);
   }
-  // Função que é chamada quando o formulário é enviado
+  var removerFormatacao = (telefone) => formData.telefone.replace(/\D/g, "");
+
   const handleSubmit = (e) => {
-    e.preventDefault(); // Previne o comportamento padrão de envio do formulário
+    e.preventDefault();
+    const telefoneFormatado = removerFormatacao(formData.telefone);
+    setFormData({
+      ...formData,
+      telefone: telefoneFormatado,
+    });
+
     if (validateForm()) {
       // Se o formulário for válido
-      console.log(formData); // Mostra os dados no console (para fins de depuração)
-      alert("Anúncio criado com sucesso!"); // Exibe uma mensagem de sucesso
+      console.log(formData);
+      alert("Anúncio criado com sucesso!");
     }
   };
 
@@ -225,17 +235,20 @@ const CadAnuncio = () => {
               <span className="error-text">{errors.cep}</span>
             </div>
           )}
-          <input
+          <InputMask
+            mask="99999-999"
             type="text"
             className="form-control mb-4"
             name="cep"
             value={formData.cep}
-            onBlur={handleBLurCEP}  
+            onBlur={handleBLurCEP}
             onChange={handleChange}
             placeholder="Digite o cep da quadra"
-          />
+          >
+            {(inputProps) => <input{...inputProps} />}
+          </InputMask>
           <label htmlFor="rua" className="form-label">
-            Rua<span className="error-text">*</span>
+            Logradouro<span className="error-text">*</span>
           </label>
           {errors.rua && (
             <div className="alert alert-danger" role="alert">
@@ -269,14 +282,16 @@ const CadAnuncio = () => {
               <span className="error-text">{errors.telefone}</span>
             </div>
           )}
-          <input
-            type="tel"
+          <InputMask
+            mask={"(99) 99999-9999"}
             className="form-control mb-4"
             name="telefone"
             value={formData.telefone}
             onChange={handleChange}
             placeholder="Digite um número telefônico para contato"
-          />
+          >
+            {(inputProps) => <input{...inputProps} />}
+          </InputMask>
 
           <label htmlFor="fotos" className="form-label">
             Fotos<span className="error-text">*</span>
