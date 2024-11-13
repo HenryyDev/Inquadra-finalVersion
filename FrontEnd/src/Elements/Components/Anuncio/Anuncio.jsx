@@ -8,8 +8,153 @@ import "../../../Elements/Css/anuncio.css";
 import "bootstrap/dist/js/bootstrap.min.js";
 import { useState } from "react";
 import Carrossel from "../CarrosselImg/Carrossel.jsx";
+import { useParams, Link } from "react-router-dom";
 
 function Anuncio() {
+
+  const quadrasData = [
+    {
+      id: 1,
+      titulo: "Quadra de Futebol Society",
+      descricao: "Quadra de futebol society, gramado sintético, com iluminação.",
+      esportes: {
+        basquete: false,
+        futebol: true,
+        bilhar: false,
+        golfe: false,
+        natacao: false,
+        volei: true,
+        tenis: false,
+        pong: false,
+        skate: false,
+        futsal: true
+      },
+      preco: 150,
+      fotos: [golfimg, golfimg],
+      endereco: "Rua dos Esportes, 123",
+      cep: "12345000",
+      telefone: "(11) 98765-4321"
+    },
+    {
+      id: 2,
+      titulo: "Quadra de Tênis",
+      descricao: "Quadra de tênis em saibro, com rede e iluminação noturna.",
+      esportes: {
+        basquete: false,
+        futebol: false,
+        bilhar: false,
+        golfe: false,
+        natacao: false,
+        volei: false,
+        tenis: true,
+        pong: false,
+        skate: false,
+        futsal: false
+      },
+      preco: 100,
+      fotos: [golfimg, golfimg],
+      endereco: "Avenida das Raquetes, 456",
+      cep: "54321000",
+      telefone: "(11) 91234-5678"
+    },
+    {
+      id: 3,
+      titulo: "Quadra de Vôlei de Praia",
+      descricao: "Quadra de vôlei de praia com rede e areia fofa.",
+      esportes: {
+        basquete: false,
+        futebol: false,
+        bilhar: false,
+        golfe: false,
+        natacao: false,
+        volei: true,
+        tenis: false,
+        pong: false,
+        skate: false,
+        futsal: false
+      },
+      preco: 120,
+      fotos: [golfimg, golfimg],
+      endereco: "Praia dos Esportes, 789",
+      cep: "98765432",
+      telefone: "(11) 92345-6789"
+    },
+    {
+      id: 4,
+      titulo: "Quadra de Basquete",
+      descricao: "Quadra de basquete com pintura profissional e aro de alta qualidade.aaaaaaaaaaaaaaaaaaaaaa",
+      esportes: {
+        basquete: true,
+        futebol: false,
+        bilhar: false,
+        golfe: false,
+        natacao: false,
+        volei: false,
+        tenis: false,
+        pong: false,
+        skate: false,
+        futsal: false
+      },
+      preco: 80,
+      fotos: [golfimg, golfimg],
+      endereco: "Avenida do Basquete, 321",
+      cep: "45678900",
+      telefone: "(11) 93456-7890"
+    },
+    {
+      id: 5,
+      titulo: "Quadra de Futebol de Areia",
+      descricao: "Quadra de futebol de areia com iluminação e cercado.",
+      esportes: {
+        basquete: false,
+        futebol: true,
+        bilhar: false,
+        golfe: false,
+        natacao: false,
+        volei: false,
+        tenis: false,
+        pong: false,
+        skate: false,
+        futsal: false
+      },
+      preco: 130,
+      fotos: [golfimg, golfimg],
+      endereco: "Rua da Praia, 654",
+      cep: "11223344",
+      telefone: "(11) 94567-8901"
+    },
+    {
+      id: 6,
+      titulo: "Quadra de Golfe",
+      descricao: "Quadra de golfe com grama sintética e buracos de diferentes distâncias.",
+      esportes: {
+        basquete: false,
+        futebol: false,
+        bilhar: false,
+        golfe: true,
+        natacao: false,
+        volei: false,
+        tenis: false,
+        pong: false,
+        skate: false,
+        futsal: false
+      },
+      preco: 200,
+      fotos: [golfimg, golfimg],
+      endereco: "Rua do Golfe, 890",
+      cep: "33221100",
+      telefone: "(11) 95678-9012"
+    }
+  ];
+    const { id } = useParams(); // Captura o ID da URL
+    const quadra = quadrasData.find((quadra) => quadra.id === parseInt(id)); // Busca a quadra no array
+    
+    const getEsportesAtivos = (esportes) => {
+      return Object.keys(esportes)
+        .filter((esporte) => esportes[esporte]) // Filtra apenas os esportes com valor true
+        .map((esporte) => esporte.charAt(0).toUpperCase() + esporte.slice(1)); // Capitaliza a primeira letra do nome do esporte
+    };
+
   const [data, setData] = useState(new Date());
   const [checkinTime, setCheckinTime] = useState(null);
   const [checkoutTime, setCheckoutTime] = useState(null);
@@ -49,29 +194,38 @@ function Anuncio() {
     return horario; 
   };
 
+  if (!quadra) {
+    return <p>Quadra não encontrada</p>; // Mensagem se o ID da quadra não existir
+  }
+
   return (
     <>
       <NavBar />
+      <h1 className="title-quadra">{quadra.titulo}</h1>
       <div className="imagem-anuncio">
-        <Carrossel/>
-       
+        <Carrossel imagens={quadra.fotos}/> 
+        
       </div>  
-
+      
+       
       <div className="desc-checkin">
         <div className="desc">
+        
           <h2 id="h2-desc">Descrição</h2>
           <span id="txt-desc">
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ad
-            voluptatem illo consequatur sit aut maxime earum magnam eius
-            excepturi? Aspernatur libero sint molestiae vitae numquam deleniti
-            cumque, id corporis. Beatae! Lorem ipsum dolor sit amet consectetur
-            adipisicing elit. Aperiam modi maxime voluptas. Aliquam, similique
-            aperiam vitae aliquid impedit deserunt excepturi praesentium
-            asperiores soluta rerum earum quidem? Vitae sint at illum.
+            {quadra.descricao}
           </span>
+          <h3>Esportes que podem ser feitos na quadra:</h3>
+          <ul style={{listStyleType:"none",display:"flex",textAlign:"center",justifyContent:"center"}}>
+            {getEsportesAtivos(quadra.esportes).map((esporte,index)=>{
+              return <li key={index} style={{margin: "0 10px"}}> {esporte} </li>
+            })}
+          </ul>
+          <h3>Localização</h3>
+          <p>{quadra.cep}</p>
         </div>
         <div className="check-in">
-          <h2>R$125 Hora</h2>
+          <h2>R${quadra.preco}/hora</h2>
           <span id="aval">
             <img src="../../assets/estrela.png" alt="" width="20px" /> 4,81
           </span>

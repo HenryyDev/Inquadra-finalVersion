@@ -59,7 +59,7 @@ const router = createBrowserRouter([
     element:<PagePerfilUser/>
   },
   {
-    path:"/anuncio",
+    path:"/anuncio/:id",
     element:<PageAnuncio/>
 
   }

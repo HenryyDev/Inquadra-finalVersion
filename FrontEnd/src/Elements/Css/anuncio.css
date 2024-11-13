@@ -24,13 +24,13 @@
     border-radius: 25px;}
   .imagem-anuncio {
     display: flex;
-    margin-top: 50px;
-    margin-left: 40px;
+    
+    margin-left: 60px;
   }
   .carousel {
-    width: 700px !important;
+    width: 600px !important;
   }
-   
+
   .desc-checkin {
    
     display: flex;
@@ -46,7 +46,7 @@
     height: auto;
     padding: 20px;
     margin-left: 20px;
-    margin-top: 20px;
+    
     width: 70vw;
     text-align: center;
     align-items: center;
@@ -67,7 +67,7 @@
     text-align: center;
     border: none;
   }
-  
+
   .check-in {
     width: 400px;
     height: auto;
@@ -79,7 +79,10 @@
     background-color: #cacaca;
     margin-bottom: 20px;
   }
-  
+  .title-quadra{
+    margin-left: 40px;
+    margin-top: 40px;
+  }
   
   .btn {
     width: 100%;
@@ -92,7 +95,7 @@
     margin: 20px;
     padding: 10px;
   }
-  
+
     .desc-checkin {
       flex-direction: column;
     }

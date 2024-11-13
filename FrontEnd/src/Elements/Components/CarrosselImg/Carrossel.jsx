@@ -1,35 +1,7 @@
-import "../../Css/anuncio.css"
-import React, { useState, useEffect } from 'react';
+import "../../Css/anuncio.css";
+import React from "react";
 
-
-const Carrossel = () => {
-  // Estado para armazenar as imagens
-  const [images, setImages] = useState([]);
- 
-
-  // Efeito para buscar as imagens da API (ou banco de dados)
-  useEffect(() => {
-    const fetchImages = async () => {
-      try {
-        // Substitua a linha abaixo pela sua requisição real, se necessário
-        // const response = await axios.get('/api/get-images');
-        
-        // Simulação de imagens retornando de uma API
-        const golfimg = [
-          { url: 'https://via.placeholder.com/800x400?text=Imagem+1' },
-          { url: 'https://via.placeholder.com/800x400?text=Imagem+2' },
-          { url: 'https://via.placeholder.com/800x400?text=Imagem+3' }
-        ];
-
-        setImages(golfimg); // Supondo que a resposta seja um array de URLs de imagens
-      } catch (error) {
-        console.error('Erro ao carregar as imagens:', error);
-      }
-    };
-
-    fetchImages();
-  }, []);
-
+const Carrossel = ({ imagens }) => {
   return (
     <div
       id="carouselExampleControlsNoTouching"
@@ -38,18 +10,22 @@ const Carrossel = () => {
       data-bs-interval="false"
     >
       <div className="carousel-inner">
-        {images.length > 0 ? (
-          images.map((image, index) => (
+        {imagens.length > 0 ? (
+          imagens.map((img, index) => (
             <div
-              className={`carousel-item ${index === 0 ? 'active' : ''}`}
+              className={`carousel-item ${index === 0 ? "active" : ""}`}
               key={index}
             >
-              <img src={image.url} className="d-block w-100" alt="Imagem do carrossel" />
+              <img src={img} className="d-block w-100" alt={`Imagem ${index + 1}`} />
             </div>
           ))
         ) : (
           <div className="carousel-item active">
-            <img src="loading.gif" className="d-block w-100" alt="Carregando..." />
+            <img
+              src="https://via.placeholder.com/800x400?text=Carregando..."
+              className="d-block w-100"
+              alt="Carregando..."
+            />
           </div>
         )}
       </div>
