@@ -15,26 +15,9 @@ app.use(express.json())
 //Cadastro quadras 
 
 app.post('/cadastro-anuncio', (req, res) => {
-    // const values = [
-    //     //Nome = titulo da quadra
-    //     req.body.nome,
-    //     req.body.descricao,
-    //     req.body.preco_hora,
-    //     req.body.esporte,
-    //     req.body.cep,
-    //     req.body.bairro,
-    //     req.body.municipio,
-    //     req.body.uf,
-    //     req.body.logradouro,
-    //     req.body.numero_e,
-    //     req.body.ddd,
-    //     req.body.numero_t
-    // ];
 
     const { nome, descricao, preco_hora, esporte, cep, bairro, municipio, uf, logradouro, numero_e, ddd, numero_t, fk_esporte, fk_quadra } = req.body
-
-    //Cadastrando as descrições   
-
+ 
     //Cadastrando os esportes
     const sql_esporte = `INSERT INTO Esporte (esporte) VALUES (?)`;
     db.query(sql_esporte, [esporte], (erro, resultado) => {
@@ -47,14 +30,7 @@ app.post('/cadastro-anuncio', (req, res) => {
     });
 
     //Pegando o id dos esportes
-    const id_esporte = `LAST_INSERT_ID()`;
-    const value_esporte = db.query(id_esporte, (erro, resultado) => {
-        if (erro) {
-            console.error('Erro ao selecionar dados: ', erro);
-            res.status(500).send('Erro ao procurar o ID');
-            return;
-        }
-    });
+    const id_esporte = resultado.insertId;
 
 
     //Cadastrando o endereço 
@@ -69,14 +45,7 @@ app.post('/cadastro-anuncio', (req, res) => {
     });
 
     //Pegando o id dos enderecos
-    const id_endereco = `LAST_INSERT_ID()`;
-    const value_endereco = db.query(id_endereco, (erro, resultado) => {
-        if (erro) {
-            console.error('Erro ao selecionar dados: ', erro);
-            res.status(500).send('Erro ao procurar o ID');
-            return;
-        }
-    });
+    const id_endereco = resultado.insertId;
 
 
     const sql_quadra = `INSERT INTO Quadra (nome, descricao, preco_hora, fk_endereco) VALUES (?, ?, ?, ?)`;
@@ -91,14 +60,7 @@ app.post('/cadastro-anuncio', (req, res) => {
     });
 
     //Pegando o id das quadras
-    const id_quadra = `LAST_INSERT_ID()`;
-    const value_quadra = db.query(id_quadra, (erro, resultado) => {
-        if (erro) {
-            console.error('Erro ao selecionar dados: ', erro);
-            res.status(500).send('Erro ao procurar o ID');
-            return;
-        }
-    });
+    const id_quadra = resultado.insertId;
 
     //Cadastrando os telefones
     const sql_telefone = `INSERT INTO Telefone (ddd, numero_t) VALUES (?, ?)`;
@@ -113,7 +75,7 @@ app.post('/cadastro-anuncio', (req, res) => {
 
     //Cadastrando a relacao entre esportes e quadras
     const sql_relacao = `INSERT INTO Relacao (fk_esporte, fk_quadra) VALUES (?, ?)`;
-    db.query(sql_relacao, [fk_esporte, fk_quadra], (erro, resultado) => {
+    db.query(sql_relacao, [id_esporte, id_quadra], (erro, resultado) => {
         if (erro) {
             console.error('Erro ao inserir dados: ', erro);
             res.status(500).send('Erro ao cadastrar telefone');
@@ -128,5 +90,3 @@ app.post('/cadastro-anuncio', (req, res) => {
 app.listen(port, () => {
     console.log(`Servidor rodando em http://localhost:${port}`);
 });
-
-
