@@ -4,17 +4,15 @@ import "react-datepicker/dist/react-datepicker.css";
 
 import "../../../Elements/Css/anuncio.css";
 import "bootstrap/dist/js/bootstrap.min.js";
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import Carrossel from "../CarrosselImg/Carrossel.jsx";
 import { useParams, Link } from "react-router-dom";
 import axios from "axios";
 
 function Anuncio() {
-
   const { id } = useParams(); // Captura o ID da URL
- 
 
-  const[quadra,setQuadra]=useState(null)
+  const [quadra, setQuadra] = useState(null);
 
   const [data, setData] = useState(new Date());
   const [checkinTime, setCheckinTime] = useState(null);
@@ -25,16 +23,15 @@ function Anuncio() {
       .get(`http://localhost:3000/quadra/${id}`)
       .then((resposta) => {
         console.log("Resposta da API:", resposta); // Verifique a resposta aqui
-        
-          setQuadra(resposta.data );
-        
+
+        setQuadra(resposta.data);
       })
       .catch((erro) => {
         console.log("Erro ao buscar quadra:", erro);
         setQuadra(null); // Se ocorrer um erro, defina quadra como null
       });
   }, [id]);
-  
+
   // Horário atual
   const horario = new Date();
   horario.setHours(horario.getHours() + 1); // Adiciona 2 horas ao horário atual
@@ -64,7 +61,6 @@ function Anuncio() {
   // Função para determinar o minTime do check-out
   const getMinTimeForCheckout = () => {
     if (checkinTime) {
-
       return new Date(checkinTime.getTime() + 60 * 60000);
     }
     return horario;
@@ -76,50 +72,47 @@ function Anuncio() {
 
   return (
     <>
-
       <h1 className="title-quadra">{quadra.titulo}</h1>
       <div className="imagem-anuncio">
         <Carrossel imagens={quadra.fotos} />
-
       </div>
-
 
       <div className="desc-checkin">
         <div className="desc">
-
           <h2 id="h2-desc">Descrição</h2>
-          <span id="txt-desc">
-            {quadra.descricao}
-          </span>
+          <span id="txt-desc">{quadra.descricao}</span>
           <h3>Esportes que podem ser feitos na quadra:</h3>
           <ul
-  style={{
-    listStyleType: "none",
-    display: "flex",
-    textAlign: "center",
-    justifyContent: "center",
-  }}
->
-  {quadra.esportes && quadra.esportes.length > 0 ? (
-    quadra.esportes.map((esporte, index) => (
-      <li key={index} style={{ margin: "0 10px" }}>
-        {esporte}
-      </li>
-    ))
-  ) : (
-    <li>Nenhum esporte disponível</li>
-  )}
-</ul>
+            style={{
+              listStyleType: "none",
+              display: "flex",
+              textAlign: "center",
+              justifyContent: "center",
+            }}
+          >
+            {quadra.esportes && quadra.esportes.length > 0 ? (
+              quadra.esportes.map((esporte, index) => (
+                <li key={index} style={{ margin: "0 10px" }}>
+                  {esporte}
+                </li>
+              ))
+            ) : (
+              <li>Nenhum esporte disponível</li>
+            )}
+          </ul>
 
-          
-           <h3>Localização</h3>
-          <p>Cep:{quadra.cep} | Município: {quadra.municipio} | Bairro: {quadra.bairro}</p>
-        </div> 
-         <div className="check-in">
-         <h2>R${quadra.preco_por_hora}/hora</h2>
+          <h3>Localização</h3>
+          <p>
+            Cep:{quadra.cep} | Município: {quadra.municipio} | Bairro:{" "}
+            {quadra.bairro}
+          </p>
+        </div>
+        <div className="check-in">
+          <h2>R${quadra.preco_por_hora}/hora</h2>
 
           <span id="aval">
-            <img src="../../assets/estrela.png" alt="" width="20px" /> {quadra.media_avaliacao}
+            <img src="../../assets/estrela.png" alt="" width="20px" />{" "}
+            {quadra.media_avaliacao}
           </span>
 
           <div className="calendario">
@@ -179,7 +172,6 @@ function Anuncio() {
           </button>
         </div>
       </div>
-
     </>
   );
 }

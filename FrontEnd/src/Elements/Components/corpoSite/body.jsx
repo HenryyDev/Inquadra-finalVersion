@@ -20,7 +20,6 @@ const Body = () => {
     axios
       .get("http://localhost:3000/quadras-destaque")
       .then((resposta) => {
-       
         setMelhoresavaliados(resposta.data.melhoresAvaliacoes);
         setMaisreservas(resposta.data.maisReservas);
         setMenorcusto(resposta.data.menorCusto);
@@ -99,4 +98,4 @@ const Body = () => {
   );
 };
 export default Body;
-console
+console;

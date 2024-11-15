@@ -38,9 +38,8 @@ const CadAnuncio = () => {
   const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {
-    
     const { name, value, type, checked, files } = e.target;
-  
+
     if (type === "checkbox") {
       setFormData({
         ...formData,
@@ -48,12 +47,12 @@ const CadAnuncio = () => {
           ...formData.esporte,
           [name]: checked, // Atualiza para true ou false dependendo do estado do checkbox
         },
-      
       });
-    }
-    else if (type === "file") {
+    } else if (type === "file") {
       const fileList = Array.from(files);
-      const validImages = fileList.filter(file => file.type.startsWith('image/'));
+      const validImages = fileList.filter((file) =>
+        file.type.startsWith("image/")
+      );
       setFormData({
         ...formData,
         imagens: validImages,
@@ -74,7 +73,6 @@ const CadAnuncio = () => {
       }
     }
   };
-  
 
   const validateForm = () => {
     const newErrors = {}; // Objeto para armazenar os erros de validação
@@ -83,15 +81,17 @@ const CadAnuncio = () => {
     if (!formData.preco_hora) newErrors.preco_hora = "Preço é obrigatório."; // Verifica se o preço está vazio
     if (!formData.logradouro) newErrors.logradouro = "Endereço é obrigatório."; // Verifica se o endereço está vazio
     if (!formData.cep) newErrors.cep = "CEP é obrigatório."; // Verifica se o CEP está vazio
-    if (!formData.numero_t) newErrors.numero_t = "Número telefônico é obrigatório."; // Verifica se o numero_t está vazio
+    if (!formData.numero_t)
+      newErrors.numero_t = "Número telefônico é obrigatório."; // Verifica se o numero_t está vazio
 
     // Verifica se pelo menos um esporte foi selecionado
-    const esporteelecionado = Object.values(formData.esporte).some(
+    const esporteSelecionado = Object.values(formData.esporte).some(
       (selecionado) => selecionado
     );
-    if (!esporteelecionado)
+    if (!esporteSelecionado)
       newErrors.esporte = "Selecione pelo menos um esporte."; // Se não, adiciona erro
-    if (formData.imagens.length === 0) newErrors.imagens = "Carregue pelo menos uma imagem.";
+    if (formData.imagens.length === 0)
+      newErrors.imagens = "Carregue pelo menos uma imagem.";
 
     setErrors(newErrors); // Atualiza o estado de erros com os erros encontrados
     return Object.keys(newErrors).length === 0; // Retorna true se não houver erros, caso contrário, false
@@ -131,7 +131,8 @@ const CadAnuncio = () => {
       formDataToSend.append("imagens", image);
     });
 
-    axios.post("http://localhost:3000/cadastro-anuncio", formDataToSend)
+    axios
+      .post("http://localhost:3000/cadastro-anuncio", formDataToSend)
       .then((resposta) => {
         console.log("Resposta da requisição:", resposta);
         alert("Anúncio criado com sucesso!");
@@ -192,33 +193,35 @@ const CadAnuncio = () => {
             placeholder="Digite uma descrição para sua quadra"
           ></textarea>
 
-<div className="check-box my-4">
-  <span>
-    Esportes que podem ser feitos na quadra
-    <span className="error-text">*</span>
-  </span>
-  {errors.esporte && (
-    <div className="alert alert-danger" role="alert">
-      <span className="error-text">{errors.esporte}</span>
-    </div>
-  )}
-  <div className="row">
-    {Object.keys(formData.esporte).map((esporte, index) => (
-      <div key={esporte} className="col-6 col-md-4">  {/* Cada coluna ocupa 6 em telas pequenas e 4 em telas maiores */}
-        <label className="form-check-label d-block" htmlFor={esporte}>
-          <input
-            className="form-check-input"
-            type="checkbox"
-            name={esporte}
-            checked={formData.esporte[esporte]}
-            onChange={handleChange}
-          />
-          {esporte.charAt(0).toUpperCase() + esporte.slice(1)}
-        </label>
-      </div>
-    ))}
-  </div>
-</div>
+          <div className="check-box my-4">
+            <span>
+              Esportes que podem ser feitos na quadra
+              <span className="error-text">*</span>
+            </span>
+            {errors.esporte && (
+              <div className="alert alert-danger" role="alert">
+                <span className="error-text">{errors.esporte}</span>
+              </div>
+            )}
+            <div className="row">
+              {Object.keys(formData.esporte).map((esporte, index) => (
+                <div key={esporte} className="col-6 col-md-4">
+                  {" "}
+                  {/* Cada coluna ocupa 6 em telas pequenas e 4 em telas maiores */}
+                  <label className="form-check-label d-block" htmlFor={esporte}>
+                    <input
+                      className="form-check-input"
+                      type="checkbox"
+                      name={esporte}
+                      checked={formData.esporte[esporte]}
+                      onChange={handleChange}
+                    />
+                    {esporte.charAt(0).toUpperCase() + esporte.slice(1)}
+                  </label>
+                </div>
+              ))}
+            </div>
+          </div>
 
           <label htmlFor="preco_hora" className="form-label">
             Preço R$<span className="error-text">*</span>
@@ -331,5 +334,5 @@ const CadAnuncio = () => {
     </div>
   );
 };
-console
+console;
 export default CadAnuncio;

@@ -4,7 +4,7 @@ import Footer from "../Footer";
 import NavBar from "../NavBar";
 import { Link } from "react-router-dom";
 
-function LoginEseguranca () {
+function LoginEseguranca() {
   const [showModal, setShowModal] = useState(false);
 
   const handleOpenModal = () => {
@@ -17,11 +17,13 @@ function LoginEseguranca () {
 
   return (
     <>
-    
       <NavBar />
       <div className="wrap">
         <h2>
-          <Link to={"/gerenciar-conta"} ><span style={{color:"#0000FF"}}>Conta</span></Link> &#62; Login e segurança
+          <Link to={"/gerenciar-conta"}>
+            <span style={{ color: "#0000FF" }}>Conta</span>
+          </Link>{" "}
+          &#62; Login e segurança
         </h2>
         <div>
           <h1 className="my-4">Login e segurança</h1>
@@ -35,7 +37,10 @@ function LoginEseguranca () {
           </div>
           <div className="my-4">
             Desativar Conta
-            <button className="btn btn-primary btn-seg" onClick={handleOpenModal}>
+            <button
+              className="btn btn-primary btn-seg"
+              onClick={handleOpenModal}
+            >
               Desativar
             </button>
           </div>
@@ -70,7 +75,8 @@ function LoginEseguranca () {
                 ></button>
               </div>
               <div className="modal-body">
-                Ao desativar sua conta, você perderá acesso aos nossos serviços. Tem certeza que deseja continuar?
+                Ao desativar sua conta, você perderá acesso aos nossos serviços.
+                Tem certeza que deseja continuar?
               </div>
               <div className="modal-footer">
                 <button
@@ -93,6 +99,6 @@ function LoginEseguranca () {
       <Footer />
     </>
   );
-};
+}
 
 export default LoginEseguranca;
