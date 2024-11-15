@@ -2,6 +2,9 @@ import "../../Css/anuncio.css";
 import React from "react";
 
 const Carrossel = ({ imagens }) => {
+  // Garante que imagens seja um array válido, mesmo que seja undefined ou null
+  const imagensValidas = Array.isArray(imagens) ? imagens : [];
+
   return (
     <div
       id="carouselExampleControlsNoTouching"
@@ -9,15 +12,18 @@ const Carrossel = ({ imagens }) => {
       data-bs-touch="false"
       data-bs-interval="false"
     >
-      
       <div className="carousel-inner">
-        {imagens.length > 0 ? (
-          imagens.map((img, index) => (
+        {imagensValidas.length > 0 ? (
+          imagensValidas.map((img, index) => (
             <div
               className={`carousel-item ${index === 0 ? "active" : ""}`}
               key={index}
             >
-              <img src={img} className="d-block w-100" alt={`Imagem ${index + 1}`} />
+              <img
+                src={`http://localhost:3000${img}`}
+                className="d-block w-100"
+                alt={`Imagem ${index + 1}`}
+              />
             </div>
           ))
         ) : (

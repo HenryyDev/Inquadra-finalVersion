@@ -8,7 +8,7 @@ import menu from "../../assets/menu.svg";
 
 const NavBar = () => {
  
-  const [login, setlogin] = useState(false); 
+  const [login, setlogin] = useState(true); 
 
   return (
     <>

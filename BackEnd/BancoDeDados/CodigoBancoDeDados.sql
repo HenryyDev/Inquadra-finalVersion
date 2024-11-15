@@ -52,6 +52,12 @@ CREATE TABLE Esportes (
 );
 
 
+
+
+
+
+
+
 CREATE TABLE Usuario (
     id_usuario INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
     nome VARCHAR(90),
@@ -113,6 +119,9 @@ ALTER TABLE Relacao
 ADD CONSTRAINT FK_Relacao_Esporte FOREIGN KEY (fk_esporte) REFERENCES Esportes(id_esporte),
 ADD CONSTRAINT FK_Relacao_Quadra FOREIGN KEY (fk_quadra) REFERENCES Quadra(id_quadra);
 
+ALTER TABLE Esportes ADD COLUMN fk_quadra INT;
+ALTER TABLE Esportes ADD CONSTRAINT fk_quadra FOREIGN KEY (fk_quadra) REFERENCES Quadra(id_quadra);
+
 ALTER TABLE Avaliacao
 ADD CONSTRAINT FK_Avaliacao_Quadra FOREIGN KEY (fk_quadra) REFERENCES Quadra(id_quadra),
 ADD CONSTRAINT FK_Avaliacao_Usuario FOREIGN KEY (fk_usuario) REFERENCES Usuario(id_usuario);
@@ -134,7 +143,13 @@ ALTER TABLE Endereco CHANGE numero numero_e int;
 
 ALTER TABLE Telefone CHANGE numero numero_t int;
 
-
+-- teste query de melhores avaliações 
+INSERT INTO Avaliacao (fk_quadra, qualificacao)
+VALUES (1, 5);
+-- consultar medias 
+SELECT AVG(qualificacao) AS media_avaliacao
+FROM Avaliacao
+WHERE fk_quadra = 1;
 -- Consultas para exibir os dados das tabelas
 SELECT * FROM Quadra;
 SELECT * FROM imagem;
@@ -144,12 +159,11 @@ SELECT * FROM Telefone;
 SELECT * FROM Administrador;
 SELECT * FROM Endereco;
 SELECT * FROM Relacao;
-SELECT * FROM Esporte;
+SELECT * FROM Esportes;
 SELECT * FROM Reserva;
 SELECT * FROM Pago;
 
-drop database Inquadra;
-
+SHOW CREATE TABLE Esportes;
 -- Necessario Adicionar as chaves estrangeiras depois pois se eu não realisase isso imposibilitaria a criação das tabelas  -- 
 ALTER TABLE Quadra
 ADD CONSTRAINT FK_Quadra_Endereco FOREIGN KEY (fk_endereco) REFERENCES Endereco(fk_endereco),

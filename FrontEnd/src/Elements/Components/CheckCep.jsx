@@ -15,7 +15,6 @@ const CheckCEP = (e,setFormData, setErrors) => {
       .then((res) => res.json())
      
       .then((data) => {
-        console.log(data)
         if (data.erro) {
           setErrors((prevState) => ({
             ...prevState,

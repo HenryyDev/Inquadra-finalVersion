@@ -32,35 +32,35 @@ const CadAnuncio = () => {
     uf: "",
     logradouro: "",
     numero_e: "",
-    ddd: "",
     numero_t: "",
   });
 
   const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {
-    console.log(formData.cep);
+    
     const { name, value, type, checked, files } = e.target;
-
+  
     if (type === "checkbox") {
       setFormData({
         ...formData,
         esporte: {
           ...formData.esporte,
-          [name]: checked,
+          [name]: checked, // Atualiza para true ou false dependendo do estado do checkbox
         },
+      
       });
-    } else if (type === "file") {
+    }
+    else if (type === "file") {
       const fileList = Array.from(files);
       const validImages = fileList.filter(file => file.type.startsWith('image/'));
       setFormData({
         ...formData,
-        imagens: validImages,  // Apenas imagens válidas são aceitas
+        imagens: validImages,
       });
     } else {
       // Remover a formatação do telefone se o campo alterado for "numero_t"
       if (name === "numero_t") {
-        // Remove todos os caracteres não numéricos
         const numero_tFormatado = value.replace(/\D/g, "");
         setFormData({
           ...formData,
@@ -74,6 +74,7 @@ const CadAnuncio = () => {
       }
     }
   };
+  
 
   const validateForm = () => {
     const newErrors = {}; // Objeto para armazenar os erros de validação
@@ -83,33 +84,34 @@ const CadAnuncio = () => {
     if (!formData.logradouro) newErrors.logradouro = "Endereço é obrigatório."; // Verifica se o endereço está vazio
     if (!formData.cep) newErrors.cep = "CEP é obrigatório."; // Verifica se o CEP está vazio
     if (!formData.numero_t) newErrors.numero_t = "Número telefônico é obrigatório."; // Verifica se o numero_t está vazio
-  
+
     // Verifica se pelo menos um esporte foi selecionado
     const esporteelecionado = Object.values(formData.esporte).some(
       (selecionado) => selecionado
     );
     if (!esporteelecionado)
       newErrors.esporte = "Selecione pelo menos um esporte."; // Se não, adiciona erro
-    if (formData.imagens.length === 0)  newErrors.imagens = "Carregue pelo menos uma imagem.";
+    if (formData.imagens.length === 0) newErrors.imagens = "Carregue pelo menos uma imagem.";
 
     setErrors(newErrors); // Atualiza o estado de erros com os erros encontrados
     return Object.keys(newErrors).length === 0; // Retorna true se não houver erros, caso contrário, false
-    // Se houver erros, atualiza o estado de erros
-   
-    
   };
 
-  const handleBLurCEP = (e) => {
+  const handleBlurCEP = (e) => {
     CheckCEP(e, setFormData, setErrors);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
-    // Cria um novo objeto FormData
+
+    // Valida o formulário antes de enviar os dados
+    if (!validateForm()) {
+      alert("Por favor, corrija os erros antes de enviar.");
+      return;
+    }
+
+    // Criação do objeto FormData e envio dos dados para o backend
     const formDataToSend = new FormData();
-    
-    // Adiciona os outros dados do formulário (exceto as imagens)
     formDataToSend.append("nome", formData.nome);
     formDataToSend.append("descricao", formData.descricao);
     formDataToSend.append("preco_hora", formData.preco_hora);
@@ -120,36 +122,25 @@ const CadAnuncio = () => {
     formDataToSend.append("logradouro", formData.logradouro);
     formDataToSend.append("numero_e", formData.numero_e);
     formDataToSend.append("numero_t", formData.numero_t);
-    
+
     // Adiciona os dados do esporte
-    for (const [esporte, selecionado] of Object.entries(formData.esporte)) {
-      formDataToSend.append(`esporte[${esporte}]`, selecionado);
-    }
+    formDataToSend.append("esporte", JSON.stringify(formData.esporte));
 
     // Adiciona as imagens
-    formData.imagens.forEach((image, index) => {
-        formDataToSend.append("imagens", image);  // Envia cada imagem
+    formData.imagens.forEach((image) => {
+      formDataToSend.append("imagens", image);
     });
 
-    // Cria o header para garantir que estamos enviando um FormData
-    const config = {
-        headers: {
-            "Content-Type": "multipart/form-data",
-        }
-    };
-
-    // Faz a requisição
-    axios.post("http://localhost:3000/cadastro-anuncio", formDataToSend, config)
-        .then((resposta) => {
-            console.log("Resposta da requisição:", resposta);
-            alert("Anúncio criado com sucesso!");
-        })
-        .catch((erro) => {
-            console.log("Erro na requisição:", erro);
-            alert("Erro ao criar anúncio");
-        });
-};
-
+    axios.post("http://localhost:3000/cadastro-anuncio", formDataToSend)
+      .then((resposta) => {
+        console.log("Resposta da requisição:", resposta);
+        alert("Anúncio criado com sucesso!");
+      })
+      .catch((erro) => {
+        console.log("Erro na requisição:", erro);
+        alert("Erro ao criar anúncio");
+      });
+  };
 
   return (
     <div className="container-anuncio">
@@ -174,7 +165,6 @@ const CadAnuncio = () => {
               <span className="error-text">{errors.nome}</span>
             </div>
           )}
-
           <input
             type="text"
             className="form-control mb-4"
@@ -202,62 +192,34 @@ const CadAnuncio = () => {
             placeholder="Digite uma descrição para sua quadra"
           ></textarea>
 
-          <div className="check-box my-4">
-            <span>
-              Esporte que podem ser feitos na quadra
-              <span className="error-text">*</span>
-              <br />
-            </span>
-            {errors.esporte && (
-              <div className="alert alert-danger" role="alert">
-                <span className="error-text">{errors.esporte}</span>
-              </div>
-            )}
-            <div className="row">
-              <div className="col">
-                {["outros", "basquete", "futebol", "golfe", "natacao"].map(
-                  (esporte) => (
-                    <div key={esporte}>
-                      <label
-                        className="form-check-label d-block"
-                        htmlFor={esporte}
-                      >
-                        <input
-                          className="form-check-input"
-                          type="checkbox"
-                          name={esporte}
-                          checked={formData.esporte[esporte]}
-                          onChange={handleChange}
-                        />
-                        {esporte.charAt(0).toUpperCase() + esporte.slice(1)}
-                      </label>
-                    </div>
-                  )
-                )}
-              </div>
-              <div className="col">
-                {["volei", "tenis", "pong", "skate", "futsal"].map(
-                  (esporte) => (
-                    <div key={esporte}>
-                      <label
-                        className="form-check-label d-block"
-                        htmlFor={esporte}
-                      >
-                        <input
-                          className="form-check-input"
-                          type="checkbox"
-                          name={esporte}
-                          checked={formData.esporte[esporte]}
-                          onChange={handleChange}
-                        />
-                        {esporte.charAt(0).toUpperCase() + esporte.slice(1)}
-                      </label>
-                    </div>
-                  )
-                )}
-              </div>
-            </div>
-          </div>
+<div className="check-box my-4">
+  <span>
+    Esportes que podem ser feitos na quadra
+    <span className="error-text">*</span>
+  </span>
+  {errors.esporte && (
+    <div className="alert alert-danger" role="alert">
+      <span className="error-text">{errors.esporte}</span>
+    </div>
+  )}
+  <div className="row">
+    {Object.keys(formData.esporte).map((esporte, index) => (
+      <div key={esporte} className="col-6 col-md-4">  {/* Cada coluna ocupa 6 em telas pequenas e 4 em telas maiores */}
+        <label className="form-check-label d-block" htmlFor={esporte}>
+          <input
+            className="form-check-input"
+            type="checkbox"
+            name={esporte}
+            checked={formData.esporte[esporte]}
+            onChange={handleChange}
+          />
+          {esporte.charAt(0).toUpperCase() + esporte.slice(1)}
+        </label>
+      </div>
+    ))}
+  </div>
+</div>
+
           <label htmlFor="preco_hora" className="form-label">
             Preço R$<span className="error-text">*</span>
           </label>
@@ -274,6 +236,7 @@ const CadAnuncio = () => {
             onChange={handleChange}
             placeholder="Digite o Preço que deseja cobrar"
           />
+
           <label htmlFor="cep" className="form-label">
             Cep<span className="error-text">*</span>
           </label>
@@ -290,10 +253,11 @@ const CadAnuncio = () => {
             className="form-control mb-4"
             name="cep"
             value={formData.cep}
-            onBlur={handleBLurCEP}
+            onBlur={handleBlurCEP}
             onChange={handleChange}
             placeholder="Digite o cep da quadra"
-          ></MaskInput>
+          />
+
           <label htmlFor="logradouro" className="form-label">
             Logradouro<span className="error-text">*</span>
           </label>
@@ -310,6 +274,7 @@ const CadAnuncio = () => {
             onChange={handleChange}
             placeholder="Digite o Endereço da quadra"
           />
+
           <label htmlFor="numero_e" className="form-label">
             Número<span className="error-text">*</span>
           </label>
@@ -321,8 +286,9 @@ const CadAnuncio = () => {
             onChange={handleChange}
             placeholder="Digite o número da quadra"
           />
+
           <label htmlFor="numero_t" className="form-label">
-            numero_t<span className="error-text">*</span>
+            Número Telefônico<span className="error-text">*</span>
           </label>
           {errors.numero_t && (
             <div className="alert alert-danger" role="alert">
@@ -338,10 +304,10 @@ const CadAnuncio = () => {
             value={formData.numero_t}
             onChange={handleChange}
             placeholder="Digite um número telefônico para contato"
-          ></MaskInput>
+          />
 
-           <label htmlFor="imagens" className="form-label">
-            imagens<span className="error-text">*</span>
+          <label htmlFor="imagens" className="form-label">
+            Imagens<span className="error-text">*</span>
           </label>
           {errors.imagens && (
             <div className="alert alert-danger" role="alert">
@@ -355,7 +321,7 @@ const CadAnuncio = () => {
             name="imagens"
             multiple
             onChange={handleChange}
-          /> 
+          />
 
           <button type="submit" className="btn btn-primary">
             Criar anúncio
@@ -365,5 +331,5 @@ const CadAnuncio = () => {
     </div>
   );
 };
-
+console
 export default CadAnuncio;
