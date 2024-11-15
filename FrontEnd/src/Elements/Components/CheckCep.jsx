@@ -23,11 +23,23 @@ const CheckCEP = (e,setFormData, setErrors) => {
             
           }));
         } else {
-          
+          setFormData((prevState)=>({
+            ...prevState,bairro : data.bairro || ""
+          }))
+
+          setFormData((prevState)=>({
+            ...prevState,municipio: data.localidade || ""
+          }))
+
+          setFormData((prevState)=>({
+            ...prevState, uf : data.uf || "" 
+          }))
+
           setFormData((prevState) => ({
             ...prevState,
-            rua: data.logradouro || "", // Atualiza a rua se o CEP for válido
+            logradouro: data.logradouro || "", // Atualiza a rua se o CEP for válido
           }));
+          
           setErrors((prevState) => ({
             ...prevState,
             cep: "", // Limpa o erro de CEP
