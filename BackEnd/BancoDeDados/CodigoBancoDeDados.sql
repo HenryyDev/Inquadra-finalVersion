@@ -1,5 +1,5 @@
 -- Codigo banco de dados so para salvar mesmo pois não sei um lugar melhor
-
+drop database inquadra;
 CREATE DATABASE Inquadra;
 USE Inquadra;
 
@@ -10,9 +10,15 @@ CREATE TABLE Quadra (
     fk_endereco INT,
     fk_administrador INT
 );
+CREATE TABLE Imagem (
+    id_imagem INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    caminho VARCHAR(255) NOT NULL, 
+    fk_quadra INT NOT NULL,       
+    FOREIGN KEY (fk_quadra) REFERENCES Quadra(id_quadra) 
+);
 
-ALTER TABLE Quadra
-ADD COLUMN Descricao VARCHAR(2000); 
+
+ALTER TABLE Quadra ADD COLUMN Descricao VARCHAR(2000); 
 
 CREATE TABLE Endereco (
     id_endereco INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
@@ -28,12 +34,23 @@ CREATE TABLE Relacao (
     id_relacao INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
     fk_esporte INT,
     fk_quadra INT
+    
 );
 
-CREATE TABLE Esporte (
+CREATE TABLE Esportes (
     id_esporte INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
-    esporte VARCHAR(60)
+    basquete BOOLEAN DEFAULT false,
+    futebol BOOLEAN DEFAULT false,
+    outros BOOLEAN DEFAULT false,
+    golfe BOOLEAN DEFAULT false,
+    natacao BOOLEAN DEFAULT false,
+    volei BOOLEAN DEFAULT false,
+    tenis BOOLEAN DEFAULT false,
+    pong BOOLEAN DEFAULT false,
+    skate BOOLEAN DEFAULT false,
+    futsal BOOLEAN DEFAULT false
 );
+
 
 CREATE TABLE Usuario (
     id_usuario INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
@@ -83,6 +100,9 @@ CREATE TABLE Telefone (
     fk_administrador INT,
     fk_usuario INT
 );
+ALTER TABLE Telefone
+MODIFY COLUMN numero_t VARCHAR(50);
+
 
 -- Adicionando as chaves estrangeiras após a criação das tabelas
 ALTER TABLE Quadra
@@ -90,7 +110,7 @@ ADD CONSTRAINT FK_Quadra_Endereco FOREIGN KEY (fk_endereco) REFERENCES Endereco(
 ADD CONSTRAINT FK_Quadra_Administrador FOREIGN KEY (fk_administrador) REFERENCES Administrador(id_administrador);
 
 ALTER TABLE Relacao
-ADD CONSTRAINT FK_Relacao_Esporte FOREIGN KEY (fk_esporte) REFERENCES Esporte(id_esporte),
+ADD CONSTRAINT FK_Relacao_Esporte FOREIGN KEY (fk_esporte) REFERENCES Esportes(id_esporte),
 ADD CONSTRAINT FK_Relacao_Quadra FOREIGN KEY (fk_quadra) REFERENCES Quadra(id_quadra);
 
 ALTER TABLE Avaliacao
@@ -117,6 +137,7 @@ ALTER TABLE Telefone CHANGE numero numero_t int;
 
 -- Consultas para exibir os dados das tabelas
 SELECT * FROM Quadra;
+SELECT * FROM imagem;
 SELECT * FROM Avaliacao;
 SELECT * FROM Usuario;
 SELECT * FROM Telefone;
@@ -127,7 +148,7 @@ SELECT * FROM Esporte;
 SELECT * FROM Reserva;
 SELECT * FROM Pago;
 
-drop database Inquadra
+drop database Inquadra;
 
 -- Necessario Adicionar as chaves estrangeiras depois pois se eu não realisase isso imposibilitaria a criação das tabelas  -- 
 ALTER TABLE Quadra
@@ -154,6 +175,13 @@ ADD CONSTRAINT FK_Telefone_Administrador FOREIGN KEY (fk_administrador) REFERENC
 ADD CONSTRAINT FK_Telefone_Usuario FOREIGN KEY (fk_usuario) REFERENCES Usuario(fk_usuario);
 
 
+truncate quadra;
+-- desabilitar para limpar o bd 
+SET foreign_key_checks = 0;
+
+-- Reabilitar as verificações de chave estrangeira
+SET foreign_key_checks = 1;
+
 select * from Quadra;
 select * from Avaliacao;
 select * from  Usuario;
@@ -161,7 +189,7 @@ select * from Telefone;
 select * from Administrador;
 select * from Endereco;
 select * from Relacao;
-select * from Esporte;
+select * from Esportes;
 select * from Reserva;
 select * from Pago;
 

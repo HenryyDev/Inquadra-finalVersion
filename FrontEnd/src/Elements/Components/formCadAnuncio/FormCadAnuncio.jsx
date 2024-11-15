@@ -25,7 +25,7 @@ const CadAnuncio = () => {
       skate: false,
       futsal: false,
     },
-    fotos: [],
+    imagens: [],
     cep: "",
     bairro: "",
     municipio: "",
@@ -52,9 +52,10 @@ const CadAnuncio = () => {
       });
     } else if (type === "file") {
       const fileList = Array.from(files);
+      const validImages = fileList.filter(file => file.type.startsWith('image/'));
       setFormData({
         ...formData,
-        fotos: fileList,
+        imagens: validImages,  // Apenas imagens válidas são aceitas
       });
     } else {
       // Remover a formatação do telefone se o campo alterado for "numero_t"
@@ -89,17 +90,13 @@ const CadAnuncio = () => {
     );
     if (!esporteelecionado)
       newErrors.esporte = "Selecione pelo menos um esporte."; // Se não, adiciona erro
-  
-    // Se houver erros, atualiza o estado de erros
-    setErrors(newErrors);
-  
-    return Object.keys(newErrors).length === 0; // Retorna true se não houver erros, caso contrário, false
-    anuncioData
-    //if (formData.fotos.length === 0)
-    //newErrors.fotos = "Carregue pelo menos uma imagem.";
+    if (formData.imagens.length === 0)  newErrors.imagens = "Carregue pelo menos uma imagem.";
 
-    //setErrors(newErrors); // Atualiza o estado de erros com os erros encontrados
-    //return Object.keys(newErrors).length === 0; // Retorna true se não houver erros, caso contrário, false
+    setErrors(newErrors); // Atualiza o estado de erros com os erros encontrados
+    return Object.keys(newErrors).length === 0; // Retorna true se não houver erros, caso contrário, false
+    // Se houver erros, atualiza o estado de erros
+   
+    
   };
 
   const handleBLurCEP = (e) => {
@@ -108,30 +105,51 @@ const CadAnuncio = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const ddd = formData.numero_t.slice(0, 2);
-    setFormData({
-      ...formData,
-      ddd: ddd,
+    
+    // Cria um novo objeto FormData
+    const formDataToSend = new FormData();
+    
+    // Adiciona os outros dados do formulário (exceto as imagens)
+    formDataToSend.append("nome", formData.nome);
+    formDataToSend.append("descricao", formData.descricao);
+    formDataToSend.append("preco_hora", formData.preco_hora);
+    formDataToSend.append("cep", formData.cep);
+    formDataToSend.append("bairro", formData.bairro);
+    formDataToSend.append("municipio", formData.municipio);
+    formDataToSend.append("uf", formData.uf);
+    formDataToSend.append("logradouro", formData.logradouro);
+    formDataToSend.append("numero_e", formData.numero_e);
+    formDataToSend.append("numero_t", formData.numero_t);
+    
+    // Adiciona os dados do esporte
+    for (const [esporte, selecionado] of Object.entries(formData.esporte)) {
+      formDataToSend.append(`esporte[${esporte}]`, selecionado);
+    }
+
+    // Adiciona as imagens
+    formData.imagens.forEach((image, index) => {
+        formDataToSend.append("imagens", image);  // Envia cada imagem
     });
 
-  
-    if (validateForm()) {
-      
+    // Cria o header para garantir que estamos enviando um FormData
+    const config = {
+        headers: {
+            "Content-Type": "multipart/form-data",
+        }
+    };
 
-      console.log("Dados enviados:", formData);
-
-      axios
-        .post("http://localhost:3000/cadastro-anuncio", formData)
+    // Faz a requisição
+    axios.post("http://localhost:3000/cadastro-anuncio", formDataToSend, config)
         .then((resposta) => {
-          console.log("Resposta da requisição:", resposta);
-          alert("Anúncio criado com sucesso!");
+            console.log("Resposta da requisição:", resposta);
+            alert("Anúncio criado com sucesso!");
         })
         .catch((erro) => {
-          console.log("Erro na requisição:", erro);
-          alert("Erro ao criar anúncio");
+            console.log("Erro na requisição:", erro);
+            alert("Erro ao criar anúncio");
         });
-    }
-  };
+};
+
 
   return (
     <div className="container-anuncio">
@@ -322,22 +340,22 @@ const CadAnuncio = () => {
             placeholder="Digite um número telefônico para contato"
           ></MaskInput>
 
-          {/* <label htmlFor="fotos" className="form-label">
-            Fotos<span className="error-text">*</span>
+           <label htmlFor="imagens" className="form-label">
+            imagens<span className="error-text">*</span>
           </label>
-          {errors.fotos && (
+          {errors.imagens && (
             <div className="alert alert-danger" role="alert">
-              <span className="error-text">{errors.fotos}</span>
+              <span className="error-text">{errors.imagens}</span>
             </div>
           )}
           <input
             className="form-control mb-4"
             type="file"
-            id="fotos"
-            name="fotos"
+            id="imagens"
+            name="imagens"
             multiple
             onChange={handleChange}
-          /> */}
+          /> 
 
           <button type="submit" className="btn btn-primary">
             Criar anúncio

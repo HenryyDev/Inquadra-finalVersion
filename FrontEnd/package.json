@@ -17,7 +17,6 @@
     "react-datepicker": "^7.5.0",
     "react-dom": "^18.3.1",
     "react-input-cep": "^0.1.5",
-    "react-input-mask": "^2.0.4",
     "react-maskinput": "^3.2.0",
     "react-router-dom": "^6.27.0"
   },
