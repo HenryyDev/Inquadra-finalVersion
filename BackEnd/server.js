@@ -304,8 +304,38 @@ if (quadra.futsal) esportesDisponiveis.push('futsal');
   });
 });
 
-  
-  console
+app.get('/busca/:termo', (req, res) => {
+  const termoPesquisa = req.params.termo;
+
+  if (!termoPesquisa) {
+    return res.status(400).json({ error: 'Termo de pesquisa não fornecido.' });
+  }
+
+  const query = `
+    SELECT 
+        q.id_quadra, 
+        q.nome, 
+        q.descricao, 
+        q.preco_hora, 
+        i.caminho AS imagem 
+    FROM 
+        Quadra q
+    LEFT JOIN 
+        Imagem i ON q.id_quadra = i.fk_quadra
+    WHERE 
+        q.nome LIKE CONCAT('%', ?, '%') OR 
+        q.descricao LIKE CONCAT('%', ?, '%');
+  `;
+
+  db.query(query, [termoPesquisa, termoPesquisa], (err, results) => {
+    console.log(termoPesquisa)
+    if (err) {
+      console.error('Erro ao executar a query:', err);
+      return res.status(500).json({ error: 'Erro ao buscar quadras.' });
+    }
+    res.json(results);
+  });
+});
 
   
 
