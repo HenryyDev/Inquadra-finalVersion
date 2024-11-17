@@ -133,7 +133,7 @@ app.post("/cadastro-anuncio", upload.array("imagens"), (req, res) => {
   
   
 
-app.get("/quadras-destaque", (req, res) => {
+app.get("/quadras-destaque", (req, res) => {//rota para retornar as quadras melhores avaliadas, mais populares e com menor custo
     // Consulta para melhores avaliações
     const sqlAvaliacoes = `
       SELECT 
@@ -304,7 +304,7 @@ if (quadra.futsal) esportesDisponiveis.push('futsal');
   });
 });
 
-app.get('/busca/:termo', (req, res) => {
+app.get('/busca/:termo', (req, res) => { //rota para pesquisa atraves do input do navbar
   const termoPesquisa = req.params.termo;
 
   if (!termoPesquisa) {
