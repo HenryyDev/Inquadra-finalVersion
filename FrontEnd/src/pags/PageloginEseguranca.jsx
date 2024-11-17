@@ -6,8 +6,11 @@ const PageLoginEseguranca=()=>{
 
     return(
         <>
-        <NavBar/>
-    <LoginEseguranca/>
+        <SearchProvider>
+            <NavBar/>
+                <LoginEseguranca/>
+                <Footer/>
+        </SearchProvider>
     </>
 )
 }

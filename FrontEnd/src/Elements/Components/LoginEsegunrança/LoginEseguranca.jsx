@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "../../Css/loginEseguranca.css";
 import Footer from "../Footer";
-import NavBar from "../NavBar";
+
 import { Link } from "react-router-dom";
 
 function LoginEseguranca() {
@@ -17,7 +17,7 @@ function LoginEseguranca() {
 
   return (
     <>
-      <NavBar />
+      
       <div className="wrap">
         <h2>
           <Link to={"/gerenciar-conta"}>

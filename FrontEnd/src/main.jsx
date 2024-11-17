@@ -65,7 +65,7 @@ const router = createBrowserRouter([
     element:<PagePerfilUser/>
   },
   {
-    path:"/busca/:termo",
+    path:"/busca",
     element:<PagePesquisa/>
   },
   {

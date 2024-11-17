@@ -20,7 +20,7 @@ const NavBar = () => {
   const onSubmitHandler = (event) => {
     event.preventDefault(); // Previne o comportamento padrão do formulário (recarregar a página)
     handleSearch(query); // Atualiza o termo de pesquisa no contexto
-    navigate(`/busca/${query}`); // Redireciona para a página de resultados de busca com o termo
+    navigate(`/busca?termo=${query}`); // Redireciona para a página de resultados de busca com o termo
   };
 
   return (

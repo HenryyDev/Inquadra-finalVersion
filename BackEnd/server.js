@@ -304,38 +304,53 @@ if (quadra.futsal) esportesDisponiveis.push('futsal');
   });
 });
 
-app.get('/busca/:termo', (req, res) => { //rota para pesquisa atraves do input do navbar
-  const termoPesquisa = req.params.termo;
+app.get('/busca', (req, res) => {
+  const termoPesquisa = req.query.termo || '';  // Use query string para o termo
+  const modalidade = req.query.modalidade || null; // Use query string para a modalidade
 
-  if (!termoPesquisa) {
-    return res.status(400).json({ error: 'Termo de pesquisa não fornecido.' });
+  // Verifica se ao menos um dos parâmetros foi fornecido
+  if (!termoPesquisa && !modalidade) {
+    return res.status(400).json({ error: 'Nenhum termo ou modalidade fornecido.' });
   }
 
-  const query = `
+  // Valida se a modalidade fornecida é uma modalidade válida
+  const modalidadesValidas = ['basquete', 'futebol', 'volei', 'tenis', 'golfe', 'natacao', 'skate', 'futsal', 'pingpong']; // Exemplo de modalidades
+  let queryParams = [termoPesquisa, termoPesquisa];
+  let query = `
     SELECT 
-        q.id_quadra, 
-        q.nome, 
-        q.descricao, 
-        q.preco_hora, 
-        i.caminho AS imagem 
+      q.id_quadra, 
+      q.nome, 
+      q.descricao, 
+      q.preco_hora, 
+      i.caminho AS imagem 
     FROM 
-        Quadra q
+      Quadra q
     LEFT JOIN 
-        Imagem i ON q.id_quadra = i.fk_quadra
+      Imagem i ON q.id_quadra = i.fk_quadra
+    LEFT JOIN 
+      Esportes e ON q.id_quadra = e.id_esporte
     WHERE 
-        q.nome LIKE CONCAT('%', ?, '%') OR 
-        q.descricao LIKE CONCAT('%', ?, '%');
+      (q.nome LIKE CONCAT('%', ?, '%') OR q.descricao LIKE CONCAT('%', ?, '%'))
   `;
 
-  db.query(query, [termoPesquisa, termoPesquisa], (err, results) => {
-    console.log(termoPesquisa)
+  // Se uma modalidade válida foi fornecida, adiciona a condição booleana correspondente
+  if (modalidade && modalidadesValidas.includes(modalidade)) {
+    query += ` AND e.${modalidade} = true`;  // Exemplo: "e.basquete = true"
+  }
+
+  db.query(query, queryParams, (err, results) => {
     if (err) {
       console.error('Erro ao executar a query:', err);
       return res.status(500).json({ error: 'Erro ao buscar quadras.' });
     }
+
     res.json(results);
   });
 });
+
+
+
+
 
   
 
