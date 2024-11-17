@@ -1,15 +1,19 @@
-import { Link } from "react-router-dom";
 import NavBar from "../Elements/Components/NavBar";
-import InfoPessoal from "../Elements/Components/InfoPessoais/InfoPessoais";
 import Footer from "../Elements/Components/Footer";
+import {SearchProvider } from "../Elements/Components/PesquisarContext"
+
+import InfoPessoal from "../Elements/Components/InfoPessoais/InfoPessoais";
+
 
 export default function  PageInfoPessoal(){
 
     return(
         <>
-        <NavBar/>
-        <InfoPessoal/>
-        <Footer/>
+       <SearchProvider>
+           <NavBar/>
+            <InfoPessoal/>
+            <Footer/>
+       </SearchProvider>
         </>
     )
 }

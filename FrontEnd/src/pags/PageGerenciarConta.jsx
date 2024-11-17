@@ -1,15 +1,19 @@
-import NavBar from "../Elements/Components/NavBar.jsx";
 
-import Footer from "../Elements/Components/Footer.jsx";
+
+import NavBar from "../Elements/Components/NavBar";
+import Footer from "../Elements/Components/Footer";
+import {SearchProvider } from "../Elements/Components/PesquisarContext"
 import GerenciarConta from "../Elements/Components/gerenciarConta/Gerenciar";
 
 
 function PageGerenciarConta() {
   return (
     <>
-    <NavBar/>
-    <GerenciarConta />
-    <Footer/>
+    <SearchProvider>
+      <NavBar/>
+      <GerenciarConta />
+      <Footer/>
+    </SearchProvider>
     </>
   );
   

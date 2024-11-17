@@ -1,14 +1,18 @@
 import NavBar from "../Elements/Components/NavBar";
-import AnunciosAtivos from "../Elements/Components/AnunciosAtivos/AnuncioAtivos";
 import Footer from "../Elements/Components/Footer";
+import {SearchProvider } from "../Elements/Components/PesquisarContext"
+import AnunciosAtivos from "../Elements/Components/AnunciosAtivos/AnuncioAtivos";
+
 
 export default function PageAnunciosAtivos(){
 
     return(
         <>
-        <NavBar/>
-        <AnunciosAtivos/>
-        <Footer/>
+        <SearchProvider>
+            <NavBar/>
+            <AnunciosAtivos/>
+            <Footer/>
+        </SearchProvider>
         </>
     )
 }

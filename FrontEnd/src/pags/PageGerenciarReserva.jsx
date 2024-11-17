@@ -1,14 +1,18 @@
-import NavBar from "../Elements/Components/NavBar"
+import NavBar from "../Elements/Components/NavBar";
+import Footer from "../Elements/Components/Footer";
+import {SearchProvider } from "../Elements/Components/PesquisarContext"
 import GerenciarReserva from "../Elements/Components/gerenciarReserva/GerenciarReserva";
-import Footer from "../Elements/Components/Footer"
+
 
 export default function PageGerenciarReserva(){
 
     return(
         <>
-        <NavBar/>
-        <GerenciarReserva/>
-        <Footer/>
+        <SearchProvider>
+            <NavBar/>
+            <GerenciarReserva/>
+            <Footer/>
+        </SearchProvider>
         </>
     )
 }

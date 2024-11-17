@@ -10,6 +10,7 @@ import PageCadAnuncio from "./pags/PageCadAnuncio";
 import PageGerenciarReserva from "./pags/PageGerenciarReserva";
 import PageAnunciosAtivos from "./pags/PageAnunciosAtivos";
 import PagePerfilUser from "./pags/PagePerfilUser";
+import PagePesquisa from "./pags/PagePesquisa";
 import { createRoot } from "react-dom/client";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -62,6 +63,10 @@ const router = createBrowserRouter([
   {
     path:"/perfil",
     element:<PagePerfilUser/>
+  },
+  {
+    path:"/busca/:termo",
+    element:<PagePesquisa/>
   },
   {
     path:"/anuncio/:id",

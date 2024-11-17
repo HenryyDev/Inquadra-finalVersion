@@ -1,28 +1,49 @@
 import React, { useState } from "react";
-import "../Css/NavBar.css";
-import logo from "../../assets/logo.png";
-import { Link } from "react-router-dom";
-import "bootstrap/dist/js/bootstrap.min.js";
-import lupa from "../../assets/lupa.png";
-import menu from "../../assets/menu.svg";
+import logo from "../../assets/logo.png"
+import lupa from "../../assets/lupa.png"
+import menu from "../../assets/menu.svg"
+import "../Css/NavBar.css"
+import { useNavigate,Link } from "react-router-dom"; // Importando useNavigate do react-router-dom
+import { useSearch } from "./PesquisarContext"; // Acessando o contexto
+
 
 const NavBar = () => {
- 
   const [login, setlogin] = useState(true); 
+  const { handleSearch } = useSearch(); // Acessando a função handleSearch do contexto
+  const [query, setQuery] = useState(""); // Estado para o termo de busca
+  const navigate = useNavigate(); // Hook para navegação programática
+
+  const onChangeHandler = (event) => {
+    setQuery(event.target.value); // Atualiza o valor do campo de busca
+  };
+
+  const onSubmitHandler = (event) => {
+    event.preventDefault(); // Previne o comportamento padrão do formulário (recarregar a página)
+    handleSearch(query); // Atualiza o termo de pesquisa no contexto
+    navigate(`/busca/${query}`); // Redireciona para a página de resultados de busca com o termo
+  };
 
   return (
-    <>
-      <header>
+    <header>
         <div className="header-container">
           <Link to={"/"}>
             <img src={logo} alt="" width="96" className="logo-img" />
           </Link>
           <div className="search">
-            <label htmlFor="searchInput">
-              <img className="lupa" src={lupa} alt="" width="24px" />
-            </label>
-            <input type="text" id="searchInput" placeholder="Pesquisar" />
-          </div>
+  <form onSubmit={onSubmitHandler}>
+    <input 
+      type="text" 
+      id="searchInput" 
+      value={query} 
+      onChange={onChangeHandler} 
+      placeholder="Pesquisar"
+    />
+    <button type="submit" className="btn">
+      <img className="lupa" src={lupa} alt="Ícone de pesquisa" width="24px" />
+    </button>
+  </form>
+</div>
+
 
           {!login && (
             <>
@@ -76,7 +97,6 @@ const NavBar = () => {
           )}
         </div>
       </header>
-    </>
   );
 };
 

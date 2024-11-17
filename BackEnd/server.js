@@ -221,7 +221,7 @@ LIMIT 4
     });
   });
 
-  app.get("/quadra/:id", (req, res) => {
+app.get("/quadra/:id", (req, res) => {
   const { id } = req.params; // Pega o id da quadra da URL
 
   const sql = ` 

@@ -1,14 +1,18 @@
 import NavBar from "../Elements/Components/NavBar";
-import Anuncio from "../Elements/Components/Anuncio/Anuncio";
 import Footer from "../Elements/Components/Footer";
+import {SearchProvider } from "../Elements/Components/PesquisarContext"
+import Anuncio from "../Elements/Components/Anuncio/Anuncio";
+
 
 
 function PageAnuncio() {
   return (
     <>
-    <NavBar/>
-    <Anuncio />
-    <Footer/>
+    <SearchProvider>
+      <NavBar/>
+      <Anuncio />
+      <Footer/>
+    </SearchProvider>
     </>
   );
 
