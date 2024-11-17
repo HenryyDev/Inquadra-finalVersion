@@ -88,6 +88,8 @@
 }
 
 .txt-anuncio {
+  display: flex;
+  justify-content: space-between;
   text-align: left;
   margin-top: 10px;
   font-size: 14px; 

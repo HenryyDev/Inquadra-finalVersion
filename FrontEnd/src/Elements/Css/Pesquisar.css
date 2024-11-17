@@ -1,79 +1,87 @@
-.wrap-anuncio{
-  
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    
-    margin-left: 40px;
- 
+.wrap-anuncio {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  margin-left: 40px;
 }
 
-  ul{
-    list-style-type: none;
-  }
-  .wrap-anuncio .anun{
-    margin-top: 40px;
-    background-color: var(--transparence-primary);
-    width:auto;
-    border-radius: 25px;
-    height: auto;
-  }
-  .anuncio{
-    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
-   
+ul {
+  list-style-type: none;
+}
+.wrap-anuncio .anun {
+  background-color: var(--transparence-primary);
+  width: auto;
+  border-radius: 25px;
+  height: auto;
+  margin: 0;
+}
+.anuncio {
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  background-color: #eaeaea;
+  margin: 20px;
+
+  display: flex;
+  flex-direction: row;
+  border-radius: 25px;
+  gap: 40px;
+}
+
+.anuncio img {
+  border-radius: 25px;
+  height: 150px;
+}
+.img-loc {
+  height: 20px !important;
+  margin-bottom: 10px;
+}
+.anuncio-left {
+  margin-top: 20px;
+  width: 40%;
+}
+.anuncio-right {
+  margin-top: 20px;
+  margin-right: 20px;
+}
+
+ul {
+  padding: 0;
+}
+
+@media (max-width: 1200px) {
+  .anun {
     margin-left: 20px;
     margin-right: 20px;
-    margin-bottom: 40px;
+    margin-top: 0;
+    padding: 10px;
+    text-align: left;
+  }
+  .img-loc {
+    height: 20px !important;
+    width: 100% !important;
+  }
+  .mt-5 {
     display: flex;
-    flex-direction: row;
-    border-radius: 25px;
-    gap: 40px;
-    }
+    width: 100px;
+  }
 
-  .anuncio img{
-    border-radius: 25px;
-    height: 150px;
-  }
-  .anuncio-left{
-    margin-top: 20px;
-    width: 40%;
-  }
-  .anuncio-right{
-    margin-top: 20px;
-    margin-right: 20px;
-  }
- 
-  ul{
+  .anuncio {
+    margin-bottom: 20px !important;
     padding: 0;
+    display: flex;
+    margin: 0;
+    flex-direction: column;
+    align-items: flex-start;
   }
 
-  @media (max-width: 1200px) {
-    .anun {
-      margin-left: 20px;
-      margin-right: 20px;
-      margin-top: 0; 
-      padding: 10px; 
-      text-align: left;
-    }
-  
-    .anuncio {
-      margin-bottom: 10px !important;
-      padding: 0;
-      display: flex;
-      margin: 0;
-      flex-direction: column;
-      align-items: flex-start;
-    }
-  
-    .anuncio-left, .anuncio-right {
-      margin: 5px 0; 
-    }
-  
-   
-    .anuncio img {
-      max-width: 100%;
-      width: 100vw;
-      margin-bottom: 10px; 
-    }
+  .anuncio-left,
+  .anuncio-right {
+    margin: 5px 0;
   }
-  
+
+  .anuncio img {
+    max-width: 100%;
+    width: 100vw;
+    margin-bottom: 10px;
+  }
+}

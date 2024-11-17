@@ -1,4 +1,4 @@
-import "../../Css/anuncio.css";
+
 import React from "react";
 
 const Carrossel = ({ imagens }) => {
@@ -21,7 +21,7 @@ const Carrossel = ({ imagens }) => {
             >
               <img
                 src={`http://localhost:3000${img}`}
-                className="d-block w-100"
+                className="d-block " style={{height:"300px",borderRadius:"25px"}}
                 alt={`Imagem ${index + 1}`}
               />
             </div>

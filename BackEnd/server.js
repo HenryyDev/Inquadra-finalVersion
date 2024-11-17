@@ -25,201 +25,224 @@ const upload = multer({ storage: armazenamento }); // Instância do multer
 
 // Rota de cadastro de quadras com upload de imagens
 app.post("/cadastro-anuncio", upload.array("imagens"), (req, res) => {
-    const {
-      nome,
-      descricao,
-      preco_hora,
-      cep,
-      bairro,
-      municipio,
-      uf,
-      logradouro,
-      numero_e,
-      ddd,
-      numero_t,
-    } = req.body;
-  
-    if (!req.files || req.files.length === 0) {
-      return res.status(400).send("Nenhuma imagem foi enviada");
-    }
-  
-    const imagens = req.files.map((file) => `/img/${file.filename}`);
-    const esporteData = JSON.parse(req.body.esporte);
-    const esporteValues = Object.values(esporteData); 
-  
-    // Cadastrando o esporte
-    const sql_esporte = `INSERT INTO Esportes (basquete, futebol, outros, golfe, natacao, volei, tenis, pong, skate, futsal)
+  const {
+    nome,
+    descricao,
+    preco_hora,
+    cep,
+    bairro,
+    municipio,
+    uf,
+    logradouro,
+    numero_e,
+    ddd,
+    numero_t,
+  } = req.body;
+
+  if (!req.files || req.files.length === 0) {
+    return res.status(400).send("Nenhuma imagem foi enviada");
+  }
+
+  const imagens = req.files.map((file) => `/img/${file.filename}`);
+  const esporteData = JSON.parse(req.body.esporte);
+  const esporteValues = Object.values(esporteData);
+
+  // Cadastrando o esporte
+  const sql_esporte = `INSERT INTO Esportes (basquete, futebol, outros, golfe, natacao, volei, tenis, pong, skate, futsal)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-  
-    db.query(sql_esporte, esporteValues, (erro, resultado) => {
-      if (erro) {
-        console.error("Erro ao inserir esporte:", erro);
-        return res.status(500).send("Erro ao cadastrar esporte");
-      }
-  
-      const id_esporte = resultado.insertId;
-  
-      // Cadastrando o endereço
-      const sql_endereco = `INSERT INTO Endereco (cep, logradouro, numero_e, bairro, municipio, uf) VALUES (?, ?, ?, ?, ?, ?)`;
-      db.query(sql_endereco, [cep, logradouro, numero_e, bairro, municipio, uf], (erro, resultado) => {
+
+  db.query(sql_esporte, esporteValues, (erro, resultado) => {
+    if (erro) {
+      console.error("Erro ao inserir esporte:", erro);
+      return res.status(500).send("Erro ao cadastrar esporte");
+    }
+
+    const id_esporte = resultado.insertId;
+
+    // Cadastrando o endereço
+    const sql_endereco = `INSERT INTO Endereco (cep, logradouro, numero_e, bairro, municipio, uf) VALUES (?, ?, ?, ?, ?, ?)`;
+    db.query(
+      sql_endereco,
+      [cep, logradouro, numero_e, bairro, municipio, uf],
+      (erro, resultado) => {
         if (erro) {
           console.error("Erro ao inserir endereço:", erro);
           return res.status(500).send("Erro ao cadastrar endereço");
         }
-  
+
         const id_endereco = resultado.insertId;
-  
+
         // Cadastrando a quadra
         const sql_quadra = `INSERT INTO Quadra (nome, descricao, preco_hora, fk_endereco) VALUES (?, ?, ?, ?)`;
-        db.query(sql_quadra, [nome, descricao, preco_hora, id_endereco], (erro, resultado) => {
-          if (erro) {
-            console.error("Erro ao inserir quadra:", erro);
-            return res.status(500).send("Erro ao cadastrar quadra");
-          }
-  
-          const id_quadra = resultado.insertId;
-  
-          // Associando a quadra ao esporte na tabela Esportes
-          const sql_atualiza_esporte = `UPDATE Esportes SET fk_quadra = ? WHERE id_esporte = ?`;
-          db.query(sql_atualiza_esporte, [id_quadra, id_esporte], (erro) => {
+        db.query(
+          sql_quadra,
+          [nome, descricao, preco_hora, id_endereco],
+          (erro, resultado) => {
             if (erro) {
-              console.error("Erro ao atualizar esporte com fk_quadra:", erro);
-              return res.status(500).send("Erro ao atualizar esporte com fk_quadra");
+              console.error("Erro ao inserir quadra:", erro);
+              return res.status(500).send("Erro ao cadastrar quadra");
             }
-  
-            // Inserindo imagens na tabela Imagem
-            const sql_imagens = `INSERT INTO Imagem (caminho, fk_quadra) VALUES ?`;
-            const valores_imagens = imagens.map((caminho) => [caminho, id_quadra]);
-  
-            db.query(sql_imagens, [valores_imagens], (erro) => {
+
+            const id_quadra = resultado.insertId;
+
+            // Associando a quadra ao esporte na tabela Esportes
+            const sql_atualiza_esporte = `UPDATE Esportes SET fk_quadra = ? WHERE id_esporte = ?`;
+            db.query(sql_atualiza_esporte, [id_quadra, id_esporte], (erro) => {
               if (erro) {
-                console.error("Erro ao salvar imagens:", erro);
-                return res.status(500).send("Erro ao salvar imagens");
+                console.error("Erro ao atualizar esporte com fk_quadra:", erro);
+                return res
+                  .status(500)
+                  .send("Erro ao atualizar esporte com fk_quadra");
               }
-  
-              // Relacionando esporte e quadra na tabela Relacao
-              const sql_relacao = `INSERT INTO Relacao (fk_esporte, fk_quadra) VALUES (?, ?)`;
-              db.query(sql_relacao, [id_esporte, id_quadra], (erro) => {
+
+              // Inserindo imagens na tabela Imagem
+              const sql_imagens = `INSERT INTO Imagem (caminho, fk_quadra) VALUES ?`;
+              const valores_imagens = imagens.map((caminho) => [
+                caminho,
+                id_quadra,
+              ]);
+
+              db.query(sql_imagens, [valores_imagens], (erro) => {
                 if (erro) {
-                  console.error("Erro ao cadastrar relação entre esporte e quadra:", erro);
-                  return res.status(500).send("Erro ao cadastrar relação");
+                  console.error("Erro ao salvar imagens:", erro);
+                  return res.status(500).send("Erro ao salvar imagens");
                 }
-  
-                res.send({
-                  message: "Quadra cadastrada com sucesso",
-                  quadra: {
-                    nome,
-                    descricao,
-                    preco_hora,
-                    esporte: esporteData,
-                    endereco: {
-                      cep,
-                      bairro,
-                      municipio,
-                      uf,
-                      logradouro,
-                      numero_e,
-                    },
-                    imagens,
+
+                // Relacionando esporte e quadra na tabela Relacao
+                const sql_relacao = `INSERT INTO Relacao (fk_esporte, fk_quadra) VALUES (?, ?)`;
+                db.query(sql_relacao, [id_esporte, id_quadra], (erro) => {
+                  if (erro) {
+                    console.error(
+                      "Erro ao cadastrar relação entre esporte e quadra:",
+                      erro
+                    );
+                    return res.status(500).send("Erro ao cadastrar relação");
                   }
+
+                  res.send({
+                    message: "Quadra cadastrada com sucesso",
+                    quadra: {
+                      nome,
+                      descricao,
+                      preco_hora,
+                      esporte: esporteData,
+                      endereco: {
+                        cep,
+                        bairro,
+                        municipio,
+                        uf,
+                        logradouro,
+                        numero_e,
+                      },
+                      imagens,
+                    },
+                  });
                 });
               });
             });
-          });
-        });
-      });
-    });
+          }
+        );
+      }
+    );
   });
-  
-  
+});
 
-app.get("/quadras-destaque", (req, res) => {//rota para retornar as quadras melhores avaliadas, mais populares e com menor custo
-    // Consulta para melhores avaliações
-    const sqlAvaliacoes = `
+app.get("/quadras-destaque", (req, res) => {
+  //rota para retornar as quadras melhores avaliadas, mais populares e com menor custo
+  // Consulta para melhores avaliações
+  const sqlAvaliacoes = `
       SELECT 
           q.id_quadra AS id, 
           q.nome AS titulo, 
           q.descricao, 
           q.preco_hora AS preco, 
           AVG(a.qualificacao) AS media_avaliacao,
-          GROUP_CONCAT(i.caminho) AS fotos  -- Inclui os caminhos das imagens
+          en.municipio,
+          en.bairro,
+          GROUP_CONCAT(i.caminho) AS fotos 
       FROM Quadra q
       LEFT JOIN Avaliacao a ON q.id_quadra = a.fk_quadra
       LEFT JOIN Imagem i ON q.id_quadra = i.fk_quadra  
+      LEFT JOIN Endereco en ON q.fk_endereco = en.id_endereco 
      GROUP BY q.id_quadra, q.nome, q.descricao, q.preco_hora
       ORDER BY media_avaliacao DESC
       LIMIT 4
     `;
-  
-    // Consulta para mais reservas
-    const sqlReservas = `
+
+  // Consulta para mais reservas
+  const sqlReservas = `
       SELECT 
           q.id_quadra AS id, 
           q.nome AS titulo, 
           q.descricao, 
           q.preco_hora AS preco, 
+           en.municipio,
+          en.bairro,
           COUNT(r.id_reserva) AS total_reservas,
           GROUP_CONCAT(i.caminho) AS fotos  
       FROM Quadra q
       LEFT JOIN Reserva r ON q.id_quadra = r.fk_quadra
       LEFT JOIN Imagem i ON q.id_quadra = i.fk_quadra  
+      LEFT JOIN Endereco en ON q.fk_endereco = en.id_endereco 
       GROUP BY q.id_quadra, q.nome, q.descricao, q.preco_hora
       ORDER BY total_reservas DESC
       LIMIT 4
     `;
-  
-    // Consulta para menor custo
-    const sqlCusto = `
+
+  // Consulta para menor custo
+  const sqlCusto = `
      SELECT 
     q.id_quadra AS id, 
     q.nome AS titulo, 
     q.descricao, 
     q.preco_hora AS preco,
+    en.municipio,
+     en.bairro,
     GROUP_CONCAT(i.caminho) AS fotos
 FROM Quadra q
 LEFT JOIN Imagem i ON q.id_quadra = i.fk_quadra
+LEFT JOIN Endereco en ON q.fk_endereco = en.id_endereco 
 GROUP BY q.id_quadra, q.nome, q.descricao, q.preco_hora
 ORDER BY q.preco_hora ASC
 LIMIT 4
 
     `;
-  
-    // Realiza todas as consultas
-    db.query(sqlAvaliacoes, (erro, resultadosAvaliacoes) => {
+
+  // Realiza todas as consultas
+  db.query(sqlAvaliacoes, (erro, resultadosAvaliacoes) => {
+    if (erro) {
+      console.error("Erro ao buscar melhores avaliações:", erro);
+      return res.status(500).send("Erro ao buscar melhores avaliações");
+    }
+
+    db.query(sqlReservas, (erro, resultadosReservas) => {
       if (erro) {
-        console.error("Erro ao buscar melhores avaliações:", erro);
-        return res.status(500).send("Erro ao buscar melhores avaliações");
+        console.error("Erro ao buscar mais reservas:", erro);
+        return res.status(500).send("Erro ao buscar mais reservas");
       }
-  
-      db.query(sqlReservas, (erro, resultadosReservas) => {
+
+      db.query(sqlCusto, (erro, resultadosCusto) => {
         if (erro) {
-          console.error("Erro ao buscar mais reservas:", erro);
-          return res.status(500).send("Erro ao buscar mais reservas");
+          console.error("Erro ao buscar menor custo:", erro);
+          return res.status(500).send("Erro ao buscar menor custo");
         }
-  
-        db.query(sqlCusto, (erro, resultadosCusto) => {
-          if (erro) {
-            console.error("Erro ao buscar menor custo:", erro);
-            return res.status(500).send("Erro ao buscar menor custo");
-          }
-  
-          const formatarFotos = (quadras) => {
-            return quadras.map(quadra => ({
-              ...quadra,
-              fotos: quadra.fotos ? quadra.fotos.split(",") : []  // Apenas formata o campo 'fotos'
-            }));
-          };
-  
-          
-          res.json({
-            melhoresAvaliacoes: formatarFotos(resultadosAvaliacoes),
-            maisReservas: formatarFotos(resultadosReservas),
-            menorCusto: formatarFotos(resultadosCusto),
-          });
+
+        const formatarFotos = (quadras) => {
+          return quadras.map((quadra) => ({
+            ...quadra,
+            fotos: quadra.fotos ? quadra.fotos.split(",") : [], // Apenas formata o campo 'fotos'
+          }));
+        };
+
+        res.json({
+          melhoresAvaliacoes: formatarFotos(resultadosAvaliacoes),
+          maisReservas: formatarFotos(resultadosReservas),
+          menorCusto: formatarFotos(resultadosCusto),
         });
       });
     });
   });
+});
 
 app.get("/quadra/:id", (req, res) => {
   const { id } = req.params; // Pega o id da quadra da URL
@@ -249,7 +272,7 @@ FROM Quadra q
 LEFT JOIN Imagem i ON q.id_quadra = i.fk_quadra  
 LEFT JOIN Esportes e ON q.id_quadra = e.fk_quadra
 LEFT JOIN Avaliacao a ON q.id_quadra = a.fk_quadra  
-LEFT JOIN Endereco en ON q.fk_endereco = en.id_endereco  -- Join com a tabela Endereco
+LEFT JOIN Endereco en ON q.fk_endereco = en.id_endereco  
 WHERE q.id_quadra = ?
 GROUP BY q.id_quadra, e.basquete, e.futebol, e.outros, e.golfe, e.natacao, e.volei, e.tenis, e.pong, e.skate, e.futsal, en.cep, en.municipio, en.bairro;
 
@@ -265,56 +288,64 @@ GROUP BY q.id_quadra, e.basquete, e.futebol, e.outros, e.golfe, e.natacao, e.vol
     if (resultado.length === 0) {
       return res.status(404).send("Quadra não encontrada");
     }
-    
+
     const quadra = resultado[0];
 
     // Filtra os esportes que são 'true'
     const esportesDisponiveis = [];
 
+    if (quadra.basquete) esportesDisponiveis.push("basquete");
+    if (quadra.futebol) esportesDisponiveis.push("futebol");
+    if (quadra.outros) esportesDisponiveis.push("outros");
+    if (quadra.golfe) esportesDisponiveis.push("golfe");
+    if (quadra.natacao) esportesDisponiveis.push("natacao");
+    if (quadra.volei) esportesDisponiveis.push("volei");
+    if (quadra.tenis) esportesDisponiveis.push("tenis");
+    if (quadra.pong) esportesDisponiveis.push("pong");
+    if (quadra.skate) esportesDisponiveis.push("skate");
+    if (quadra.futsal) esportesDisponiveis.push("futsal");
 
-if (quadra.basquete) esportesDisponiveis.push('basquete');
-if (quadra.futebol) esportesDisponiveis.push('futebol');
-if (quadra.outros) esportesDisponiveis.push('outros');
-if (quadra.golfe) esportesDisponiveis.push('golfe');
-if (quadra.natacao) esportesDisponiveis.push('natacao');
-if (quadra.volei) esportesDisponiveis.push('volei');
-if (quadra.tenis) esportesDisponiveis.push('tenis');
-if (quadra.pong) esportesDisponiveis.push('pong');
-if (quadra.skate) esportesDisponiveis.push('skate');
-if (quadra.futsal) esportesDisponiveis.push('futsal');
-
-
-
-    
-    
     // Retorna a quadra com as informações formatadas
     res.json({
-        id: quadra.id,
-        titulo: quadra.titulo,
-        descricao: quadra.descricao,
-        preco_por_hora: quadra.preco_por_hora,
-        fotos: quadra.fotos ? quadra.fotos.split(',') : [],  // Divide a string de fotos em um array
-        esportes: esportesDisponiveis,
-        media_avaliacao: quadra.media_avaliacao ? parseFloat(quadra.media_avaliacao).toFixed(2) : null,  // Formata a média para 2 casas decimais
-        cep: quadra.cep,
-        municipio: quadra.municipio,
-        bairro: quadra.bairro
-      });
-      
+      id: quadra.id,
+      titulo: quadra.titulo,
+      descricao: quadra.descricao,
+      preco_por_hora: quadra.preco_por_hora,
+      fotos: quadra.fotos ? quadra.fotos.split(",") : [], // Divide a string de fotos em um array
+      esportes: esportesDisponiveis,
+      media_avaliacao: quadra.media_avaliacao
+        ? parseFloat(quadra.media_avaliacao).toFixed(2)
+        : null, // Formata a média para 2 casas decimais
+      cep: quadra.cep,
+      municipio: quadra.municipio,
+      bairro: quadra.bairro,
+    });
   });
 });
 
-app.get('/busca', (req, res) => {
-  const termoPesquisa = req.query.termo || '';  // Use query string para o termo
+app.get("/busca", (req, res) => {
+  const termoPesquisa = req.query.termo || ""; // Use query string para o termo
   const modalidade = req.query.modalidade || null; // Use query string para a modalidade
 
   // Verifica se ao menos um dos parâmetros foi fornecido
   if (!termoPesquisa && !modalidade) {
-    return res.status(400).json({ error: 'Nenhum termo ou modalidade fornecido.' });
+    return res
+      .status(400)
+      .json({ error: "Nenhum termo ou modalidade fornecido." });
   }
 
   // Valida se a modalidade fornecida é uma modalidade válida
-  const modalidadesValidas = ['basquete', 'futebol', 'volei', 'tenis', 'golfe', 'natacao', 'skate', 'futsal', 'pingpong']; // Exemplo de modalidades
+  const modalidadesValidas = [
+    "basquete",
+    "futebol",
+    "volei",
+    "tenis",
+    "golfe",
+    "natacao",
+    "skate",
+    "futsal",
+    "pingpong",
+  ]; // Exemplo de modalidades
   let queryParams = [termoPesquisa, termoPesquisa];
   let query = `
     SELECT 
@@ -322,37 +353,36 @@ app.get('/busca', (req, res) => {
       q.nome, 
       q.descricao, 
       q.preco_hora, 
+      en.municipio,
+      en.bairro,
       i.caminho AS imagem 
+     
+  
     FROM 
       Quadra q
     LEFT JOIN 
       Imagem i ON q.id_quadra = i.fk_quadra
     LEFT JOIN 
       Esportes e ON q.id_quadra = e.id_esporte
+      LEFT JOIN Endereco en ON q.fk_endereco = en.id_endereco 
     WHERE 
       (q.nome LIKE CONCAT('%', ?, '%') OR q.descricao LIKE CONCAT('%', ?, '%'))
   `;
 
   // Se uma modalidade válida foi fornecida, adiciona a condição booleana correspondente
   if (modalidade && modalidadesValidas.includes(modalidade)) {
-    query += ` AND e.${modalidade} = true`;  // Exemplo: "e.basquete = true"
+    query += ` AND e.${modalidade} = true`; // Exemplo: "e.basquete = true"
   }
 
   db.query(query, queryParams, (err, results) => {
     if (err) {
-      console.error('Erro ao executar a query:', err);
-      return res.status(500).json({ error: 'Erro ao buscar quadras.' });
+      console.error("Erro ao executar a query:", err);
+      return res.status(500).json({ error: "Erro ao buscar quadras." });
     }
 
     res.json(results);
   });
 });
-
-
-
-
-
-  
 
 // Iniciar o servidor
 app.listen(port, () => {

@@ -12,7 +12,7 @@ const GerenciarConta = () => {
 
       <div className="conta ms-5 my-4">
         <h5>Conta</h5>
-        <p>NomeUser, emailUser,<Link to={"/perfil"} classNameName="acesso-perfil"> Acessar perfil</Link></p>
+        <p>NomeUser, emailUser,<Link to={"/perfil"} className="acesso-perfil"> Acessar perfil</Link></p>
       </div>
 
       <div className="config">

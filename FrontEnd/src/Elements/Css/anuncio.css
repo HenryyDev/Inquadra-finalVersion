@@ -24,12 +24,9 @@
     border-radius: 25px;}
   .imagem-anuncio {
     display: flex;
-    
-    margin-left: 60px;
+    margin-left: 40px;
   }
-  .carousel {
-    width: 600px !important;
-  }
+ 
 
   .desc-checkin {
    

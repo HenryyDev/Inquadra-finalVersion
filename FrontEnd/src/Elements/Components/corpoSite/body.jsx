@@ -1,11 +1,11 @@
-// Imports de bibliotecas externas
+
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Link } from "react-router-dom";
 
-// Imports de arquivos de estilo
+
 import "../../Css/body.css";
 
-// Imports de imagens/ativos
+import loc from "../../../assets/pin.png"
 import Modalidades from "../Modalidades";
 
 import React, { useState, useEffect } from "react";
@@ -20,6 +20,7 @@ const Body = () => {
     axios
       .get("http://localhost:3000/quadras-destaque")
       .then((resposta) => {
+        console.log(resposta)
         setMelhoresavaliados(resposta.data.melhoresAvaliacoes);
         setMaisreservas(resposta.data.maisReservas);
         setMenorcusto(resposta.data.menorCusto);
@@ -28,6 +29,7 @@ const Body = () => {
         console.log("erro ao buscar quadra:", erro);
       });
   }, []); // Executa apenas uma vez ao montar o componente
+ 
   return (
     <>
       <Modalidades />
@@ -40,13 +42,19 @@ const Body = () => {
           {melhoresAvaliados.map((quadra) => (
             <li key={quadra.id}>
               <Link to={`/anuncio/${quadra.id}`}>
-                <img src={`http://localhost:3000${quadra.fotos[0]}`} alt="" />
-                <h5 className="txt-anuncio">{quadra.titulo}</h5>
-                <p className="txt-anuncio">
-                  {quadra.descricao.length > 90
-                    ? quadra.descricao.substring(0, 87) + "..."
-                    : quadra.descricao}
-                </p>
+                <img src={`http://localhost:3000${quadra.fotos[0]}`} alt=""  style={{height:"150px"}}/>
+                <div className="txt-anuncio">
+                  <h5 className="txt-anuncio" >
+                  {quadra.titulo.length > 20
+                 ? quadra.titulo.substring(0, 17) + "..."
+                 : quadra.titulo}
+                </h5>
+                  <h5 className="txt-anuncio" >R${quadra.preco}/H</h5>
+                  
+                </div>
+                <h5  style={{fontSize:"14px",display:"flex",marginTop:"10px"}}><img src={loc} style={{height:"20px", width:"20px"}} alt=""  />{quadra.municipio},{quadra.bairro}</h5>
+              
+                
               </Link>
             </li>
           ))}
@@ -59,17 +67,23 @@ const Body = () => {
       <section className="mais-populares">
         <ul>
           {maisReservas.map((quadra) => (
-            <li key={quadra.id}>
-              <Link to={`/anuncio/${quadra.id}`}>
-                <img src={`http://localhost:3000${quadra.fotos[0]}`} alt="" />
-                <h5 className="txt-anuncio">{quadra.titulo}</h5>
-                <p className="txt-anuncio">
-                  {quadra.descricao.length > 90
-                    ? quadra.descricao.substring(0, 87) + "..."
-                    : quadra.descricao}
-                </p>
-              </Link>
-            </li>
+           <li key={quadra.id}>
+           <Link to={`/anuncio/${quadra.id}`}>
+             <img src={`http://localhost:3000${quadra.fotos[0]}`} alt=""  style={{height:"150px"}}/>
+             <div className="txt-anuncio">
+               <h5 className="txt-anuncio" >
+               {quadra.titulo.length > 20
+                 ? quadra.titulo.substring(0, 17) + "..."
+                 : quadra.titulo}
+             </h5>
+               <h5 className="txt-anuncio" >R${quadra.preco}/H</h5>
+               
+             </div>
+             <h5 style={{fontSize:"14px",display:"flex",marginTop:"10px"}} ><img src={loc} style={{height:"20px", width:"20px"}} alt="" />{quadra.municipio},{quadra.bairro}</h5>
+            
+             
+           </Link>
+         </li>
           ))}
         </ul>
       </section>
@@ -80,17 +94,23 @@ const Body = () => {
       <section className="menor-custo">
         <ul>
           {menorCusto.map((quadra) => (
-            <li key={quadra.id}>
-              <Link to={`/anuncio/${quadra.id}`}>
-                <img src={`http://localhost:3000${quadra.fotos[0]}`} alt="" />
-                <h5 className="txt-anuncio">{quadra.titulo}</h5>
-                <p className="txt-anuncio">
-                  {quadra.descricao.length > 90
-                    ? quadra.descricao.substring(0, 87) + "..."
-                    : quadra.descricao}
-                </p>
-              </Link>
-            </li>
+           <li key={quadra.id}>
+           <Link to={`/anuncio/${quadra.id}`}>
+             <img src={`http://localhost:3000${quadra.fotos[0]}`} alt=""  style={{height:"150px"}}/>
+             <div className="txt-anuncio">
+               <h5 className="txt-anuncio" >
+               {quadra.titulo.length > 20
+                 ? quadra.titulo.substring(0, 17) + "..."
+                 : quadra.titulo}
+             </h5>
+               <h5 className="txt-anuncio" >R${quadra.preco}/H</h5>
+               
+             </div>
+             <h5 style={{fontSize:"14px",display:"flex",marginTop:"10px"}} ><img src={loc} style={{height:"20px", width:"20px"}} alt="" />{quadra.municipio},{quadra.bairro}</h5>
+            
+             
+           </Link>
+         </li>
           ))}
         </ul>
       </section>

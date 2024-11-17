@@ -39,9 +39,7 @@
 .btn-secondary {
   background-color: var(--blue-secondary) !important;
 }
-.btn {
-  border: none !important;
-}
+
 
 .dropdown-item:hover {
   background-color: var(--blue-secondary) !important;
@@ -71,32 +69,38 @@
   margin-left: 20px;
   margin-right: 20px;
 }
-
+.search{
+  padding: 0 !important;
+  height: 40px !important;}
 .search form {
   display: flex;
   flex-direction: row;
-  height: 50px;
-  padding: 10px;
+ 
+  padding: 0;
   align-items: center;
   border-radius: 25px;
   width: 100%;
 }
 
-.search button {
-  width: 24px;
-}
 
+.btn {
+  width: auto !important;
+  padding: 5px !important;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
 .lupa {
   cursor: pointer;
   margin: 8px;
 }
 
 #searchInput {
-  padding: 8px;
+  padding: 0;
   border: none;
   background-color: #ffffff;
   border-radius: 25px;
-  width: 95%;
+  width: 100%;
   outline: none;
 }
 
