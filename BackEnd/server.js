@@ -156,7 +156,7 @@ app.get("/quadras-destaque", (req, res) => {
           q.nome AS titulo, 
           q.descricao, 
           q.preco_hora AS preco, 
-          AVG(a.qualificacao) AS media_avaliacao,
+          FORMAT(AVG(a.qualificacao), 2) AS media_avaliacao,
           en.municipio,
           en.bairro,
           GROUP_CONCAT(i.caminho) AS fotos 
@@ -179,9 +179,11 @@ app.get("/quadras-destaque", (req, res) => {
            en.municipio,
           en.bairro,
           COUNT(r.id_reserva) AS total_reservas,
-          GROUP_CONCAT(i.caminho) AS fotos  
+          GROUP_CONCAT(i.caminho) AS fotos,  
+          FORMAT(AVG(a.qualificacao), 2) AS media_avaliacao
       FROM Quadra q
       LEFT JOIN Reserva r ON q.id_quadra = r.fk_quadra
+      LEFT JOIN Avaliacao a ON q.id_quadra = a.fk_quadra
       LEFT JOIN Imagem i ON q.id_quadra = i.fk_quadra  
       LEFT JOIN Endereco en ON q.fk_endereco = en.id_endereco 
       GROUP BY q.id_quadra, q.nome, q.descricao, q.preco_hora
@@ -198,9 +200,11 @@ app.get("/quadras-destaque", (req, res) => {
     q.preco_hora AS preco,
     en.municipio,
      en.bairro,
-    GROUP_CONCAT(i.caminho) AS fotos
+    GROUP_CONCAT(i.caminho) AS fotos,
+    FORMAT(AVG(a.qualificacao), 2) AS media_avaliacao
 FROM Quadra q
 LEFT JOIN Imagem i ON q.id_quadra = i.fk_quadra
+LEFT JOIN Avaliacao a ON q.id_quadra = a.fk_quadra
 LEFT JOIN Endereco en ON q.fk_endereco = en.id_endereco 
 GROUP BY q.id_quadra, q.nome, q.descricao, q.preco_hora
 ORDER BY q.preco_hora ASC
@@ -264,7 +268,7 @@ app.get("/quadra/:id", (req, res) => {
   e.pong, 
   e.skate, 
   e.futsal,
-  AVG(a.qualificacao) AS media_avaliacao,
+  FORMAT(AVG(a.qualificacao), 2) AS media_avaliacao,
   en.cep,
   en.municipio,
   en.bairro
@@ -344,6 +348,7 @@ app.get("/busca", (req, res) => {
     "natacao",
     "skate",
     "futsal",
+    "outros",
     "pingpong",
   ]; // Exemplo de modalidades
   let queryParams = [termoPesquisa, termoPesquisa];

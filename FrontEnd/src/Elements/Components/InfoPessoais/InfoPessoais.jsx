@@ -31,33 +31,8 @@ function InfoPessoal() {
             </button>
           </div>
 
-          <div className="my-2">
-            <label htmlFor="email">Telefone</label>
-            <button
-              className="btn btn-primary btn-seg"
-              aria-label="Atualizar email"
-            >
-              Atualizar
-            </button>
-          </div>
-          <div className="my-2">
-            <label htmlFor="email">Endereço</label>
-            <button
-              className="btn btn-primary btn-seg"
-              aria-label="Atualizar email"
-            >
-              Atualizar
-            </button>
-          </div>
-          <div className="my-2">
-            <label htmlFor="email">Contato Emergencia</label>
-            <button
-              className="btn btn-primary btn-seg"
-              aria-label="Atualizar email"
-            >
-              Atualizar
-            </button>
-          </div>
+          
+          
         </div>
       </div>
 

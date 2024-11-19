@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import MaskInput from "react-maskinput";
 import "../../Css/CadAnuncio.css";
 import logo from "../../../assets/logo.png";
@@ -73,11 +74,11 @@ const CadAnuncio = () => {
       }
     }
   };
-
   const validateForm = () => {
     const newErrors = {}; // Objeto para armazenar os erros de validação
     if (!formData.nome) newErrors.nome = "Título é obrigatório."; // Verifica se o título está vazio
     if (!formData.descricao) newErrors.descricao = "Descrição é obrigatória."; // Verifica se a descrição está vazia
+    if(formData.descricao.length>1999) newErrors.descricao = "Descrição superior a 2000 caracteres"
     if (!formData.preco_hora) newErrors.preco_hora = "Preço é obrigatório."; // Verifica se o preço está vazio
     if (!formData.logradouro) newErrors.logradouro = "Endereço é obrigatório."; // Verifica se o endereço está vazio
     if (!formData.cep) newErrors.cep = "CEP é obrigatório."; // Verifica se o CEP está vazio
@@ -106,7 +107,7 @@ const CadAnuncio = () => {
 
     // Valida o formulário antes de enviar os dados
     if (!validateForm()) {
-      alert("Por favor, corrija os erros antes de enviar.");
+      toast.error("Por favor, corrija os erros antes de enviar.");
       return;
     }
 
@@ -144,6 +145,8 @@ const CadAnuncio = () => {
   };
 
   return (
+    <>
+    <ToastContainer />
     <div className="container-anuncio">
       <div className="anuncio-form">
         <form onSubmit={handleSubmit} encType="multipart/form-data">
@@ -170,9 +173,10 @@ const CadAnuncio = () => {
             type="text"
             className="form-control mb-4"
             name="nome"
+            maxLength={2000}
             value={formData.nome}
             onChange={handleChange}
-            placeholder="Digite um título para o seu anúncio"
+            placeholder="Digite um título para o seu anúncio (maximo 2000 caracteres)"
           />
 
           <label htmlFor="descricao" className="form-label">
@@ -332,6 +336,7 @@ const CadAnuncio = () => {
         </form>
       </div>
     </div>
+    </>
   );
 };
 console;

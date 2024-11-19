@@ -2,7 +2,7 @@ import React from "react";
 import "../../Css/pesquisar.css";
 import loc from "../../../assets/pin.png"
 import { Link } from "react-router-dom";
-
+import erro from "../../../assets/nao-encontrado.png"
 
 const Pesquisar = ({ termo,modalidade, resultados }) => {
   const verificaPesquisa = () => {
@@ -21,12 +21,19 @@ const Pesquisar = ({ termo,modalidade, resultados }) => {
   
   return (
     <div className="wrap-anuncio">
-     
-      <h3>{verificaPesquisa()}</h3>
-      <div className="anun">
-        <ul className=" row">
-          {resultados.length === 0 ? (
-            <li className="mx-4" style={{minHeight:"400px"}}>Não há resultados para {termo || modalidade}</li>
+  <h3>{verificaPesquisa()}</h3>
+  <div className="anun">
+    <ul className="row">
+      {resultados.length === 0 ? (
+        <li className="mx-4" style={{ minHeight: "400px" }}>
+          <div className="d-flex  align-items-center h-100 text-center">
+            <img src={erro} width={"200px"} alt="Erro" style={{ marginRight: "15px" }} />
+            <p style={{ fontWeight: "bold", marginTop: 0 ,fontSize:"25px"}}>Resultado não encontrado</p>
+          </div>
+        </li>
+
+
+
           ) : (
             resultados.map((anuncio, index) => (
               <li key={index} className="col-md-6 col-12" {...(resultados.length < 3 ? { style: { minHeight: "400px" } } : {})}>

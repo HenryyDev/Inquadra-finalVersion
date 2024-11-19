@@ -26,7 +26,10 @@
     display: flex;
     margin-left: 40px;
   }
- 
+ #txt-desc{
+  width: auto;
+  height: auto;
+ }
 
   .desc-checkin {
    
