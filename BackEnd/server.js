@@ -389,6 +389,8 @@ app.get("/busca", (req, res) => {
   });
 });
 
+//NAO TESTEI POIS MEU BANCO DE DADOS NAO ESTA FUNCIONANDO, SUJEITO A VARIOS ERROS 
+
 // Cadastro da conta do usuario
 app.post('/usuario', (req, res) => {
   const { nome, email, senha } = req.body;
@@ -749,6 +751,8 @@ app.delete('/usuario/:id', (req, res) => {
 
 
 //Adiconar mais segurança para as senhas 
+
+
 // Iniciar o servidor
 app.listen(port, () => {
   console.log(`Servidor rodando em http://localhost:${port}`);
