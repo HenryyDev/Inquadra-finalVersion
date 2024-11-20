@@ -51,13 +51,6 @@ CREATE TABLE Esportes (
     futsal BOOLEAN DEFAULT false
 );
 
-
-
-
-
-
-
-
 CREATE TABLE Usuario (
     id_usuario INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
     nome VARCHAR(90),

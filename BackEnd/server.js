@@ -389,7 +389,369 @@ app.get("/busca", (req, res) => {
   });
 });
 
+// Cadastro da conta do usuario
+app.post('/usuario', (req, res) => {
+  const { nome, email, senha } = req.body;
+
+  const query = 'INSERT INTO Usuario (nome, email, senha) VALUES (?, ?, ?)';
+  db.query(query, [nome, email, senha], (err, result) => {
+    if (err) {
+      console.error('Erro ao inserir usuário:', err);
+      return res.status(500).json({ error: 'Erro ao inserir usuário' });
+    }
+
+    res.status(201).json({ message: 'Usuário criado com sucesso', usuarioId: result.insertId });
+  });
+});
+
+// Put da tabela Usuario para mudar informações 
+// app.put('/usuario/:id', (req, res) => {
+//   const { nome, email, senha } = req.body;
+//   const { id } = req.params;
+
+//   const query = 'UPDATE Usuario SET nome = ?, email = ?, senha = ? WHERE id_usuario = ?';
+//   db.query(query, [nome, email, senha, id], (err, result) => {
+//     if (err) {
+//       console.error('Erro ao atualizar usuário:', err);
+//       return res.status(500).json({ error: 'Erro ao atualizar usuário' });
+//     }
+
+//     if (result.affectedRows === 0) {
+//       return res.status(404).json({ error: 'Usuário não encontrado' });
+//     }
+
+//     res.status(200).json({ message: 'Usuário atualizado com sucesso' });
+//   });
+// });
+
+// ATUALIZA TUDO DE UMA VEZ ⬆
+
+// Put individual nas informações 
+
+// Put nome
+app.put('/usuario/:id/nome', (req, res) => {
+  const { nome } = req.body;
+  const { id } = req.params;
+
+  // Validação que o nome seja informado
+  if (!nome || nome.trim() === '') {
+    return res.status(400).json({ error: 'Nome é obrigatório' });
+  }
+
+  // Consulta para atualizar o nome do usuário
+  const query = 'UPDATE Usuario SET nome = ? WHERE id_usuario = ?';
+  db.query(query, [nome, id], (err, result) => {
+    if (err) {
+      console.error('Erro ao atualizar nome do usuário:', err);
+      return res.status(500).json({ error: 'Erro ao atualizar nome do usuário' });
+    }
+
+    // Verifica se nenhuma linha foi afetada, indicando que o usuário não foi encontrado
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: 'Usuário não encontrado' });
+    }
+
+    // Sucesso na atualização do nome
+    res.status(200).json({ message: 'Nome do usuário atualizado com sucesso' });
+  });
+});
+
+
+// Put email
+// Atualiza o email do usuário
+app.put('/usuario/:id/email', (req, res) => {
+  const { email } = req.body;
+  const { id } = req.params;
+
+  // Validação simples para garantir que o email seja informado
+  if (!email || email.trim() === '') {
+    return res.status(400).json({ error: 'Email é obrigatório' });
+  }
+
+  // Validação básica de formato de email 
+  const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  if (!emailRegex.test(email)) {
+    return res.status(400).json({ error: 'Email inválido' });
+  }
+
+  const query = 'UPDATE Usuario SET email = ? WHERE id_usuario = ?';
+  db.query(query, [email, id], (err, result) => {
+    if (err) {
+      console.error('Erro ao atualizar email do usuário:', err);
+      return res.status(500).json({ error: 'Erro ao atualizar email do usuário' });
+    }
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: 'Usuário não encontrado' });
+    }
+
+    res.status(200).json({ message: 'Email do usuário atualizado com sucesso' });
+  });
+});
+
+// Atualiza a senha do usuário
+app.put('/usuario/:id/senha', (req, res) => {
+  const { senha } = req.body;
+  const { id } = req.params;
+
+  // Validação simples para garantir que a senha seja informada
+  if (!senha || senha.trim() === '') {
+    return res.status(400).json({ error: 'Senha é obrigatória' });
+  }
+
+  // Validação simples para garantir que a senha tenha ao menos 6 caracteres (exemplo)
+  if (senha.length < 6) {
+    return res.status(400).json({ error: 'A senha deve ter pelo menos 6 caracteres' });
+  }
+
+  const query = 'UPDATE Usuario SET senha = ? WHERE id_usuario = ?';
+  db.query(query, [senha, id], (err, result) => {
+    if (err) {
+      console.error('Erro ao atualizar senha do usuário:', err);
+      return res.status(500).json({ error: 'Erro ao atualizar senha do usuário' });
+    }
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: 'Usuário não encontrado' });
+    }
+
+    res.status(200).json({ message: 'Senha do usuário atualizada com sucesso' });
+  });
+});
+
+
+// Tabela reserva 
+// Post 
+// Criação de reserva
+app.post('/reserva', (req, res) => {
+  const { data_reserva, horario_inicio, horario_final, estado, fk_quadra, fk_usuario } = req.body;
+
+  // Validação dos campos obrigatórios
+  if (!data_reserva || !horario_inicio || !horario_final || !estado || !fk_quadra || !fk_usuario) {
+    return res.status(400).json({ error: 'Todos os campos (data_reserva, horario_inicio, horario_final, estado, fk_quadra, fk_usuario) são obrigatórios' });
+  }
+
+  // Validação do formato de data e horário
+  const datePattern = /^\d{4}-\d{2}-\d{2}$/; // Formato YYYY-MM-DD
+  const timePattern = /^\d{2}:\d{2}:\d{2}$/; // Formato HH:MM:SS
+
+  if (!datePattern.test(data_reserva)) {
+    return res.status(400).json({ error: 'Formato de data inválido. Use YYYY-MM-DD.' });
+  }
+  if (!timePattern.test(horario_inicio) || !timePattern.test(horario_final)) {
+    return res.status(400).json({ error: 'Formato de horário inválido. Use HH:MM:SS.' });
+  }
+
+  // Validação do estado (exemplo simples, adaptável conforme os valores possíveis)
+  const estadosValidos = ['pendente', 'confirmada', 'concluída', 'cancelada']; // Exemplo de estados válidos
+  if (!estadosValidos.includes(estado)) {
+    return res.status(400).json({ error: 'Estado inválido. Valores válidos: pendente, confirmada, concluída, cancelada.' });
+  }
+
+  // Verificação se fk_quadra e fk_usuario existem nas respectivas tabelas
+  const checkQuadraQuery = 'SELECT COUNT(*) AS count FROM Quadra WHERE id_quadra = ?';
+  db.query(checkQuadraQuery, [fk_quadra], (err, result) => {
+    if (err) {
+      console.error('Erro ao verificar a quadra:', err);
+      return res.status(500).json({ error: 'Erro ao verificar a quadra' });
+    }
+    if (result[0].count === 0) {
+      return res.status(404).json({ error: 'Quadra não encontrada' });
+    }
+
+    const checkUsuarioQuery = 'SELECT COUNT(*) AS count FROM Usuario WHERE id_usuario = ?';
+    db.query(checkUsuarioQuery, [fk_usuario], (err, result) => {
+      if (err) {
+        console.error('Erro ao verificar o usuário:', err);
+        return res.status(500).json({ error: 'Erro ao verificar o usuário' });
+      }
+      if (result[0].count === 0) {
+        return res.status(404).json({ error: 'Usuário não encontrado' });
+      }
+
+      // Inserção da reserva no banco de dados
+      const query = 'INSERT INTO Reserva (data_reserva, horario_inicio, horario_final, estado, fk_quadra, fk_usuario) VALUES (?, ?, ?, ?, ?, ?)';
+      db.query(query, [data_reserva, horario_inicio, horario_final, estado, fk_quadra, fk_usuario], (err, result) => {
+        if (err) {
+          console.error('Erro ao inserir reserva:', err);
+          return res.status(500).json({ error: 'Erro ao inserir reserva' });
+        }
+
+        res.status(201).json({ message: 'Reserva criada com sucesso', reservaId: result.insertId });
+      });
+    });
+  });
+});
+
+// Put da tabela Reserva para mudar informações 
+// app.put('/reserva/:id', (req, res) => {
+//   const { data_reserva, horario_inicio, horario_final, estado, fk_quadra, fk_usuario } = req.body;
+//   const { id } = req.params;
+
+//   const query = 'UPDATE Reserva SET data_reserva = ?, horario_inicio = ?, horario_final = ?, estado = ?, fk_quadra = ?, fk_usuario = ? WHERE id_reserva = ?';
+//   db.query(query, [data_reserva, horario_inicio, horario_final, estado, fk_quadra, fk_usuario, id], (err, result) => {
+//     if (err) {
+//       console.error('Erro ao atualizar reserva:', err);
+//       return res.status(500).json({ error: 'Erro ao atualizar reserva' });
+//     }
+
+//     if (result.affectedRows === 0) {
+//       return res.status(404).json({ error: 'Reserva não encontrada' });
+//     }
+
+//     res.status(200).json({ message: 'Reserva atualizada com sucesso' });
+//   });
+// });
+
+// Put individual nas informações da reserva
+
+// Atualização do estado da reserva
+app.put('/reserva/:id/estado', (req, res) => {
+  // Extração do estado da reserva e ID da URL da requisição
+  const { estado } = req.body;
+  const { id } = req.params;
+
+  // Validação do estado
+  // Lista dos estados válidos para a reserva
+  const estadosValidos = ['pendente', 'confirmada', 'concluída', 'cancelada'];
+  
+  // Verifica se o estado recebido é um dos valores válidos
+  if (!estadosValidos.includes(estado)) {
+    // Se não for válido, retorna um erro com status 400 (Bad Request)
+    return res.status(400).json({ error: 'Estado inválido. Valores válidos: pendente, confirmada, concluída, cancelada.' });
+  }
+
+  // Definindo a consulta SQL para atualizar o estado da reserva
+  const query = 'UPDATE Reserva SET estado = ? WHERE id_reserva = ?';
+
+  // Executando a consulta no banco de dados
+  db.query(query, [estado, id], (err, result) => {
+    // Se ocorrer algum erro durante a execução da consulta
+    if (err) {
+      // Registra o erro no console e retorna erro 500 (Erro interno do servidor)
+      console.error('Erro ao atualizar estado da reserva:', err);
+      return res.status(500).json({ error: 'Erro ao atualizar estado da reserva' });
+    }
+
+    // Verifica se a reserva foi encontrada e o estado foi realmente atualizado
+    if (result.affectedRows === 0) {
+      // Se não houverem linhas afetadas (ou seja, a reserva não foi encontrada)
+      return res.status(404).json({ error: 'Reserva não encontrada' });
+    }
+
+    // Se a atualização foi bem-sucedida, retorna uma resposta com sucesso
+    res.status(200).json({ message: 'Estado da reserva atualizado com sucesso' });
+  });
+});
+
+
+// Consulta de todas as reservas
+app.get('/reservas', (req, res) => {
+  const query = 'SELECT * FROM Reserva';
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error('Erro ao buscar reservas:', err);
+      return res.status(500).json({ error: 'Erro ao buscar reservas' });
+    }
+
+    res.status(200).json(results);
+  });
+});
+
+// Consulta de reservas por usuário
+app.get('/reservas/:usuarioId', (req, res) => {
+  const { usuarioId } = req.params;
+
+  // Validação de ID de usuário
+  if (!usuarioId || isNaN(usuarioId)) {
+    return res.status(400).json({ error: 'ID de usuário inválido' });
+  }
+
+  const query = 'SELECT * FROM Reserva WHERE fk_usuario = ?';
+  db.query(query, [usuarioId], (err, results) => {
+    if (err) {
+      console.error('Erro ao buscar reservas do usuário:', err);
+      return res.status(500).json({ error: 'Erro ao buscar reservas do usuário' });
+    }
+
+    res.status(200).json(results);
+  });
+});
+
+// Consulta de reservas por data
+app.get('/reservas/data/:data', (req, res) => {
+  const { data } = req.params;
+
+  // Validação de data
+  const datePattern = /^\d{4}-\d{2}-\d{2}$/; // Formato YYYY-MM-DD
+  if (!datePattern.test(data)) {
+    return res.status(400).json({ error: 'Formato de data inválido. Use YYYY-MM-DD.' });
+  }
+
+  const query = 'SELECT * FROM Reserva WHERE data_reserva = ?';
+  db.query(query, [data], (err, results) => {
+    if (err) {
+      console.error('Erro ao buscar reservas por data:', err);
+      return res.status(500).json({ error: 'Erro ao buscar reservas por data' });
+    }
+
+    res.status(200).json(results);
+  });
+});
+
+// Exclusão de reserva
+app.delete('/reserva/:id', (req, res) => {
+  const { id } = req.params;
+
+  // Validação de ID de reserva
+  if (!id || isNaN(id)) {
+    return res.status(400).json({ error: 'ID de reserva inválido' });
+  }
+
+  const query = 'DELETE FROM Reserva WHERE id_reserva = ?';
+  db.query(query, [id], (err, result) => {
+    if (err) {
+      console.error('Erro ao excluir reserva:', err);
+      return res.status(500).json({ error: 'Erro ao excluir reserva' });
+    }
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: 'Reserva não encontrada' });
+    }
+
+    res.status(200).json({ message: 'Reserva excluída com sucesso' });
+  });
+});
+
+// Exclusão de usuário
+app.delete('/usuario/:id', (req, res) => {
+  const { id } = req.params;
+
+  // Validação de ID de usuário
+  if (!id || isNaN(id)) {
+    return res.status(400).json({ error: 'ID de usuário inválido' });
+  }
+
+  const query = 'DELETE FROM Usuario WHERE id_usuario = ?';
+  db.query(query, [id], (err, result) => {
+    if (err) {
+      console.error('Erro ao excluir usuário:', err);
+      return res.status(500).json({ error: 'Erro ao excluir usuário' });
+    }
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: 'Usuário não encontrado' });
+    }
+
+    res.status(200).json({ message: 'Usuário excluído com sucesso' });
+  });
+});
+
+
+//Adiconar mais segurança para as senhas 
 // Iniciar o servidor
 app.listen(port, () => {
   console.log(`Servidor rodando em http://localhost:${port}`);
 });
+ 
+
