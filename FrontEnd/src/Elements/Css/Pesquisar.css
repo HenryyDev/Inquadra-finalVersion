@@ -47,6 +47,9 @@ ul {
 ul {
   padding: 0;
 }
+.no-result{
+  margin-left: 20px;
+}
 
 @media (max-width: 1200px) {
   .anun {
@@ -72,8 +75,15 @@ ul {
     margin: 0;
     flex-direction: column;
     align-items: flex-start;
+    justify-content: space-around;
   }
+.no-result img{
+  display: none;
+}
 
+  .no-result{
+    margin-left: 0;
+  }
   .anuncio-left,
   .anuncio-right {
     margin: 5px 0;

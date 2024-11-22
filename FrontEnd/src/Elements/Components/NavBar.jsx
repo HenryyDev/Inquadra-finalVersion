@@ -13,12 +13,12 @@ const NavBar = () => {
   const [query, setQuery] = useState(""); // Estado para o termo de busca
   const navigate = useNavigate(); // Hook para navegação programática
 
-  const onChangeHandler = (event) => {
-    setQuery(event.target.value); // Atualiza o valor do campo de busca
+  const onChangeHandler = (evento) => {
+    setQuery(evento.target.value); // Atualiza o valor do campo de busca
   };
 
-  const onSubmitHandler = (event) => {
-    event.preventDefault(); // Previne o comportamento padrão do formulário (recarregar a página)
+  const onSubmitHandler = (evento) => {
+    evento.preventDefault(); // Previne o comportamento padrão do formulário (recarregar a página)
     handleSearch(query); // Atualiza o termo de pesquisa no contexto
     navigate(`/busca?termo=${query}`); // Redireciona para a página de resultados de busca com o termo
   };

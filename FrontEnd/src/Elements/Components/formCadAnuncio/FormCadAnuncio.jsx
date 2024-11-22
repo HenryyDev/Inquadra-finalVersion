@@ -176,7 +176,7 @@ const CadAnuncio = () => {
             maxLength={2000}
             value={formData.nome}
             onChange={handleChange}
-            placeholder="Digite um título para o seu anúncio (maximo 2000 caracteres)"
+            placeholder="Digite um título para o seu anúncio "
           />
 
           <label htmlFor="descricao" className="form-label">
@@ -194,7 +194,7 @@ const CadAnuncio = () => {
             rows="3"
             value={formData.descricao}
             onChange={handleChange}
-            placeholder="Digite uma descrição para sua quadra"
+            placeholder="Digite uma descrição para sua quadra (maximo 2000 caracteres)"
           ></textarea>
 
           <div className="check-box my-4">
