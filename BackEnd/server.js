@@ -3,6 +3,7 @@ const db = require("./db");
 const multer = require("multer");
 const cors = require("cors");
 const path = require("path");
+const jwt = require("jsonwebtoken"); // Importa o jsonwebtoken
 
 const app = express();
 app.use(cors({ origin: "*" }));
@@ -10,6 +11,9 @@ app.use(express.json());
 app.use("/img", express.static("img"));
 
 const port = 3000;
+
+// Chave secreta para o JWT 
+const JWT_SECRET = "";
 
 // Configuração do armazenamento do multer
 const armazenamento = multer.diskStorage({
@@ -23,8 +27,70 @@ const armazenamento = multer.diskStorage({
 
 const upload = multer({ storage: armazenamento }); // Instância do multer
 
+// Middleware para verificar o token JWT
+const autenticarToken = (req, res, next) => {
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
+
+  if (!token) return res.status(401).send("Token não fornecido");
+
+  jwt.verify(token, JWT_SECRET, (err, user) => {
+    if (err) return res.status(403).send("Token inválido");
+    req.user = user;
+    next();
+  });
+};
+
+// Rota de login para gerar um token JWT
+app.post("/login", (req, res) => {
+  const { email, senha } = req.body;
+
+  // Verifica se os campos foram enviados
+  if (!email || !senha) {
+    return res.status(400).json({ message: "Email e senha são obrigatórios." });
+  }
+
+  // Consulta o banco de dados
+  const sql = "SELECT * FROM Usuario WHERE email = ? AND senha = ?";
+  db.query(sql, [email, senha], (err, results) => {
+    if (err) {
+      console.error("Erro ao consultar usuário:", err);
+      return res.status(500).json({ message: "Erro interno do servidor." });
+    }
+
+    if (results.length === 0) {
+      // Usuário ou senha inválidos
+      return res.status(401).json({ message: "Credenciais inválidas." });
+    }
+
+    const user = results[0];
+
+    // Gerar um token JWT com informações básicas do usuário
+    const token = jwt.sign(
+      {
+        id_usuario: user.id_usuario,
+        nome: user.nome,
+        email: user.email,
+      },
+      JWT_SECRET,
+      { expiresIn: "1h" } // Token expira em 1 hora
+    );
+
+    // Resposta com o token e informações básicas do usuário
+    res.json({
+      message: "Login realizado com sucesso.",
+      token,
+      user: {
+        id_usuario: user.id_usuario,
+        nome: user.nome,
+        email: user.email,
+      },
+    });
+  });
+});
+
 // Rota de cadastro de quadras com upload de imagens
-app.post("/cadastro-anuncio", upload.array("imagens"), (req, res) => {
+app.post("/cadastro-anuncio",autenticarToken, upload.array("imagens"), (req, res) => {
   const {
     nome,
     descricao,
@@ -431,7 +497,7 @@ app.post('/usuario', (req, res) => {
 // Put individual nas informações 
 
 // Put nome
-app.put('/usuario/:id/nome', (req, res) => {
+app.put('/usuario/:id/nome',autenticarToken, (req, res) => {
   const { nome } = req.body;
   const { id } = req.params;
 
@@ -461,7 +527,7 @@ app.put('/usuario/:id/nome', (req, res) => {
 
 // Put email
 // Atualiza o email do usuário
-app.put('/usuario/:id/email', (req, res) => {
+app.put('/usuario/:id/email',autenticarToken, (req, res) => {
   const { email } = req.body;
   const { id } = req.params;
 

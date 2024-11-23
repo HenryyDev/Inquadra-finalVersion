@@ -1,11 +1,11 @@
-// Imports de bibliotecas externas
 import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios"; // Biblioteca para requisições HTTP
 import logo from "../../../assets/logo.png";
 import "../../../Elements/Css/login.css";
-import ocultar from "../../../assets/ocultar.png"
-import ver from "../../../assets/ver.png"
+import ocultar from "../../../assets/ocultar.png";
+import ver from "../../../assets/ver.png";
 
 const Login = () => {
   const [viewSenha, setViewSenha] = useState(true);
@@ -14,9 +14,35 @@ const Login = () => {
     senha: "",
     lembrar: false,
   });
-  const handleSubmit = (event) => {
-    console.log(values.lembrar);
+  const [error, setError] = useState(""); // Estado para mensagens de erro
+  const navigate = useNavigate(); // Para redirecionar após o login bem-sucedido
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
+
+    try {
+      const response = await axios.post("http://localhost:3000/login", {
+        email: values.email, 
+        senha: values.senha,
+      });
+
+      const { token } = response.data;
+
+      // Armazena o token no localStorage ou sessionStorage
+      if (values.lembrar) {
+        localStorage.setItem("token", token);
+      } else {
+        sessionStorage.setItem("token", token);
+      }
+
+      // Redireciona para a página principal ou dashboard
+      navigate("/");
+      console.log(token)
+    } catch (error) {
+      setError(
+        error.response?.data?.message || "Erro ao fazer login. Tente novamente."
+      );
+    }
   };
 
   return (
@@ -47,7 +73,9 @@ const Login = () => {
             </div>
 
             <div className="mb-3" style={{ position: "relative" }}>
-              <label htmlFor="senha" className="form-label" >Senha</label>
+              <label htmlFor="senha" className="form-label">
+                Senha
+              </label>
 
               <div className="senha">
                 <input
@@ -56,7 +84,9 @@ const Login = () => {
                   className="form-control"
                   id="senha"
                   value={values.senha}
-                  onChange={(e) => setValues({ ...values, senha: e.target.value })}
+                  onChange={(e) =>
+                    setValues({ ...values, senha: e.target.value })
+                  }
                 />
                 <img
                   src={viewSenha ? ver : ocultar}
@@ -66,7 +96,7 @@ const Login = () => {
                   style={{
                     position: "absolute",
                     right: "10px",
-                    cursor: "pointer"
+                    cursor: "pointer",
                   }}
                   onClick={() => setViewSenha((estado) => !estado)}
                 />
@@ -78,7 +108,7 @@ const Login = () => {
                 type="checkbox"
                 className="form-check-input"
                 id="rememberMe"
-                checked={values.lembrar} // Estado do checkbox
+                checked={values.lembrar}
                 onChange={(e) =>
                   setValues({ ...values, lembrar: e.target.checked })
                 }
@@ -93,6 +123,12 @@ const Login = () => {
                 </Link>
               </p>
             </div>
+
+            {error && (
+              <div className="alert alert-danger" role="alert">
+                {error}
+              </div>
+            )}
 
             <button type="submit" className="btn btn-primary btn-login">
               Entrar
