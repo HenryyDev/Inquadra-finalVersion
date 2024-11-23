@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import axios from "axios";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import MaskInput from "react-maskinput";
 import "../../Css/CadAnuncio.css";
 import logo from "../../../assets/logo.png";
-import { Link } from "react-router-dom";
+import { Link, Navigate, useNavigate  } from "react-router-dom";
 import CheckCEP from "../CheckCep";
 
 const CadAnuncio = () => {
@@ -35,6 +35,14 @@ const CadAnuncio = () => {
     numero_e: "",
     numero_t: "",
   });
+ const token=localStorage.getItem("token")
+ const navigate = useNavigate();
+ useEffect(() => {
+  if (!token) {
+    toast.error("Você precisa estar logado para criar um anúncio.");
+    navigate("/login"); // Redireciona para a página de login
+  }
+}, [token, navigate]);
 
   const [errors, setErrors] = useState({});
 

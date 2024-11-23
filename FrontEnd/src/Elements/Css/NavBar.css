@@ -118,7 +118,8 @@ a {
 
 @media (max-width: 1200px) {
   
-  .login-link {
-    display: none;
+  .login-link{
+    height: 50px;
+    border-radius: 20px;
   }
 }
