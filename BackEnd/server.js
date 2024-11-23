@@ -13,7 +13,7 @@ app.use("/img", express.static("img"));
 const port = 3000;
 
 // Chave secreta para o JWT 
-const JWT_SECRET = "";
+const JWT_SECRET = "token";
 
 // Configuração do armazenamento do multer
 const armazenamento = multer.diskStorage({
