@@ -4,7 +4,7 @@ import "../../Css/CadUsuario.css";
 import logo from "../../../assets/logo.png";
 import ver from "../../../assets/ver.png";
 import ocultar from "../../../assets/ocultar.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const CadUsuario = () => {
@@ -15,7 +15,7 @@ const CadUsuario = () => {
     confirmarSenha: "",
     termos: false,
   });
-
+  const navigate = useNavigate();
   const [errors, setErrors] = useState({});
   const [viewSenha, setViewSenha] = useState(true);
 
@@ -40,7 +40,7 @@ const CadUsuario = () => {
     axios.post("http://localhost:3000/usuario",values)
     .then((resposta)=>{
       console.log("resposta da req:",resposta)
-      toast.success("Conta criado com sucesso!");
+      navigate("/login")
     })
     .catch((erro)=>{
       console.log("erro na req:",erro);
@@ -109,7 +109,7 @@ const CadUsuario = () => {
                 type={viewSenha ? "password" : "text"}
                 style={{ width: "100%" }}
                 className="form-control"
-                id="senha"
+                
                 value={values.senha}
                 onChange={(e) =>
                   setValues({ ...values, senha: e.target.value })
@@ -144,7 +144,7 @@ const CadUsuario = () => {
                 type={viewSenha ? "password" : "text"}
                 style={{ width: "100%" }}
                 className="form-control"
-                id="senha"
+                
                 value={values.confirmarSenha}
                 onChange={(e) =>
                   setValues({ ...values, confirmarSenha: e.target.value })

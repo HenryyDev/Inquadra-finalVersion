@@ -3,16 +3,58 @@ import IconInfoPessoal from "../../../assets/info-pessoal.svg"
 import IconLogin from "../../../assets/escudo.png"
 import IconAnuncios from "../../../assets/megafone.png"
 import IconGerenciarReserva from "../../../assets/sino-do-hotel (1).png"
-import { Link } from "react-router-dom"
+import { Link,useNavigate } from "react-router-dom"
+import { useEffect, useState } from "react"
+import { jwtDecode } from "jwt-decode";
+
+
+
 
 const GerenciarConta = () => {
+  const [data,setData]=useState({
+    nome:"",
+    email:"",
+    id:null
+  }
+  )
+  const navigate = useNavigate();
+  useEffect(() => {
+    const token = localStorage.getItem("token") || sessionStorage.getItem("token");
 
+    if (!token) {
+      navigate("/login");
+    } else {
+      try {
+        // Decodificando o token
+        const tokenDecodificado = jwtDecode(token);
+        const primeiroNome =tokenDecodificado.nome.split(" ")[0]
+        const nomeFormatado = primeiroNome.charAt(0).toUpperCase() + primeiroNome.slice(1).toLowerCase();
+      
+        setData((prevData) => ({
+          ...prevData, 
+          userId:tokenDecodificado.id_usuario, // userId
+          nome:nomeFormatado, //  nome
+          email:tokenDecodificado.email, // E-mail
+        }));
+
+        const currentTime = Date.now() / 1000; 
+        if (tokenDecodificado.exp && tokenDecodificado.exp < currentTime) {
+          console.log("Token expirado");
+          navigate("/login"); 
+        }
+
+      } catch (error) {
+        console.error("Erro ao decodificar o token:", error);
+       
+      }
+    }
+  }, [navigate]);
   return (
     <>
 
-      <div className="conta ms-5 my-4">
+      <div className="conta ms-3 my-4">
         <h5>Conta</h5>
-        <p>NomeUser, emailUser,<Link to={"/perfil"} className="acesso-perfil"> Acessar perfil</Link></p>
+        <p>{data.nome}, {data.email},<Link to={"/perfil"} className="acesso-perfil"> Acessar perfil</Link></p>
       </div>
 
       <div className="config">

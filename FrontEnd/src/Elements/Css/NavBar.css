@@ -55,19 +55,16 @@
   gap: 40px;
   transition: all 200ms linear;
 }
-.login-link:hover {
-  transition: all 200ms linear;
-  box-shadow: rgba(17, 17, 26, 0.1) 0px 1px 0px,
-    rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 48px;
-  background-color: #cacaca;
-  color: #000000;
-}
+
 .login01 {
   margin-left: 20px;
 }
 .login02 {
   margin-left: 20px;
   margin-right: 20px;
+}
+.login-link{
+  background: none;
 }
 .search{
   padding: 0 !important;
@@ -119,6 +116,7 @@ a {
 @media (max-width: 1200px) {
   
   .login-link{
+    background: none ;
     height: 50px;
     border-radius: 20px;
   }

@@ -792,28 +792,45 @@ app.delete('/reserva/:id', (req, res) => {
 });
 
 // Exclusão de usuário
-app.delete('/usuario/:id', (req, res) => {
-  const { id } = req.params;
+app.post('/usuario/deletar', (req, res) => {
+  const { id, senha } = req.body;
 
-  // Validação de ID de usuário
-  if (!id || isNaN(id)) {
-    return res.status(400).json({ error: 'ID de usuário inválido' });
+  // Validação de entrada
+  if (!id || isNaN(id) || !senha) {
+    return res.status(400).json({ error: 'ID ou senha inválidos' });
   }
 
-  const query = 'DELETE FROM Usuario WHERE id_usuario = ?';
-  db.query(query, [id], (err, result) => {
+  // Busca o usuário e verifica a senha
+  const querySelect = 'SELECT senha FROM Usuario WHERE id_usuario = ?';
+  db.query(querySelect, [id], (err, results) => {
     if (err) {
-      console.error('Erro ao excluir usuário:', err);
-      return res.status(500).json({ error: 'Erro ao excluir usuário' });
+      console.error('Erro ao buscar usuário:', err);
+      return res.status(500).json({ error: 'Erro ao processar solicitação' });
     }
 
-    if (result.affectedRows === 0) {
+    if (results.length === 0) {
       return res.status(404).json({ error: 'Usuário não encontrado' });
     }
 
-    res.status(200).json({ message: 'Usuário excluído com sucesso' });
+    const senhaBanco = results[0].senha;
+
+    if (senha !== senhaBanco) {
+      return res.status(401).json({ error: 'Senha incorreta' });
+    }
+
+    // Senha válida, prossegue com a exclusão
+    const queryDelete = 'DELETE FROM Usuario WHERE id_usuario = ?';
+    db.query(queryDelete, [id], (err, result) => {
+      if (err) {
+        console.error('Erro ao excluir usuário:', err);
+        return res.status(500).json({ error: 'Erro ao excluir usuário' });
+      }
+
+      res.status(200).json({ message: 'Usuário excluído com sucesso' });
+    });
   });
 });
+
 
 
 //Adiconar mais segurança para as senhas 

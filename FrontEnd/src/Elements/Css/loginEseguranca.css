@@ -45,6 +45,9 @@ a {
 }
 .btn-seg{
   width:100px !important;
+  background: none !important; 
+  color: #0000FF ;
+  margin: 0 !important;
 }
 .input div{
   display: flex;
@@ -52,3 +55,9 @@ a {
     align-items: center; 
 }
 
+@media (max-width: 1200px) {
+  .input{
+    width: auto;
+    margin-right: 20px;
+  }
+}

@@ -36,7 +36,7 @@ function InfoPessoal() {
         </div>
       </div>
 
-      <Footer />
+     
     </>
   );
 }

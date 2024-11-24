@@ -58,7 +58,8 @@ a{
 }
 
 .btn-login{
-    background-color:#707070;
+    background: none !important;
+    color: #000000;
     border: none;
     width: 100%;
     border-radius: 25px;

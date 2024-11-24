@@ -35,7 +35,7 @@ const CadAnuncio = () => {
     numero_e: "",
     numero_t: "",
   });
- const token=localStorage.getItem("token")
+  const token = localStorage.getItem("token") || sessionStorage.getItem
  const navigate = useNavigate();
  useEffect(() => {
   if (!token) {

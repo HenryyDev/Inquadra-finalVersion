@@ -36,6 +36,7 @@ const NavBar = () => {
     // Limpa o token do armazenamento e atualiza o estado
     localStorage.removeItem("token");
     sessionStorage.removeItem("token");
+    navigate("/")
     setLogin(false); // Atualiza o estado para 'false' após o logout
   };
 
