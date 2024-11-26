@@ -36,7 +36,7 @@ const autenticarToken = (req, res, next) => {
 
   jwt.verify(token, JWT_SECRET, (err, user) => {
     if (err) return res.status(403).send("Token inválido");
-    req.user = user;
+    req.user = user;  // Armazena o usuário no objeto req para ser acessado nas rotas
     next();
   });
 };
@@ -137,12 +137,12 @@ app.post("/cadastro-anuncio",autenticarToken, upload.array("imagens"), (req, res
         }
 
         const id_endereco = resultado.insertId;
-
+        const fk_administrador = req.user.id;
         // Cadastrando a quadra
-        const sql_quadra = `INSERT INTO Quadra (nome, descricao, preco_hora, fk_endereco) VALUES (?, ?, ?, ?)`;
+        const sql_quadra = `INSERT INTO Quadra (nome, descricao, preco_hora, fk_endereco, fk_administrador) VALUES (?, ?, ?, ?, ?)`;
         db.query(
           sql_quadra,
-          [nome, descricao, preco_hora, id_endereco],
+          [nome, descricao, preco_hora, id_endereco, fk_administrador],
           (erro, resultado) => {
             if (erro) {
               console.error("Erro ao inserir quadra:", erro);
@@ -831,7 +831,82 @@ app.post('/usuario/deletar', (req, res) => {
   });
 });
 
+// //Relacionando usarios e os seus anuncios 
+// app.post('/quadra/:id/imagem', autenticarToken, upload.single('imagem'), async (req, res) => {
+//   const { id } = req.params; // ID da quadra
+//   const caminhoImagem = req.file.path; // Caminho da imagem
+//   const fk_usuario = req.user.id; // ID do usuário autenticado, proveniente do JWT
 
+//   try {
+//     // Verificar se a quadra pertence ao usuário
+//     const [quadra] = await db.query('SELECT * FROM Quadra WHERE id_quadra = ? AND fk_usuario = ?', {
+//       replacements: [id, fk_usuario],
+//       type: db.QueryTypes.SELECT
+//     });
+
+//     if (!quadra) {
+//       return res.status(403).json({ message: 'Você não tem permissão para adicionar imagens a esta quadra.' });
+//     }
+
+//     // Inserir a imagem na tabela Imagem, associando à quadra
+//     await db.query('INSERT INTO Imagem (caminho, fk_quadra) VALUES (?, ?)', {
+//       replacements: [caminhoImagem, id],
+//       type: db.QueryTypes.INSERT
+//     });
+
+//     res.status(201).json({ message: 'Imagem associada à quadra com sucesso', caminho: caminhoImagem });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ message: 'Erro ao associar imagem à quadra', error: error.message });
+//   }
+// });
+
+
+//Faznedo um update nas fotos dos anunciantes
+app.put('/quadra/:id/imagem', autenticarToken, upload.single('imagem'), async (req, res) => {
+  const { id } = req.params; // ID da quadra
+  const caminhoImagem = req.file.path; // Caminho da imagem
+  const fk_usuario = req.user.id; // ID do usuário autenticado, proveniente do JWT
+
+  try {
+    // Verificar se a quadra pertence ao usuário
+    const [quadra] = await db.query('SELECT * FROM Quadra WHERE id_quadra = ? AND fk_usuario = ?', {
+      replacements: [id, fk_usuario],
+      type: db.QueryTypes.SELECT
+    });
+
+    if (!quadra) {
+      return res.status(403).json({ message: 'Você não tem permissão para adicionar ou atualizar imagens para esta quadra.' });
+    }
+
+    // Verificar se já existe uma imagem associada à quadra
+    const [imagemExistente] = await db.query('SELECT * FROM Imagem WHERE fk_quadra = ?', {
+      replacements: [id],
+      type: db.QueryTypes.SELECT
+    });
+
+    if (imagemExistente) {
+      // Se já existe uma imagem, realizar o update
+      await db.query('UPDATE Imagem SET caminho = ? WHERE fk_quadra = ?', {
+        replacements: [caminhoImagem, id],
+        type: db.QueryTypes.UPDATE
+      });
+
+      return res.status(200).json({ message: 'Imagem atualizada com sucesso', caminho: caminhoImagem });
+    } else {
+      // Se não existe uma imagem, realizar a inserção
+      await db.query('INSERT INTO Imagem (caminho, fk_quadra) VALUES (?, ?)', {
+        replacements: [caminhoImagem, id],
+        type: db.QueryTypes.INSERT
+      });
+
+      return res.status(201).json({ message: 'Imagem associada à quadra com sucesso', caminho: caminhoImagem });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Erro ao associar ou atualizar imagem à quadra', error: error.message });
+  }
+});
 
 //Adiconar mais segurança para as senhas 
 
