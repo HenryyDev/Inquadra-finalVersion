@@ -13,7 +13,7 @@ import PagePerfilUser from "./pags/PagePerfilUser";
 import PagePesquisa from "./pags/PagePesquisa";
 import { createRoot } from "react-dom/client";
 import 'bootstrap/dist/css/bootstrap.min.css';
-
+import "./Elements/Css/main.css"
 import {
   createBrowserRouter,
   RouterProvider,

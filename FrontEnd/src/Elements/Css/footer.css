@@ -1,49 +1,71 @@
-footer{
-  
+/* Garantir que o HTML e o body ocupem 100% da altura da tela */
+html, body {
+  height: 100%;
+  margin: 0;
  
-    background-color: var(--blue-secondary);
-    height:auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* O root da aplicação ocupa toda a altura e é um flex container */
+#root {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+/* Estilo do footer */
+footer {
+  background-color: var(--blue-secondary);
+  height: auto;
+  margin-top: auto;  /* Garante que o footer fique no fundo da tela */
+  padding: 20px 0;
+}
+
+footer .footer-container {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap; /* Para garantir que os itens se ajustem em telas menores */
+}
+
+footer .footer-container ul {
+  width: 25%;
+  padding: 0 10px;
+}
+
+footer .footer-container h3 {
+  font-weight: 600;
+  font-size: 1.2rem;
+}
+
+footer .footer-container .redes-sociais img {
+  margin-right: 20px;
+  margin-bottom: 20px;
+}
+
+footer .footer-container li {
+  margin: 10px 0;
+  list-style-type: none;
+}
+
+footer .footer-container a {
+  color: rgb(0, 0, 0);
+}
+
+a {
+  text-decoration: none !important;
+  color: #000000 !important;
+}
+
+/* Estilo para responsividade */
+@media (max-width: 1200px) {
+  footer .footer-container ul {
+    width: 100%;
+    padding: 13px;
+    margin: 0 !important;
   }
-  footer .footer-container{
-    display: flex;
-    justify-content: space-around;
-  
+  footer .footer-container {
+    flex-direction: column;
+    align-items: center;
   }
-  footer .footer-container ul{
-  
-    width: 25%;
-  }
-  footer .footer-container h3{
-   
-    font-weight: 600;
-  
-  }
-  footer .footer-container .redes-sociais img{
-    margin-right: 20px;
-    margin-bottom: 20px;
-  }
- 
-  footer .footer-container li{
-    margin: 10px 0;
-    list-style-type: none;
-  }
-  footer .footer-container a{
-    color: rgb(0, 0, 0);
-  }
-  
-  a{
-    text-decoration: none !important;
-    color: #000000 !important;
-  }
-  @media (max-width:1200px) {
-    
-    footer .footer-container ul{
-      width: 100%;
-      padding: 13px;
-      margin: 0 !important;
-      width: 100%;
-    }
-    footer .footer-container{
-      flex-direction: column;
-    }
-  }
+}
