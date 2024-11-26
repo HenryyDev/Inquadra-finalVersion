@@ -98,7 +98,8 @@ app.post("/cadastro-anuncio", autenticarToken, upload.array("imagens"), (req, re
     ddd,
     numero_t,
   } = req.body;
-
+  const idUser=autenticarToken.id_usuario
+  console.log(idUser)
   if (!req.files || req.files.length === 0) {
     return res.status(400).send("Nenhuma imagem foi enviada");
   }
@@ -452,30 +453,6 @@ app.post('/usuario', (req, res) => {
   });
 });
 
-// Put da tabela Usuario para mudar informações 
-// app.put('/usuario/:id', (req, res) => {
-//   const { nome, email, senha } = req.body;
-//   const { id } = req.params;
-
-//   const query = 'UPDATE Usuario SET nome = ?, email = ?, senha = ? WHERE id_usuario = ?';
-//   db.query(query, [nome, email, senha, id], (err, result) => {
-//     if (err) {
-//       console.error('Erro ao atualizar usuário:', err);
-//       return res.status(500).json({ error: 'Erro ao atualizar usuário' });
-//     }
-
-//     if (result.affectedRows === 0) {
-//       return res.status(404).json({ error: 'Usuário não encontrado' });
-//     }
-
-//     res.status(200).json({ message: 'Usuário atualizado com sucesso' });
-//   });
-// });
-
-// ATUALIZA TUDO DE UMA VEZ ⬆
-
-// Put individual nas informações 
-
 // Put nome
 app.put('/usuario/:id/nome',autenticarToken, (req, res) => {
   const { nome } = req.body;
@@ -507,7 +484,7 @@ app.put('/usuario/:id/nome',autenticarToken, (req, res) => {
 
 // Put email
 // Atualiza o email do usuário
-app.put('/usuario/:id/email',autenticarToken, (req, res) => {
+app.put('/usuario/:id/email', autenticarToken, (req, res) => {
   const { email } = req.body;
   const { id } = req.params;
 
@@ -522,20 +499,35 @@ app.put('/usuario/:id/email',autenticarToken, (req, res) => {
     return res.status(400).json({ error: 'Email inválido' });
   }
 
-  const query = 'UPDATE Usuario SET email = ? WHERE id_usuario = ?';
-  db.query(query, [email, id], (err, result) => {
+  // Verificar se o novo e-mail já está cadastrado no sistema
+  const checkEmailQuery = 'SELECT * FROM Usuario WHERE email = ? AND id_usuario != ?';
+  db.query(checkEmailQuery, [email, id], (err, result) => {
     if (err) {
-      console.error('Erro ao atualizar email do usuário:', err);
-      return res.status(500).json({ error: 'Erro ao atualizar email do usuário' });
+      console.error('Erro ao verificar e-mail existente:', err);
+      return res.status(500).json({ error: 'Erro ao verificar e-mail existente' });
     }
 
-    if (result.affectedRows === 0) {
-      return res.status(404).json({ error: 'Usuário não encontrado' });
+    if (result.length > 0) {
+      return res.status(400).json({ error: 'Este e-mail já está em uso por outro usuário' });
     }
 
-    res.status(200).json({ message: 'Email do usuário atualizado com sucesso' });
+    // Atualizar o e-mail no banco de dados
+    const updateEmailQuery = 'UPDATE Usuario SET email = ? WHERE id_usuario = ?';
+    db.query(updateEmailQuery, [email, id], (err, result) => {
+      if (err) {
+        console.error('Erro ao atualizar e-mail do usuário:', err);
+        return res.status(500).json({ error: 'Erro ao atualizar e-mail do usuário' });
+      }
+
+      if (result.affectedRows === 0) {
+        return res.status(404).json({ error: 'Usuário não encontrado' });
+      }
+
+      res.status(200).json({ message: 'Email do usuário atualizado com sucesso' });
+    });
   });
 });
+
 
 // Atualiza a senha do usuário
 app.put('/usuario/:id/senha', (req, res) => {

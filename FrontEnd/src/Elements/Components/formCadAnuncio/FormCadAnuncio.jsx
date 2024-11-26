@@ -1,11 +1,11 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import MaskInput from "react-maskinput";
 import "../../Css/CadAnuncio.css";
 import logo from "../../../assets/logo.png";
-import { Link, Navigate, useNavigate  } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import CheckCEP from "../CheckCep";
 
 const CadAnuncio = () => {
@@ -35,14 +35,15 @@ const CadAnuncio = () => {
     numero_e: "",
     numero_t: "",
   });
-  const token = localStorage.getItem("token") || sessionStorage.getItem
- const navigate = useNavigate();
- useEffect(() => {
-  if (!token) {
-    toast.error("Você precisa estar logado para criar um anúncio.");
-    navigate("/login"); // Redireciona para a página de login
-  }
-}, [token, navigate]);
+  const token = localStorage.getItem("token") || sessionStorage.getItem("token")
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!token) {
+      toast.error("Você precisa estar logado para criar um anúncio.");
+      navigate("/login"); // Redireciona para a página de login
+    }
+    console.log(token)
+  }, [token, navigate]);
 
   const [errors, setErrors] = useState({});
 
@@ -86,7 +87,7 @@ const CadAnuncio = () => {
     const newErrors = {}; // Objeto para armazenar os erros de validação
     if (!formData.nome) newErrors.nome = "Título é obrigatório."; // Verifica se o título está vazio
     if (!formData.descricao) newErrors.descricao = "Descrição é obrigatória."; // Verifica se a descrição está vazia
-    if(formData.descricao.length>1999) newErrors.descricao = "Descrição superior a 2000 caracteres"
+    if (formData.descricao.length > 1999) newErrors.descricao = "Descrição superior a 2000 caracteres"
     if (!formData.preco_hora) newErrors.preco_hora = "Preço é obrigatório."; // Verifica se o preço está vazio
     if (!formData.logradouro) newErrors.logradouro = "Endereço é obrigatório."; // Verifica se o endereço está vazio
     if (!formData.cep) newErrors.cep = "CEP é obrigatório."; // Verifica se o CEP está vazio
@@ -141,7 +142,11 @@ const CadAnuncio = () => {
     });
 
     axios
-      .post("http://localhost:3000/cadastro-anuncio", formDataToSend)
+      .post("http://localhost:3000/cadastro-anuncio", formDataToSend, {
+        headers: {
+          Authorization: `Bearer ${token}`, // Usando o token com o prefixo "Bearer"
+        },
+      })
       .then((resposta) => {
         console.log("Resposta da requisição:", resposta);
         alert("Anúncio criado com sucesso!");
@@ -154,196 +159,196 @@ const CadAnuncio = () => {
 
   return (
     <>
-    <ToastContainer />
-    <div className="container-anuncio">
-      <div className="anuncio-form">
-        <form onSubmit={handleSubmit} encType="multipart/form-data">
-          <Link to={"/"} className="logo-anuncio">
-            <img src={logo} alt="logo" width={"200px"} />
-          </Link>
-          <h2 className="h2-txt">
-            Compartilhe algumas informações sobre sua quadra
-          </h2>
-          <p>
-            Os itens com (<span className="error-text">*</span>) são
-            obrigatórios
-          </p>
+      <ToastContainer />
+      <div className="container-anuncio">
+        <div className="anuncio-form">
+          <form onSubmit={handleSubmit} encType="multipart/form-data">
+            <Link to={"/"} className="logo-anuncio">
+              <img src={logo} alt="logo" width={"200px"} />
+            </Link>
+            <h2 className="h2-txt">
+              Compartilhe algumas informações sobre sua quadra
+            </h2>
+            <p>
+              Os itens com (<span className="error-text">*</span>) são
+              obrigatórios
+            </p>
 
-          <label htmlFor="nome" className="form-label">
-            Título<span className="error-text">*</span>
-          </label>
-          {errors.nome && (
-            <div className="alert alert-danger" role="alert">
-              <span className="error-text">{errors.nome}</span>
-            </div>
-          )}
-          <input
-            type="text"
-            className="form-control mb-4"
-            name="nome"
-            maxLength={2000}
-            value={formData.nome}
-            onChange={handleChange}
-            placeholder="Digite um título para o seu anúncio "
-          />
-
-          <label htmlFor="descricao" className="form-label">
-            Descrição<span className="error-text">*</span>
-          </label>
-          {errors.descricao && (
-            <div className="alert alert-danger" role="alert">
-              <span className="error-text">{errors.descricao}</span>
-            </div>
-          )}
-          <textarea
-            className="form-control"
-            id="descricao"
-            name="descricao"
-            rows="3"
-            value={formData.descricao}
-            onChange={handleChange}
-            placeholder="Digite uma descrição para sua quadra (maximo 2000 caracteres)"
-          ></textarea>
-
-          <div className="check-box my-4">
-            <span>
-              Esportes que podem ser feitos na quadra
-              <span className="error-text">*</span>
-            </span>
-            {errors.esporte && (
+            <label htmlFor="nome" className="form-label">
+              Título<span className="error-text">*</span>
+            </label>
+            {errors.nome && (
               <div className="alert alert-danger" role="alert">
-                <span className="error-text">{errors.esporte}</span>
+                <span className="error-text">{errors.nome}</span>
               </div>
             )}
-            <div className="row">
-              {Object.keys(formData.esporte).map((esporte, index) => (
-                <div key={esporte} className="col-6 col-md-4">
-                  {" "}
-                  {/* Cada coluna ocupa 6 em telas pequenas e 4 em telas maiores */}
-                  <label className="form-check-label d-block" htmlFor={esporte}>
-                    <input
-                      className="form-check-input"
-                      type="checkbox"
-                      name={esporte}
-                      checked={formData.esporte[esporte]}
-                      onChange={handleChange}
-                    />
-                    {esporte.charAt(0).toUpperCase() + esporte.slice(1)}
-                  </label>
+            <input
+              type="text"
+              className="form-control mb-4"
+              name="nome"
+              maxLength={2000}
+              value={formData.nome}
+              onChange={handleChange}
+              placeholder="Digite um título para o seu anúncio "
+            />
+
+            <label htmlFor="descricao" className="form-label">
+              Descrição<span className="error-text">*</span>
+            </label>
+            {errors.descricao && (
+              <div className="alert alert-danger" role="alert">
+                <span className="error-text">{errors.descricao}</span>
+              </div>
+            )}
+            <textarea
+              className="form-control"
+              id="descricao"
+              name="descricao"
+              rows="3"
+              value={formData.descricao}
+              onChange={handleChange}
+              placeholder="Digite uma descrição para sua quadra (maximo 2000 caracteres)"
+            ></textarea>
+
+            <div className="check-box my-4">
+              <span>
+                Esportes que podem ser feitos na quadra
+                <span className="error-text">*</span>
+              </span>
+              {errors.esporte && (
+                <div className="alert alert-danger" role="alert">
+                  <span className="error-text">{errors.esporte}</span>
                 </div>
-              ))}
+              )}
+              <div className="row">
+                {Object.keys(formData.esporte).map((esporte, index) => (
+                  <div key={esporte} className="col-6 col-md-4">
+                    {" "}
+                    {/* Cada coluna ocupa 6 em telas pequenas e 4 em telas maiores */}
+                    <label className="form-check-label d-block" htmlFor={esporte}>
+                      <input
+                        className="form-check-input"
+                        type="checkbox"
+                        name={esporte}
+                        checked={formData.esporte[esporte]}
+                        onChange={handleChange}
+                      />
+                      {esporte.charAt(0).toUpperCase() + esporte.slice(1)}
+                    </label>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
 
-          <label htmlFor="preco_hora" className="form-label">
-            Preço R$<span className="error-text">*</span>
-          </label>
-          {errors.preco_hora && (
-            <div className="alert alert-danger" role="alert">
-              <span className="error-text">{errors.preco_hora}</span>
-            </div>
-          )}
-          <input
-            type="number"
-            className="form-control mb-4"
-            name="preco_hora"
-            value={formData.preco_hora}
-            onChange={handleChange}
-            placeholder="Digite o Preço que deseja cobrar"
-          />
+            <label htmlFor="preco_hora" className="form-label">
+              Preço R$<span className="error-text">*</span>
+            </label>
+            {errors.preco_hora && (
+              <div className="alert alert-danger" role="alert">
+                <span className="error-text">{errors.preco_hora}</span>
+              </div>
+            )}
+            <input
+              type="number"
+              className="form-control mb-4"
+              name="preco_hora"
+              value={formData.preco_hora}
+              onChange={handleChange}
+              placeholder="Digite o Preço que deseja cobrar"
+            />
 
-          <label htmlFor="cep" className="form-label">
-            Cep<span className="error-text">*</span>
-          </label>
-          {errors.cep && (
-            <div className="alert alert-danger" role="alert">
-              <span className="error-text">{errors.cep}</span>
-            </div>
-          )}
-          <MaskInput
-            alwaysShowMask
-            maskChar="_"
-            mask="00000-000"
-            type="text"
-            className="form-control mb-4"
-            name="cep"
-            value={formData.cep}
-            onBlur={handleBlurCEP}
-            onChange={handleChange}
-            placeholder="Digite o cep da quadra"
-          />
+            <label htmlFor="cep" className="form-label">
+              Cep<span className="error-text">*</span>
+            </label>
+            {errors.cep && (
+              <div className="alert alert-danger" role="alert">
+                <span className="error-text">{errors.cep}</span>
+              </div>
+            )}
+            <MaskInput
+              alwaysShowMask
+              maskChar="_"
+              mask="00000-000"
+              type="text"
+              className="form-control mb-4"
+              name="cep"
+              value={formData.cep}
+              onBlur={handleBlurCEP}
+              onChange={handleChange}
+              placeholder="Digite o cep da quadra"
+            />
 
-          <label htmlFor="logradouro" className="form-label">
-            Logradouro<span className="error-text">*</span>
-          </label>
-          {errors.logradouro && (
-            <div className="alert alert-danger" role="alert">
-              <span className="error-text">{errors.logradouro}</span>
-            </div>
-          )}
-          <input
-            type="text"
-            className="form-control mb-4"
-            name="logradouro"
-            value={formData.logradouro}
-            onChange={handleChange}
-            placeholder="Digite o Endereço da quadra"
-          />
+            <label htmlFor="logradouro" className="form-label">
+              Logradouro<span className="error-text">*</span>
+            </label>
+            {errors.logradouro && (
+              <div className="alert alert-danger" role="alert">
+                <span className="error-text">{errors.logradouro}</span>
+              </div>
+            )}
+            <input
+              type="text"
+              className="form-control mb-4"
+              name="logradouro"
+              value={formData.logradouro}
+              onChange={handleChange}
+              placeholder="Digite o Endereço da quadra"
+            />
 
-          <label htmlFor="numero_e" className="form-label">
-            Número<span className="error-text">*</span>
-          </label>
-          <input
-            type="text"
-            className="form-control mb-4"
-            name="numero_e"
-            value={formData.numero_e}
-            onChange={handleChange}
-            placeholder="Digite o número da quadra"
-          />
+            <label htmlFor="numero_e" className="form-label">
+              Número<span className="error-text">*</span>
+            </label>
+            <input
+              type="text"
+              className="form-control mb-4"
+              name="numero_e"
+              value={formData.numero_e}
+              onChange={handleChange}
+              placeholder="Digite o número da quadra"
+            />
 
-          <label htmlFor="numero_t" className="form-label">
-            Número Telefônico<span className="error-text">*</span>
-          </label>
-          {errors.numero_t && (
-            <div className="alert alert-danger" role="alert">
-              <span className="error-text">{errors.numero_t}</span>
-            </div>
-          )}
-          <MaskInput
-            alwaysShowMask
-            maskChar="_"
-            mask={"(00) 00000-0000"}
-            className="form-control mb-4"
-            name="numero_t"
-            value={formData.numero_t}
-            onChange={handleChange}
-            placeholder="Digite um número telefônico para contato"
-          />
+            <label htmlFor="numero_t" className="form-label">
+              Número Telefônico<span className="error-text">*</span>
+            </label>
+            {errors.numero_t && (
+              <div className="alert alert-danger" role="alert">
+                <span className="error-text">{errors.numero_t}</span>
+              </div>
+            )}
+            <MaskInput
+              alwaysShowMask
+              maskChar="_"
+              mask={"(00) 00000-0000"}
+              className="form-control mb-4"
+              name="numero_t"
+              value={formData.numero_t}
+              onChange={handleChange}
+              placeholder="Digite um número telefônico para contato"
+            />
 
-          <label htmlFor="imagens" className="form-label">
-            Imagens<span className="error-text">*</span>
-          </label>
-          {errors.imagens && (
-            <div className="alert alert-danger" role="alert">
-              <span className="error-text">{errors.imagens}</span>
-            </div>
-          )}
-          <input
-            className="form-control mb-4"
-            type="file"
-            id="imagens"
-            name="imagens"
-            multiple
-            onChange={handleChange}
-          />
+            <label htmlFor="imagens" className="form-label">
+              Imagens<span className="error-text">*</span>
+            </label>
+            {errors.imagens && (
+              <div className="alert alert-danger" role="alert">
+                <span className="error-text">{errors.imagens}</span>
+              </div>
+            )}
+            <input
+              className="form-control mb-4"
+              type="file"
+              id="imagens"
+              name="imagens"
+              multiple
+              onChange={handleChange}
+            />
 
-          <button type="submit" className="btn btn-primary">
-            Criar anúncio
-          </button>
-        </form>
+            <button type="submit" className="btn btn-primary">
+              Criar anúncio
+            </button>
+          </form>
+        </div>
       </div>
-    </div>
     </>
   );
 };
