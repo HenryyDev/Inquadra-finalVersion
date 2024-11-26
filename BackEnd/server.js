@@ -551,33 +551,59 @@ app.put('/usuario/:id/email', autenticarToken, (req, res) => {
 
 // Atualiza a senha do usuário
 app.put('/usuario/:id/senha', (req, res) => {
-  const { senha } = req.body;
+  const { senhaAtual, novaSenha } = req.body;  // Recebe a senha atual e a nova senha
   const { id } = req.params;
 
   // Validação simples para garantir que a senha seja informada
-  if (!senha || senha.trim() === '') {
-    return res.status(400).json({ error: 'Senha é obrigatória' });
+  if (!senhaAtual || senhaAtual.trim() === '') {
+    return res.status(400).json({ error: 'Senha atual é obrigatória' });
   }
 
-  // Validação simples para garantir que a senha tenha ao menos 6 caracteres (exemplo)
-  if (senha.length < 6) {
-    return res.status(400).json({ error: 'A senha deve ter pelo menos 6 caracteres' });
+  if (!novaSenha || novaSenha.trim() === '') {
+    return res.status(400).json({ error: 'Nova senha é obrigatória' });
   }
 
-  const query = 'UPDATE Usuario SET senha = ? WHERE id_usuario = ?';
-  db.query(query, [senha, id], (err, result) => {
+  // Validação para garantir que a nova senha tenha ao menos 6 caracteres
+  if (novaSenha.length < 6) {
+    return res.status(400).json({ error: 'A nova senha deve ter pelo menos 6 caracteres' });
+  }
+
+  // Verificar a senha atual no banco de dados
+  const queryGetSenha = 'SELECT senha FROM Usuario WHERE id_usuario = ?';
+  db.query(queryGetSenha, [id], (err, result) => {
     if (err) {
-      console.error('Erro ao atualizar senha do usuário:', err);
-      return res.status(500).json({ error: 'Erro ao atualizar senha do usuário' });
+      console.error('Erro ao buscar senha do usuário:', err);
+      return res.status(500).json({ error: 'Erro ao buscar senha do usuário' });
     }
 
-    if (result.affectedRows === 0) {
+    if (result.length === 0) {
       return res.status(404).json({ error: 'Usuário não encontrado' });
     }
 
-    res.status(200).json({ message: 'Senha do usuário atualizada com sucesso' });
+    const senhaHash = result[0].senha;
+
+    // Comparar a senha atual fornecida com a senha armazenada no banco de dados
+    if (senhaAtual !== senhaHash) {
+      return res.status(400).json({ error: 'Senha atual incorreta' });
+    }
+
+    // Se as senhas coincidem, atualize a senha no banco de dados
+    const queryUpdate = 'UPDATE Usuario SET senha = ? WHERE id_usuario = ?';
+    db.query(queryUpdate, [novaSenha, id], (err, result) => {
+      if (err) {
+        console.error('Erro ao atualizar senha do usuário:', err);
+        return res.status(500).json({ error: 'Erro ao atualizar senha do usuário' });
+      }
+
+      if (result.affectedRows === 0) {
+        return res.status(404).json({ error: 'Usuário não encontrado' });
+      }
+
+      res.status(200).json({ message: 'Senha do usuário atualizada com sucesso' });
+    });
   });
 });
+
 
 
 // Tabela reserva 
