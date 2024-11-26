@@ -3,7 +3,7 @@ const db = require("./db");
 const multer = require("multer");
 const cors = require("cors");
 const path = require("path");
-const jwt = require("jsonwebtoken"); // Importa o jsonwebtoken
+const jwt = require("jsonwebtoken");
 
 const app = express();
 app.use(cors({ origin: "*" }));
@@ -12,7 +12,7 @@ app.use("/img", express.static("img"));
 
 const port = 3000;
 
-// Chave secreta para o JWT 
+// Chave secreta para o JWT
 const JWT_SECRET = "token";
 
 // Configuração do armazenamento do multer
@@ -45,12 +45,10 @@ const autenticarToken = (req, res, next) => {
 app.post("/login", (req, res) => {
   const { email, senha } = req.body;
 
-  // Verifica se os campos foram enviados
   if (!email || !senha) {
     return res.status(400).json({ message: "Email e senha são obrigatórios." });
   }
 
-  // Consulta o banco de dados
   const sql = "SELECT * FROM Usuario WHERE email = ? AND senha = ?";
   db.query(sql, [email, senha], (err, results) => {
     if (err) {
@@ -59,13 +57,10 @@ app.post("/login", (req, res) => {
     }
 
     if (results.length === 0) {
-      // Usuário ou senha inválidos
       return res.status(401).json({ message: "Credenciais inválidas." });
     }
 
     const user = results[0];
-
-    // Gerar um token JWT com informações básicas do usuário
     const token = jwt.sign(
       {
         id_usuario: user.id_usuario,
@@ -73,10 +68,9 @@ app.post("/login", (req, res) => {
         email: user.email,
       },
       JWT_SECRET,
-      { expiresIn: "1h" } // Token expira em 1 hora
+      { expiresIn: "1h" }
     );
 
-    // Resposta com o token e informações básicas do usuário
     res.json({
       message: "Login realizado com sucesso.",
       token,
@@ -90,7 +84,7 @@ app.post("/login", (req, res) => {
 });
 
 // Rota de cadastro de quadras com upload de imagens
-app.post("/cadastro-anuncio",autenticarToken, upload.array("imagens"), (req, res) => {
+app.post("/cadastro-anuncio", autenticarToken, upload.array("imagens"), (req, res) => {
   const {
     nome,
     descricao,
@@ -111,12 +105,12 @@ app.post("/cadastro-anuncio",autenticarToken, upload.array("imagens"), (req, res
   }
 
   const imagens = req.files.map((file) => `/img/${file.filename}`);
-  const esporteData = JSON.parse(req.body.esporte);
-  const esporteValues = Object.values(esporteData);
+  const esporteData = JSON.parse(req.body.esporte); // Exemplo: { futebol: true, basquete: false }
+  const esporteValues = Object.values(esporteData); // Array com os valores de cada esporte
 
-  // Cadastrando o esporte
+  // Cadastrando os esportes
   const sql_esporte = `INSERT INTO Esportes (basquete, futebol, outros, golfe, natacao, volei, tenis, pong, skate, futsal)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
   db.query(sql_esporte, esporteValues, (erro, resultado) => {
     if (erro) {
@@ -139,6 +133,7 @@ app.post("/cadastro-anuncio",autenticarToken, upload.array("imagens"), (req, res
 
         const id_endereco = resultado.insertId;
         const fk_administrador = req.user.id;
+
         // Cadastrando a quadra
         const sql_quadra = `INSERT INTO Quadra (nome, descricao, preco_hora, fk_endereco, fk_administrador) VALUES (?, ?, ?, ?, ?)`;
         db.query(
@@ -152,22 +147,19 @@ app.post("/cadastro-anuncio",autenticarToken, upload.array("imagens"), (req, res
 
             const id_quadra = resultado.insertId;
 
-            // Associando a quadra ao esporte na tabela Esportes
-            const sql_atualiza_esporte = `UPDATE Esportes SET fk_quadra = ? WHERE id_esporte = ?`;
-            db.query(sql_atualiza_esporte, [id_quadra, id_esporte], (erro) => {
+            // Associando a quadra ao esporte na tabela Relacao
+            const sql_relacao = `INSERT INTO Relacao (fk_esporte, fk_quadra) VALUES ?`;
+            const esportesAssociados = esporteValues.map(() => [id_esporte, id_quadra]);
+
+            db.query(sql_relacao, [esportesAssociados], (erro) => {
               if (erro) {
-                console.error("Erro ao atualizar esporte com fk_quadra:", erro);
-                return res
-                  .status(500)
-                  .send("Erro ao atualizar esporte com fk_quadra");
+                console.error("Erro ao associar esporte à quadra:", erro);
+                return res.status(500).send("Erro ao associar esporte");
               }
 
-              // Inserindo imagens na tabela Imagem
+              // Inserindo imagens da quadra
               const sql_imagens = `INSERT INTO Imagem (caminho, fk_quadra) VALUES ?`;
-              const valores_imagens = imagens.map((caminho) => [
-                caminho,
-                id_quadra,
-              ]);
+              const valores_imagens = imagens.map((caminho) => [caminho, id_quadra]);
 
               db.query(sql_imagens, [valores_imagens], (erro) => {
                 if (erro) {
@@ -175,35 +167,23 @@ app.post("/cadastro-anuncio",autenticarToken, upload.array("imagens"), (req, res
                   return res.status(500).send("Erro ao salvar imagens");
                 }
 
-                // Relacionando esporte e quadra na tabela Relacao
-                const sql_relacao = `INSERT INTO Relacao (fk_esporte, fk_quadra) VALUES (?, ?)`;
-                db.query(sql_relacao, [id_esporte, id_quadra], (erro) => {
-                  if (erro) {
-                    console.error(
-                      "Erro ao cadastrar relação entre esporte e quadra:",
-                      erro
-                    );
-                    return res.status(500).send("Erro ao cadastrar relação");
-                  }
-
-                  res.send({
-                    message: "Quadra cadastrada com sucesso",
-                    quadra: {
-                      nome,
-                      descricao,
-                      preco_hora,
-                      esporte: esporteData,
-                      endereco: {
-                        cep,
-                        bairro,
-                        municipio,
-                        uf,
-                        logradouro,
-                        numero_e,
-                      },
-                      imagens,
+                res.status(200).send({
+                  message: "Quadra cadastrada com sucesso",
+                  quadra: {
+                    nome,
+                    descricao,
+                    preco_hora,
+                    esporte: esporteData,
+                    endereco: {
+                      cep,
+                      bairro,
+                      municipio,
+                      uf,
+                      logradouro,
+                      numero_e,
                     },
-                  });
+                    imagens,
+                  },
                 });
               });
             });
