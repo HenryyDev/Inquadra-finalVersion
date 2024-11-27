@@ -408,7 +408,6 @@ app.get("/busca", (req, res) => {
       en.municipio,
       en.bairro,
       i.caminho AS imagem 
-     
   
     FROM 
       Quadra q
