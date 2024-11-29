@@ -82,6 +82,7 @@ const CadAnuncio = () => {
         });
       }
     }
+   
   };
   const validateForm = () => {
     const newErrors = {}; // Objeto para armazenar os erros de validação

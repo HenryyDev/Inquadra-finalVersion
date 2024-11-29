@@ -98,7 +98,7 @@ app.post("/cadastro-anuncio", autenticarToken, upload.array("imagens"), (req, re
     ddd,
     numero_t,
   } = req.body;
-  const idUser=autenticarToken.id_usuario
+  const idUser = autenticarToken.id_usuario
   console.log(idUser)
   if (!req.files || req.files.length === 0) {
     return res.status(400).send("Nenhuma imagem foi enviada");
@@ -321,7 +321,8 @@ app.get("/quadra/:id", (req, res) => {
   en.bairro
 FROM Quadra q
 LEFT JOIN Imagem i ON q.id_quadra = i.fk_quadra  
-LEFT JOIN Esportes e ON q.id_quadra = e.fk_quadra
+LEFT JOIN Relacao r ON q.id_quadra = r.fk_quadra
+  LEFT JOIN Esportes e ON r.fk_esporte = e.id_esporte 
 LEFT JOIN Avaliacao a ON q.id_quadra = a.fk_quadra  
 LEFT JOIN Endereco en ON q.fk_endereco = en.id_endereco  
 WHERE q.id_quadra = ?
@@ -341,6 +342,8 @@ GROUP BY q.id_quadra, e.basquete, e.futebol, e.outros, e.golfe, e.natacao, e.vol
     }
 
     const quadra = resultado[0];
+    console.log("Resultado da consulta:", quadra);
+
 
     // Filtra os esportes que são 'true'
     const esportesDisponiveis = [];
@@ -453,7 +456,7 @@ app.post('/usuario', (req, res) => {
 });
 
 // Put nome
-app.put('/usuario/:id/nome',autenticarToken, (req, res) => {
+app.put('/usuario/:id/nome', autenticarToken, (req, res) => {
   const { nome } = req.body;
   const { id } = req.params;
 
@@ -679,7 +682,7 @@ app.put('/reserva/:id/estado', (req, res) => {
   // Validação do estado
   // Lista dos estados válidos para a reserva
   const estadosValidos = ['pendente', 'confirmada', 'concluída', 'cancelada'];
-  
+
   // Verifica se o estado recebido é um dos valores válidos
   if (!estadosValidos.includes(estado)) {
     // Se não for válido, retorna um erro com status 400 (Bad Request)
@@ -912,5 +915,5 @@ app.put('/quadra/:id/imagem', autenticarToken, upload.single('imagem'), async (r
 app.listen(port, () => {
   console.log(`Servidor rodando em http://localhost:${port}`);
 });
- 
+
 

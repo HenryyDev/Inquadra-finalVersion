@@ -81,7 +81,7 @@ function Anuncio() {
         <div className="desc">
           <h2 id="h2-desc">Descrição</h2>
           <span id="txt-desc">{quadra.descricao}</span>
-          <h3>Esportes que podem ser feitos na quadra:</h3>
+          <h3>Esportes que podem ser feitos na quadra</h3>
           <ul
             style={{
               listStyleType: "none",
@@ -92,9 +92,12 @@ function Anuncio() {
           >
             {quadra.esportes && quadra.esportes.length > 0 ? (
               quadra.esportes.map((esporte, index) => (
-                <li key={index} style={{ margin: "0 10px" }}>
-                  {esporte}
-                </li>
+                <div style={{backgroundColor:"#94B0B3", borderRadius:"25px", marginLeft:"10px"}}>
+                  <li key={index} style={{ margin: "0 10px" }}>
+                  
+                    {esporte}
+                  </li>
+                </div>
               ))
             ) : (
               <li>Nenhum esporte disponível</li>
@@ -106,6 +109,7 @@ function Anuncio() {
             Cep:{quadra.cep} | Município: {quadra.municipio} | Bairro:{" "}
             {quadra.bairro}
           </p>
+          <Link><p style={{color:"#0000FF"}}>Ver perfil anunciante</p></Link>
         </div>
         <div className="check-in">
           <h2>R${quadra.preco_por_hora}/hora</h2>
