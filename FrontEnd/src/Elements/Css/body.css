@@ -71,18 +71,18 @@
 .melhores-avaliados li, .mais-populares li, .menor-custo li {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  
   margin-left:40px;
   background-color: var(--transparence-primary);
   width: 250px;
   height: auto;
   border-radius: 25px;
-  padding: 20px;
+padding-top: 20px;
   text-align: center;
 }
 
 .melhores-avaliados li img, .mais-populares li img, .menor-custo li img {
-  width: 100%;
+  width: 90%;
   border-radius: 10px; 
   height: auto;
 }
@@ -92,6 +92,8 @@
   justify-content: space-between;
   text-align: left;
   margin-top: 10px;
+  margin-left: 5px;
+  margin-right: 5px;
   font-size: 14px; 
 }
 

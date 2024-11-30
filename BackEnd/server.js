@@ -365,7 +365,7 @@ GROUP BY q.id_quadra, e.basquete, e.futebol, e.outros, e.golfe, e.natacao, e.vol
       titulo: quadra.titulo,
       descricao: quadra.descricao,
       preco_por_hora: quadra.preco_por_hora,
-      fotos: quadra.fotos ? quadra.fotos.split(",") : [], // Divide a string de fotos em um array
+      fotos: quadra.fotos ? [...new Set(quadra.fotos.split(","))] : [], // Remove duplicatas
       esportes: esportesDisponiveis,
       media_avaliacao: quadra.media_avaliacao
         ? parseFloat(quadra.media_avaliacao).toFixed(2)
@@ -399,8 +399,8 @@ app.get("/busca", (req, res) => {
     "skate",
     "futsal",
     "outros",
-    "pingpong",
-  ]; // Exemplo de modalidades
+    "pong",
+  ]; 
   let queryParams = [termoPesquisa, termoPesquisa];
   let query = `
     SELECT 
@@ -410,15 +410,17 @@ app.get("/busca", (req, res) => {
       q.preco_hora, 
       en.municipio,
       en.bairro,
-      i.caminho AS imagem 
-  
+      -- Seleciona a primeira imagem associada à quadra
+      (SELECT i.caminho 
+       FROM Imagem i 
+       WHERE i.fk_quadra = q.id_quadra
+       LIMIT 1) AS imagem
     FROM 
       Quadra q
     LEFT JOIN 
-      Imagem i ON q.id_quadra = i.fk_quadra
-    LEFT JOIN 
       Esportes e ON q.id_quadra = e.id_esporte
-      LEFT JOIN Endereco en ON q.fk_endereco = en.id_endereco 
+    LEFT JOIN 
+      Endereco en ON q.fk_endereco = en.id_endereco 
     WHERE 
       (q.nome LIKE CONCAT('%', ?, '%') OR q.descricao LIKE CONCAT('%', ?, '%'))
   `;
@@ -435,8 +437,10 @@ app.get("/busca", (req, res) => {
     }
 
     res.json(results);
+    console.log(results)
   });
 });
+
 
 //NAO TESTEI POIS MEU BANCO DE DADOS NAO ESTA FUNCIONANDO, SUJEITO A VARIOS ERROS 
 

@@ -17,7 +17,9 @@ CREATE TABLE Imagem (
     FOREIGN KEY (fk_quadra) REFERENCES Quadra(id_quadra) 
 );
 
+
 ALTER TABLE Quadra ADD COLUMN Descricao VARCHAR(2000); 
+
 CREATE TABLE Endereco (
     id_endereco INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
     cep VARCHAR(20),
@@ -34,6 +36,7 @@ CREATE TABLE Relacao (
     fk_quadra INT
     
 );
+
 CREATE TABLE Esportes (
     id_esporte INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
     basquete BOOLEAN DEFAULT false,
@@ -47,6 +50,13 @@ CREATE TABLE Esportes (
     skate BOOLEAN DEFAULT false,
     futsal BOOLEAN DEFAULT false
 );
+
+
+
+
+
+
+
 
 CREATE TABLE Usuario (
     id_usuario INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
@@ -81,6 +91,7 @@ CREATE TABLE Pago (
     estado BOOLEAN,
     fk_reserva INT
 );
+
 CREATE TABLE Administrador (
     id_administrador INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
     nome VARCHAR(90),
@@ -95,8 +106,9 @@ CREATE TABLE Telefone (
     fk_administrador INT,
     fk_usuario INT
 );
+ALTER TABLE Telefone
+MODIFY COLUMN numero_t VARCHAR(50);
 
-ALTER TABLE Telefone CHANGE COLUMN numero numero_t int;
 
 -- Adicionando as chaves estrangeiras após a criação das tabelas
 ALTER TABLE Quadra
@@ -113,16 +125,23 @@ ALTER TABLE Esportes ADD CONSTRAINT fk_quadra FOREIGN KEY (fk_quadra) REFERENCES
 ALTER TABLE Avaliacao
 ADD CONSTRAINT FK_Avaliacao_Quadra FOREIGN KEY (fk_quadra) REFERENCES Quadra(id_quadra),
 ADD CONSTRAINT FK_Avaliacao_Usuario FOREIGN KEY (fk_usuario) REFERENCES Usuario(id_usuario);
+
 ALTER TABLE Reserva
 ADD CONSTRAINT FK_Reserva_Quadra FOREIGN KEY (fk_quadra) REFERENCES Quadra(id_quadra),
 ADD CONSTRAINT FK_Reserva_Usuario FOREIGN KEY (fk_usuario) REFERENCES Usuario(id_usuario);
+
 ALTER TABLE Pago
 ADD CONSTRAINT FK_Pago_Reserva FOREIGN KEY (fk_reserva) REFERENCES Reserva(id_reserva);
+
 ALTER TABLE Telefone
 ADD CONSTRAINT FK_Telefone_Administrador FOREIGN KEY (fk_administrador) REFERENCES Administrador(id_administrador),
 ADD CONSTRAINT FK_Telefone_Usuario FOREIGN KEY (fk_usuario) REFERENCES Usuario(id_usuario);
+
 ALTER TABLE Quadra CHANGE Descricao descricao varchar(2000);
+
 ALTER TABLE Endereco CHANGE numero numero_e int;
+
+ALTER TABLE Telefone CHANGE numero numero_t int;
 
 -- teste query de melhores avaliações 
 INSERT INTO Avaliacao (fk_quadra, qualificacao)
@@ -135,7 +154,7 @@ WHERE fk_quadra = 1;
 SELECT * FROM Quadra;
 SELECT * FROM imagem;
 SELECT * FROM Avaliacao;
-SELECT * FROM Usuario;
+SELECT * FROM Usuario; 
 SELECT * FROM Telefone;
 SELECT * FROM Administrador;
 SELECT * FROM Endereco;
@@ -145,7 +164,26 @@ SELECT * FROM Reserva;
 SELECT * FROM Pago;
 
 SHOW CREATE TABLE Esportes;
+-- Necessario Adicionar as chaves estrangeiras depois pois se eu não realisase isso imposibilitaria a criação das tabelas  -- 
 
+
+truncate quadra;
+-- desabilitar para limpar o bd 
+SET foreign_key_checks = 0;
+
+-- Reabilitar as verificações de chave estrangeira
+SET foreign_key_checks = 1;
+
+select * from Quadra;
+select * from Avaliacao;
+select * from  Usuario;
+select * from Telefone;
+select * from Administrador;
+select * from Endereco;
+select * from Relacao;
+select * from Esportes;
+select * from Reserva;
+select * from Pago;
 
 
 --Explicações

@@ -1,4 +1,4 @@
-
+import "../../Css/carrousel.css"
 import React from "react";
 
 const Carrossel = ({ imagens }) => {
@@ -15,13 +15,13 @@ const Carrossel = ({ imagens }) => {
       <div className="carousel-inner">
         {imagensValidas.length > 0 ? (
           imagensValidas.map((img, index) => (
-            <div
+            <div 
               className={`carousel-item ${index === 0 ? "active" : ""}`}
               key={index}
             >
-              <img
+              <img 
                 src={`http://localhost:3000${img}`}
-                className="d-block " style={{height:"300px",borderRadius:"25px"}}
+                className=" imagem-car d-block " 
                 alt={`Imagem ${index + 1}`}
               />
             </div>

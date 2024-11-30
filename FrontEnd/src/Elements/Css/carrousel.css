@@ -1,0 +1,13 @@
+.imagem-car{
+    height: 300px;
+    width: 600px;
+    border-radius: 25px;
+    margin-left: 20px;
+}
+
+@media (max-width: 600px) {
+    .imagem-car{
+        width: 300px;
+        margin-left: 0;
+    }
+}

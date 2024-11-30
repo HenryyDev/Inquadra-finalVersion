@@ -52,7 +52,9 @@ const Body = () => {
                   <h5 className="txt-anuncio" >R${quadra.preco}/H</h5>
                   
                 </div>
-                <h5  style={{fontSize:"14px",display:"flex",marginTop:"10px",justifyContent:"space-between"}}><div><img src={loc} style={{height:"20px", width:"20px"}} alt=""  />{quadra.municipio},{quadra.bairro} </div> <img src={estrela} style={{height:"15px", width:"15px"}} alt="" />{quadra.media_avaliacao!=null ? quadra.media_avaliacao :"0.00"}</h5>
+                <div>
+                <h5  style={{fontSize:"14px",display:"flex",marginTop:"10px",justifyContent:"space-between",marginLeft:"5px"}}><div><img src={loc} style={{height:"20px", width:"20px"}} alt=""  />{quadra.municipio},{quadra.bairro} </div> <img src={estrela} style={{height:"15px", width:"15px",marginLeft:"20px"}} alt="" /><div style={{marginRight:"20px"}}>{quadra.media_avaliacao!=null ? quadra.media_avaliacao :"0.00"}</div></h5>
+                </div>
               
                 
               </Link>
@@ -79,7 +81,7 @@ const Body = () => {
                <h5 className="txt-anuncio" >R${quadra.preco}/H</h5>
                
              </div>
-             <h5  style={{fontSize:"14px",display:"flex",marginTop:"10px",justifyContent:"space-between"}}><div><img src={loc} style={{height:"20px", width:"20px"}} alt=""  />{quadra.municipio},{quadra.bairro} </div> <img src={estrela} style={{height:"15px", width:"15px"}} alt="" />{quadra.media_avaliacao!=null ? quadra.media_avaliacao :"0.00"}</h5>
+             <h5  style={{fontSize:"14px",display:"flex",marginTop:"10px",justifyContent:"space-between",marginLeft:"5px"}}><div><img src={loc} style={{height:"20px", width:"20px"}} alt=""  />{quadra.municipio},{quadra.bairro} </div> <img src={estrela} style={{height:"15px", width:"15px",marginLeft:"20px"}} alt="" /><div style={{marginRight:"20px"}}>{quadra.media_avaliacao!=null ? quadra.media_avaliacao :"0.00"}</div></h5>
            </Link>
          </li>
           ))}
@@ -104,7 +106,7 @@ const Body = () => {
                <h5 className="txt-anuncio" >R${quadra.preco}/H</h5>
                
              </div>
-             <h5  style={{fontSize:"14px",display:"flex",marginTop:"10px",justifyContent:"space-between"}}><div><img src={loc} style={{height:"20px", width:"20px"}} alt=""  />{quadra.municipio},{quadra.bairro} </div> <img src={estrela} style={{height:"15px", width:"15px"}} alt="" />{quadra.media_avaliacao===null ? "0.00"  :quadra.media_avaliacao}</h5>
+             <h5  style={{fontSize:"14px",display:"flex",marginTop:"10px",justifyContent:"space-between",marginLeft:"5px"}}><div><img src={loc} style={{height:"20px", width:"20px"}} alt=""  />{quadra.municipio},{quadra.bairro} </div> <img src={estrela} style={{height:"15px", width:"15px",marginLeft:"20px"}} alt="" /><div style={{marginRight:"20px"}}>{quadra.media_avaliacao!=null ? quadra.media_avaliacao :"0.00"}</div></h5>
            </Link>
          </li>
           ))}

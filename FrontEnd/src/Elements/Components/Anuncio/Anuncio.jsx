@@ -1,7 +1,7 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-
+import estrela from "../../../assets/estrela.png"
 import "../../../Elements/Css/anuncio.css";
 import "bootstrap/dist/js/bootstrap.min.js";
 import { useState, useEffect } from "react";
@@ -115,7 +115,7 @@ function Anuncio() {
           <h2>R${quadra.preco_por_hora}/hora</h2>
 
           <span id="aval">
-            <img src="../../assets/estrela.png" alt="" width="20px" />{" "}
+            <img src={estrela} alt="" width="20px" />{" "}
             {quadra.media_avaliacao}
           </span>
 
