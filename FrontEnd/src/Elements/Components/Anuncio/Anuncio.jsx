@@ -34,7 +34,7 @@ function Anuncio() {
 
   // Horário atual
   const horario = new Date();
-  horario.setHours(horario.getHours() + 1); // Adiciona 2 horas ao horário atual
+  horario.setHours(horario.getHours() + 1); 
   horario.setSeconds(0);
   horario.setMilliseconds(0);
 
@@ -74,7 +74,7 @@ function Anuncio() {
     <>
       <h1 className="title-quadra">{quadra.titulo}</h1>
       <div className="imagem-anuncio">
-        <Carrossel imagens={quadra.fotos} />
+        <Carrossel imagens={quadra.fotos}  />
       </div>
 
       <div className="desc-checkin">

@@ -5,9 +5,10 @@
     margin-left: 20px;
 }
 
+  
 @media (max-width: 600px) {
     .imagem-car{
         width: 300px;
-        margin-left: 0;
+   
     }
 }

@@ -93,9 +93,9 @@
    
   .imagem-anuncio{
     margin: 20px;
-    padding: 10px;
+   
   }
-
+  
     .desc-checkin {
       flex-direction: column;
     }

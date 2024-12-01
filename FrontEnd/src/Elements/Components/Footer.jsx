@@ -22,14 +22,12 @@ function Footer() {
               </a>
             </li>
             <li>
-              <a href="#section02">Tpos</a>
+              <a href="#section02">O que somos</a>
             </li>
             <li>
-              <a href="#section03">Impactos</a>
+              <a href="#section03">Nossa história</a>
             </li>
-            <li>
-              <a href="#section04">Onde descartar</a>
-            </li>
+            
           </ul>
 
           <ul className="my-4">

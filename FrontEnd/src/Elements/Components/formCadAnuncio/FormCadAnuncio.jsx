@@ -145,16 +145,16 @@ const CadAnuncio = () => {
     axios
       .post("http://localhost:3000/cadastro-anuncio", formDataToSend, {
         headers: {
-          Authorization: `Bearer ${token}`, // Usando o token com o prefixo "Bearer"
+          Authorization: `Bearer ${token}`, 
         },
       })
       .then((resposta) => {
         console.log("Resposta da requisição:", resposta);
-        alert("Anúncio criado com sucesso!");
+        navigate("/");
       })
       .catch((erro) => {
         console.log("Erro na requisição:", erro);
-        alert("Erro ao criar anúncio");
+        toast.error("Erro ao criar anúncio");
       });
   };
 
