@@ -255,7 +255,7 @@ const CadAnuncio = () => {
               name="preco_hora"
               value={formData.preco_hora}
               onChange={handleChange}
-              placeholder="Digite o Preço que deseja cobrar"
+              placeholder="Digite o Preço que deseja cobrar POR HORA"
             />
 
             <label htmlFor="cep" className="form-label">
@@ -293,7 +293,7 @@ const CadAnuncio = () => {
               name="logradouro"
               value={formData.logradouro}
               onChange={handleChange}
-              placeholder="Digite o Endereço da quadra"
+              placeholder="Digite o logradouro da quadra"
             />
 
             <label htmlFor="numero_e" className="form-label">
@@ -305,7 +305,7 @@ const CadAnuncio = () => {
               name="numero_e"
               value={formData.numero_e}
               onChange={handleChange}
-              placeholder="Digite o número da quadra"
+              placeholder="Digite o número do endereço"
             />
 
             <label htmlFor="numero_t" className="form-label">
@@ -329,7 +329,11 @@ const CadAnuncio = () => {
 
             <label htmlFor="imagens" className="form-label">
               Imagens<span className="error-text">*</span>
+              
             </label>
+            <div id="emailHelp" className="form-text">
+              formatos suportados:jpeg, png e jpg
+            </div>
             {errors.imagens && (
               <div className="alert alert-danger" role="alert">
                 <span className="error-text">{errors.imagens}</span>
@@ -343,6 +347,7 @@ const CadAnuncio = () => {
               multiple
               onChange={handleChange}
             />
+            
 
             <button type="submit" className="btn btn-primary">
               Criar anúncio
