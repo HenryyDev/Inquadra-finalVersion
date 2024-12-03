@@ -21,7 +21,7 @@ const Login = () => {
     event.preventDefault();
 
     try {
-      const response = await axios.post("http://localhost:3000/login", {
+      const response = await axios.post("http://localhost:3000/users/login", {
         email: values.email, 
         senha: values.senha,
       });

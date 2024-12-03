@@ -37,15 +37,20 @@ const CadUsuario = () => {
       toast.error("corrija os erros!")
       return
     }
-    axios.post("http://localhost:3000/usuario",values)
-    .then((resposta)=>{
-      console.log("resposta da req:",resposta)
-      navigate("/login")
-    })
-    .catch((erro)=>{
-      console.log("erro na req:",erro);
-      toast.error("Erro ao criar conta")
-    })
+    axios.post("http://localhost:3000/users", values, {
+    headers: {
+        'Content-Type': 'application/json',
+    }
+})
+.then((resposta) => {
+    console.log("Resposta da requisição:", resposta);
+    navigate("/login");
+})
+.catch((erro) => {
+    console.log("Erro na requisição:", erro.response ? erro.response.data : erro.message);
+    toast.error("Erro ao criar conta");
+});
+
   };
 
   return (
