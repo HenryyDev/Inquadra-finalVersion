@@ -102,9 +102,11 @@ exports.getUser = async (req, res) => {
 
 // Obter um usuario por ID
 exports.getUserID = async (req, res) => {
-    const { id_usuario } = req.params;
+    const { id } = req.params;
+    let connection
     try {
-        const [usuario] = await db.execute('SELECT * FROM Usuario WHERE id_usuario = ?', [id_usuario]);
+        connection = await db.getConnection();
+        const [usuario] = await db.execute('SELECT * FROM Usuario WHERE id_usuario = ?', [id]);
         if (usuario.length > 0) {
             res.status(200).json(usuario[0]);
         } else {
@@ -114,7 +116,7 @@ exports.getUserID = async (req, res) => {
         console.error(error);
         res.status(500).json({ error: 'Erro ao obter o usuario' });
     } finally {
-        connection.release();
+         connection.release();
     }
 };
 

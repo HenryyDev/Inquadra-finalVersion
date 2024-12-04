@@ -1,6 +1,6 @@
 CREATE DATABASE Inquadra;
 USE Inquadra;
-
+drop database inquadra;
 CREATE TABLE Esportes (
     id_esporte INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
     basquete BOOLEAN DEFAULT false,
@@ -25,27 +25,28 @@ CREATE TABLE Endereco (
     numero INT
 );
 
-CREATE TABLE Usuario (
-    id_usuario INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
-    nome VARCHAR(90),
-    email VARCHAR(255),
-    senha VARCHAR(50)
-);
-
 CREATE TABLE Administrador (
     id_administrador INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
     nome VARCHAR(90),
     email VARCHAR(255),
     senha VARCHAR(100)
 );
+DESCRIBE Esportes;
+
+CREATE TABLE Usuario (
+    id_usuario INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    nome VARCHAR(90),
+    email VARCHAR(255),
+    senha VARCHAR(255)
+);
+
+
 
 CREATE TABLE Telefone (
     id_telefone INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
     ddd INT,
     numero VARCHAR(50),
-    fk_administrador INT,
-    fk_usuario INT,
-    FOREIGN KEY (fk_administrador) REFERENCES Administrador(id_administrador),
+	fk_usuario INT,
     FOREIGN KEY (fk_usuario) REFERENCES Usuario(id_usuario)
 );
 
@@ -54,10 +55,10 @@ CREATE TABLE Quadra (
     nome VARCHAR(90),
     preco_hora DECIMAL(10, 2),
     fk_endereco INT,
-    fk_administrador INT,
+    fk_usuario INT,
     descricao VARCHAR(2000),
     FOREIGN KEY (fk_endereco) REFERENCES Endereco(id_endereco),
-    FOREIGN KEY (fk_administrador) REFERENCES Administrador(id_administrador)
+    FOREIGN KEY (fk_usuario) REFERENCES Usuario(id_usuario)
 );
 
 CREATE TABLE Imagem (
@@ -106,3 +107,34 @@ CREATE TABLE Pago (
     fk_reserva INT,
     FOREIGN KEY (fk_reserva) REFERENCES Reserva(id_reserva)
 );
+ 
+ -- Consulta todos os registros da tabela Usuario
+SELECT * FROM Usuario;
+
+-- Consulta todos os registros da tabela Telefone
+SELECT * FROM Telefone;
+
+-- Consulta todos os registros da tabela Endereco
+SELECT * FROM Endereco;
+
+-- Consulta todos os registros da tabela Quadra
+SELECT * FROM Quadra;
+
+-- Consulta todos os registros da tabela Esportes
+SELECT * FROM Esportes;
+
+-- Consulta todos os registros da tabela Relacao
+SELECT * FROM Relacao;
+
+-- Consulta todos os registros da tabela Imagem
+SELECT * FROM Imagem;
+
+-- Consulta todos os registros da tabela Avaliacao
+SELECT * FROM Avaliacao;
+
+-- Consulta todos os registros da tabela Reserva
+SELECT * FROM Reserva;
+
+-- Consulta todos os registros da tabela Pago
+SELECT * FROM Pago;
+

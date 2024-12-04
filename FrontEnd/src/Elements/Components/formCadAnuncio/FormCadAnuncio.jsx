@@ -133,7 +133,7 @@ const CadAnuncio = () => {
     formDataToSend.append("logradouro", formData.logradouro);
     formDataToSend.append("numero_e", formData.numero_e);
     formDataToSend.append("numero_t", formData.numero_t);
-
+    console.log("Dados enviados para o servidor:", formDataToSend);
     // Adiciona os dados do esporte
     formDataToSend.append("esporte", JSON.stringify(formData.esporte));
 
@@ -141,21 +141,23 @@ const CadAnuncio = () => {
     formData.imagens.forEach((image) => {
       formDataToSend.append("imagens", image);
     });
+   
 
     axios
-      .post("http://localhost:3000/cadastro-anuncio", formDataToSend, {
-        headers: {
-          Authorization: `Bearer ${token}`, 
-        },
-      })
-      .then((resposta) => {
-        console.log("Resposta da requisição:", resposta);
-        navigate("/");
-      })
-      .catch((erro) => {
-        console.log("Erro na requisição:", erro);
-        toast.error("Erro ao criar anúncio");
-      });
+  .post("http://localhost:3000/quadras", formDataToSend, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+  .then((resposta) => {
+    console.log("Resposta da requisição:", resposta);
+    navigate("/");
+  })
+  .catch((erro) => {
+    console.log("Erro na requisição:", erro.response?.data || erro);
+    toast.error("Erro ao criar anúncio");
+  });
+
   };
 
   return (
