@@ -114,9 +114,9 @@ exports.getAdminID = async (req, res) => {
 // Atualizar um administrador
 exports.updateAdmin = async (req, res) => {
     const { id_administrador } = req.params;
-    const { nome, email, senha, ddd, numero_t } = req.body;
+    const { nome, email, senha } = req.body;
 
-    if (!nome || !email || !senha || !ddd || !numero_t) {
+    if (!nome || !email || !senha) {
         return res.status(400).json({ error: 'Todos os campos são obrigatórios' });
     }
 
@@ -129,14 +129,9 @@ exports.updateAdmin = async (req, res) => {
             [nome, email, senha, id_administrador]
         );
 
-        const [telefoneResult] = await connection.execute(
-            'UPDATE Telefone SET ddd = ?, numero_t = ? WHERE fk_administrador = ?',
-            [ddd, numero_t, id_administrador]
-        );
-
         await connection.commit();
 
-        if (adminResult.affectedRows > 0 && telefoneResult.affectedRows > 0) {
+        if (adminResult.affectedRows > 0) {
             res.status(200).json({ message: 'Administrador atualizado com sucesso' });
         } else {
             res.status(404).json({ error: 'Administrador não encontrado' });

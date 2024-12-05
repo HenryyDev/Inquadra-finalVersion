@@ -223,6 +223,63 @@ exports.getQuadraID = async (req, res) => {
     }
 };
 
+exports.getQuadraEsporte = (req, res) => {
+    const termoPesquisa = req.query.termo || ""; // Usando query string para o termo
+    const modalidade = req.query.modalidade || null; // Usando query string para a modalidade
+  
+    // Valida se ao menos um dos parâmetros foi fornecido
+    if (!termoPesquisa && !modalidade) {
+      return res.status(400).json({ error: "Nenhum termo ou modalidade fornecido." });
+    }
+  
+    // Valida se a modalidade fornecida é uma modalidade válida
+    const modalidadesValidas = [
+      "basquete", "futebol", "volei", "tenis", "golfe", 
+      "natacao", "skate", "futsal", "outros", "pong",
+    ];
+  
+    // Parâmetros para a consulta SQL
+    let queryParams = [termoPesquisa, termoPesquisa];
+    let query = `
+      SELECT 
+        q.id_quadra, 
+        q.nome, 
+        q.descricao, 
+        q.preco_hora, 
+        en.municipio,
+        en.bairro,
+        (SELECT i.caminho 
+         FROM Imagem i 
+         WHERE i.fk_quadra = q.id_quadra
+         LIMIT 1) AS imagem
+      FROM 
+        Quadra q
+      LEFT JOIN 
+        Endereco en ON q.fk_endereco = en.id_endereco
+      LEFT JOIN 
+        Relacao r ON q.id_quadra = r.fk_quadra
+      LEFT JOIN 
+        Esportes e ON r.fk_esporte = e.id_esporte
+      WHERE 
+        (q.nome LIKE CONCAT('%', ?, '%') OR q.descricao LIKE CONCAT('%', ?, '%'))
+    `;
+  
+    // Se uma modalidade válida foi fornecida, adiciona a condição booleana correspondente
+    if (modalidade && modalidadesValidas.includes(modalidade)) {
+      query += ` AND e.${modalidade} = true`; // Exemplo: "e.basquete = true"
+    }
+  
+    db.query(query, queryParams, (err, results) => {
+      if (err) {
+        console.error("Erro ao executar a query:", err);
+        return res.status(500).json({ error: "Erro ao buscar quadras." });
+      }
+  
+      // Envia os resultados da consulta para o cliente
+      res.status(200).json(results);
+    });
+  };
+
 
 // Atualizar uma quadra
 exports.updateQuadra = async (req, res) => {

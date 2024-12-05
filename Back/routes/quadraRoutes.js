@@ -8,6 +8,7 @@ const upload = require('../middlewares/upload')
 router.post('/', authenticateJWT, upload.array('imagens'), quadraController.createQuadra); 
 // router.get('/', authenticateJWT, quadraController.getQuadra);
 router.get('/id/:id', quadraController.getQuadraID);
+router.get('/esporte', quadraController.getQuadraEsporte);
 router.put('/:id', authenticateJWT, quadraController.updateQuadra);
 router.delete('/:id', authenticateJWT, quadraController.deleteQuadra);
 router.get('/quadras-destaque', quadraController.getDestaque);
