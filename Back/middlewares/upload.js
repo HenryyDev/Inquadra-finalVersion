@@ -3,7 +3,7 @@ const path = require('path');
 const fs = require('fs');
 
 // Diretório onde as imagens serão salvas
-const uploadDirectory = path.resolve(__dirname, '../img'); // Caminho absoluto
+const uploadDirectory = path.resolve(__dirname, '.././img'); // Caminho absoluto
 
 // Verificar se o diretório existe, caso contrário, cria-lo
 if (!fs.existsSync(uploadDirectory)) {

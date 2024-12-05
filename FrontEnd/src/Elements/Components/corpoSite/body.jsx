@@ -18,7 +18,7 @@ const Body = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:3000/quadras-destaque")
+      .get("http://localhost:3000/quadras/quadras-destaque")
       .then((resposta) => {
         console.log(resposta)
         setMelhoresavaliados(resposta.data.melhoresAvaliacoes);
@@ -28,6 +28,7 @@ const Body = () => {
       .catch((erro) => {
         console.log("erro ao buscar quadra:", erro);
       });
+      
   }, []); // Executa apenas uma vez ao montar o componente
  
   return (

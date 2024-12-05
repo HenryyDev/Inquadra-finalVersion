@@ -12,6 +12,7 @@ app.use(cors({ origin: "*" }));
 const userRoutes = require('./routes/userRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const quadraRoutes = require('./routes/quadraRoutes');
+app.use("/img", express.static("img"));
 
 // Usar as rotas
 app.use('/users', userRoutes);
@@ -26,6 +27,7 @@ app.use('/quadras', quadraRoutes);
 
 // Ruta de prueba para verificar que el servidor está funcionando
 app.get('/', (req, res) => {
+  console.log("opa")
   res.send('¡Bienvenido al backend de InQuadra!');
 });
 

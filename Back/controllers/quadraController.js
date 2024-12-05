@@ -143,20 +143,86 @@ exports.getQuadraID = async (req, res) => {
     const { id } = req.params;
     const connection = await db.getConnection();
     try {
-        const [quadra] = await connection.execute('SELECT * FROM Quadra WHERE id_quadra = ?', [id]);
+        // Define a query SQL
+        const sql = ` 
+        SELECT 
+        q.id_quadra AS id,
+        q.nome AS titulo,
+        q.descricao AS descricao,
+        q.preco_hora AS preco_por_hora,
+        GROUP_CONCAT(i.caminho) AS fotos,   
+        e.basquete, 
+        e.futebol, 
+        e.outros, 
+        e.golfe, 
+        e.natacao, 
+        e.volei, 
+        e.tenis, 
+        e.pong, 
+        e.skate, 
+        e.futsal,
+        FORMAT(AVG(a.qualificacao), 2) AS media_avaliacao,
+        en.cep,
+        en.municipio,
+        en.bairro
+        FROM Quadra q
+        LEFT JOIN Imagem i ON q.id_quadra = i.fk_quadra  
+        LEFT JOIN Relacao r ON q.id_quadra = r.fk_quadra
+        LEFT JOIN Esportes e ON r.fk_esporte = e.id_esporte 
+        LEFT JOIN Avaliacao a ON q.id_quadra = a.fk_quadra  
+        LEFT JOIN Endereco en ON q.fk_endereco = en.id_endereco  
+        WHERE q.id_quadra = ?
+        GROUP BY q.id_quadra, e.basquete, e.futebol, e.outros, e.golfe, e.natacao, e.volei, e.tenis, e.pong, e.skate, e.futsal, en.cep, en.municipio, en.bairro;`;
 
-        if (quadra.length === 0) {
-            return res.status(404).json({ error: 'Quadra não encontrada' });
+        // Executa a consulta SQL de forma assíncrona
+        const [resultado] = await connection.query(sql, [id]);
+
+        // Verifica se a quadra foi encontrada
+        if (resultado.length === 0) {
+            return res.status(404).send("Quadra não encontrada");
         }
 
-        res.status(200).json(quadra[0]);
+        const quadra = resultado[0];
+        console.log("Resultado da consulta:", quadra);
+
+        // Filtra os esportes disponíveis
+        const esportesDisponiveis = [];
+
+        if (quadra.basquete) esportesDisponiveis.push("basquete");
+        if (quadra.futebol) esportesDisponiveis.push("futebol");
+        if (quadra.outros) esportesDisponiveis.push("outros");
+        if (quadra.golfe) esportesDisponiveis.push("golfe");
+        if (quadra.natacao) esportesDisponiveis.push("natacao");
+        if (quadra.volei) esportesDisponiveis.push("volei");
+        if (quadra.tenis) esportesDisponiveis.push("tenis");
+        if (quadra.pong) esportesDisponiveis.push("pong");
+        if (quadra.skate) esportesDisponiveis.push("skate");
+        if (quadra.futsal) esportesDisponiveis.push("futsal");
+
+        // Retorna a quadra com as informações formatadas
+        res.json({
+            id: quadra.id,
+            titulo: quadra.titulo,
+            descricao: quadra.descricao,
+            preco_por_hora: quadra.preco_por_hora,
+            fotos: quadra.fotos ? [...new Set(quadra.fotos.split(","))] : [], // Remove duplicatas
+            esportes: esportesDisponiveis,
+            media_avaliacao: quadra.media_avaliacao
+                ? parseFloat(quadra.media_avaliacao).toFixed(2)
+                : null, // Formata a média para 2 casas decimais
+            cep: quadra.cep,
+            municipio: quadra.municipio,
+            bairro: quadra.bairro,
+        });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Erro ao obter a quadra' });
     } finally {
+        // Libera a conexão
         connection.release();
     }
 };
+
 
 // Atualizar uma quadra
 exports.updateQuadra = async (req, res) => {
@@ -216,3 +282,102 @@ exports.deleteQuadra = async (req, res) => {
         connection.release();
     }
 };
+
+
+exports.getDestaque = async (req, res) => {
+    // Conecta-se ao banco de dados
+    const connection = await db.getConnection();
+    
+    try {
+      // Consultas para as quadras: melhores avaliações, mais reservas, e menor custo
+      const sqlAvaliacoes = `
+        SELECT 
+          q.id_quadra AS id, 
+          q.nome AS titulo, 
+          q.descricao, 
+          q.preco_hora AS preco, 
+          FORMAT(AVG(a.qualificacao), 2) AS media_avaliacao,
+          en.municipio,
+          en.bairro,
+          GROUP_CONCAT(i.caminho) AS fotos 
+        FROM Quadra q
+        LEFT JOIN Avaliacao a ON q.id_quadra = a.fk_quadra
+        LEFT JOIN Imagem i ON q.id_quadra = i.fk_quadra  
+        LEFT JOIN Endereco en ON q.fk_endereco = en.id_endereco 
+        GROUP BY q.id_quadra, q.nome, q.descricao, q.preco_hora
+        ORDER BY media_avaliacao DESC
+        LIMIT 4
+      `;
+      
+      const sqlReservas = `
+        SELECT 
+          q.id_quadra AS id, 
+          q.nome AS titulo, 
+          q.descricao, 
+          q.preco_hora AS preco, 
+          en.municipio,
+          en.bairro,
+          COUNT(r.id_reserva) AS total_reservas,
+          GROUP_CONCAT(i.caminho) AS fotos,  
+          FORMAT(AVG(a.qualificacao), 2) AS media_avaliacao
+        FROM Quadra q
+        LEFT JOIN Reserva r ON q.id_quadra = r.fk_quadra
+        LEFT JOIN Avaliacao a ON q.id_quadra = a.fk_quadra
+        LEFT JOIN Imagem i ON q.id_quadra = i.fk_quadra  
+        LEFT JOIN Endereco en ON q.fk_endereco = en.id_endereco 
+        GROUP BY q.id_quadra, q.nome, q.descricao, q.preco_hora
+        ORDER BY total_reservas DESC
+        LIMIT 4
+      `;
+      
+      const sqlCusto = `
+        SELECT 
+          q.id_quadra AS id, 
+          q.nome AS titulo, 
+          q.descricao, 
+          q.preco_hora AS preco,
+          en.municipio,
+          en.bairro,
+          GROUP_CONCAT(i.caminho) AS fotos,
+          FORMAT(AVG(a.qualificacao), 2) AS media_avaliacao
+        FROM Quadra q
+        LEFT JOIN Imagem i ON q.id_quadra = i.fk_quadra
+        LEFT JOIN Avaliacao a ON q.id_quadra = a.fk_quadra
+        LEFT JOIN Endereco en ON q.fk_endereco = en.id_endereco 
+        GROUP BY q.id_quadra, q.nome, q.descricao, q.preco_hora
+        ORDER BY q.preco_hora ASC
+        LIMIT 4
+      `;
+  
+      // Realiza todas as consultas de forma assíncrona utilizando Promise.all
+      const [resultadosAvaliacoes, resultadosReservas, resultadosCusto] = await Promise.all([
+        connection.query(sqlAvaliacoes),
+        connection.query(sqlReservas),
+        connection.query(sqlCusto)
+      ]);
+      
+      // Função para formatar as fotos (convertendo o campo 'fotos' para um array)
+      const formatarFotos = (quadras) => {
+        return quadras.map((quadra) => ({
+          ...quadra,
+          fotos: quadra.fotos ? quadra.fotos.split(",") : [] // Apenas formata o campo 'fotos'
+        }));
+      };
+  
+      // Envia a resposta com os resultados das 3 consultas
+      res.json({
+        melhoresAvaliacoes: formatarFotos(resultadosAvaliacoes[0]),
+        maisReservas: formatarFotos(resultadosReservas[0]),
+        menorCusto: formatarFotos(resultadosCusto[0]),
+      });
+      
+    } catch (error) {
+      console.error("Erro ao buscar quadras destaque:", error);
+      res.status(500).send("Erro ao buscar quadras destaque");
+    } finally {
+      // Libera a conexão com o banco
+      connection.release();
+    }
+  };
+  
+    

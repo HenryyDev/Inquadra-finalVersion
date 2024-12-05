@@ -20,7 +20,7 @@ function Anuncio() {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:3000/quadra/${id}`)
+      .get(`http://localhost:3000/quadras/id/${id}`)
       .then((resposta) => {
         console.log("Resposta da API:", resposta); // Verifique a resposta aqui
 
@@ -92,7 +92,7 @@ function Anuncio() {
           >
             {quadra.esportes && quadra.esportes.length > 0 ? (
               quadra.esportes.map((esporte, index) => (
-                <div style={{backgroundColor:"#94B0B3", borderRadius:"25px", marginLeft:"10px"}}>
+                <div key={esporte} style={{backgroundColor:"#94B0B3", borderRadius:"25px", marginLeft:"10px"}}>
                   <li key={index} style={{ margin: "0 10px" }}>
                   
                     {esporte}
