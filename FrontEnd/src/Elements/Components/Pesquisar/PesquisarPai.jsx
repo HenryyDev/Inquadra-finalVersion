@@ -19,7 +19,7 @@ const PesquisarPai = () => {
       if (termo.trim() || modalidade.trim()) {
         try {
           const response = await axios.get(
-            `http://localhost:3000/busca/?termo=${termo}&modalidade=${modalidade}`
+            `http://localhost:3000/quadras/esporte?termo=${termo}&modalidade=${modalidade}`
           );
         
           
@@ -36,7 +36,7 @@ const PesquisarPai = () => {
 
     fetchResults();
   }, [termo, modalidade]); // Recarrega os resultados sempre que mudar o termo ou a modalidade
-console.log(resultados)
+console.log("resultado",resultados)
   return (
     <div>
       <Pesquisar termo={termo} modalidade={modalidade} resultados={resultados} />

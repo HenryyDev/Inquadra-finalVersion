@@ -33,7 +33,7 @@ const CadAnuncio = () => {
     uf: "",
     logradouro: "",
     numero_e: "",
-    numero_t: "",
+
   });
   const token = localStorage.getItem("token") || sessionStorage.getItem("token")
   const navigate = useNavigate();
@@ -92,8 +92,7 @@ const CadAnuncio = () => {
     if (!formData.preco_hora) newErrors.preco_hora = "Preço é obrigatório."; // Verifica se o preço está vazio
     if (!formData.logradouro) newErrors.logradouro = "Endereço é obrigatório."; // Verifica se o endereço está vazio
     if (!formData.cep) newErrors.cep = "CEP é obrigatório."; // Verifica se o CEP está vazio
-    if (!formData.numero_t)
-      newErrors.numero_t = "Número telefônico é obrigatório."; // Verifica se o numero_t está vazio
+   
 
     // Verifica se pelo menos um esporte foi selecionado
     const esporteSelecionado = Object.values(formData.esporte).some(
@@ -132,7 +131,6 @@ const CadAnuncio = () => {
     formDataToSend.append("uf", formData.uf);
     formDataToSend.append("logradouro", formData.logradouro);
     formDataToSend.append("numero_e", formData.numero_e);
-    formDataToSend.append("numero_t", formData.numero_t);
     console.log("Dados enviados para o servidor:", formDataToSend);
     // Adiciona os dados do esporte
     formDataToSend.append("esporte", JSON.stringify(formData.esporte));
@@ -310,24 +308,8 @@ const CadAnuncio = () => {
               placeholder="Digite o número do endereço"
             />
 
-            <label htmlFor="numero_t" className="form-label">
-              Número Telefônico<span className="error-text">*</span>
-            </label>
-            {errors.numero_t && (
-              <div className="alert alert-danger" role="alert">
-                <span className="error-text">{errors.numero_t}</span>
-              </div>
-            )}
-            <MaskInput
-              alwaysShowMask
-              maskChar="_"
-              mask={"(00) 00000-0000"}
-              className="form-control mb-4"
-              name="numero_t"
-              value={formData.numero_t}
-              onChange={handleChange}
-              placeholder="Digite um número telefônico para contato"
-            />
+          
+           
 
             <label htmlFor="imagens" className="form-label">
               Imagens<span className="error-text">*</span>

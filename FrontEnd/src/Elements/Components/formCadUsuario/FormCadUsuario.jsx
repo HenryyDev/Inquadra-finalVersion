@@ -5,6 +5,7 @@ import logo from "../../../assets/logo.png";
 import ver from "../../../assets/ver.png";
 import ocultar from "../../../assets/ocultar.png";
 import { Link, useNavigate } from "react-router-dom";
+import MaskInput from "react-maskinput";
 import axios from "axios";
 
 const CadUsuario = () => {
@@ -12,6 +13,7 @@ const CadUsuario = () => {
     nome: "",
     email: "",
     senha: "",
+    numero_t:"",
     confirmarSenha: "",
     termos: false,
   });
@@ -27,6 +29,8 @@ const CadUsuario = () => {
     if (!values.senha) newErrors.senha = "Senha é obrigatório!";
     if (values.senha != values.confirmarSenha)
       newErrors.confirmarSenha = "Senha diferente ou nula!";
+      if (!values.numero_t)
+      newErrors.numero_t = "Número telefônico é obrigatório."; // Verifica se o numero_t está vazio
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -99,6 +103,28 @@ const CadUsuario = () => {
             <div id="emailHelp" className="form-text">
               Nunca compartilharemos seu e-mail com mais ninguém.
             </div>
+          </div>
+          <div className="mb-3">
+            <label htmlFor="numero_t" className="form-label">
+                Número Telefônico<span className="error-text">*</span>
+              </label>
+              {errors.numero_t && (
+                <div className="alert alert-danger" role="alert">
+                  <span className="error-text">{errors.numero_t}</span>
+                </div>
+              )}
+            <MaskInput
+                alwaysShowMask
+                maskChar="_"
+                mask={"(00) 00000-0000"}
+                className="form-control"
+                name="numero_t"
+                value={values.numero_t}
+                onChange={(e) =>
+                  setValues({ ...values, numero_t: e.target.value })
+                }
+                placeholder="Digite um número telefônico para contato"
+              />
           </div>
           <div className="mb-3" style={{ position: "relative" }}>
             <label htmlFor="senha" className="form-label">
