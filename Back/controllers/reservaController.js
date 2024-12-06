@@ -1,11 +1,11 @@
 const db = require('../db');
 
-// Criar uma nova reservação
+// Criar uma nova reserva
 exports.createReserva = async (req, res) => {
-    const { data_reserva, horario_inicio, horaio_final } = req.body
+    const { data_reserva, horario_inicio, horario_final } = req.body
     const { id_usuario, id_quadra } = req.user
 
-    if (!data_reserva || !horario_inicio || !horaio_final) {
+    if (!data_reserva || !horario_inicio || !horario_final) {
         return res.status(400).json({ error: 'Todos os campos são obrigatórios' });
     }
 
@@ -14,8 +14,8 @@ exports.createReserva = async (req, res) => {
         await connection.beginTransaction();
 
         const [reserva] = await connection.execute(
-            'INSERT INTO Reserva (data_reserva, horario_inicio, horaio_final, fk_quadra, fk_usuario) VALUES (?, ?, ?, ?, ?)',
-            [data_reserva, horario_inicio, horaio_final, id_quadra, id_usuario]
+            'INSERT INTO Reserva (data_reserva, horario_inicio, horario_final, fk_quadra, fk_usuario) VALUES (?, ?, ?, ?, ?)',
+            [data_reserva, horario_inicio, horario_final, id_quadra, id_usuario]
         );
 
         const id_reserva = reserva.insertId;
@@ -29,7 +29,7 @@ exports.createReserva = async (req, res) => {
 
         res.status(201).json({
             message: 'Reserva criada com sucesso',
-            id_quadra: result.insertId
+            id_quadra: reserva.insertId
         });
     } catch (error) {
         await connection.rollback();

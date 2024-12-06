@@ -41,7 +41,7 @@ const Pesquisar = ({ termo,modalidade, resultados }) => {
                 <Link to={`/anuncio/${anuncio.id_quadra}`}>
                   <div className="anuncio">
                     <img
-                      src={`http://localhost:3000${anuncio.imagem}`}
+                      src={`http://localhost:3000${anuncio.Imagem}`}
                       alt={anuncio.titulo}
                       className=" img-res img-fluid"
                       width="250px"

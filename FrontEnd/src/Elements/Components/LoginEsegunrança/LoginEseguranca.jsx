@@ -16,25 +16,34 @@ function LoginEseguranca() {
   const [erro, setErro] = useState("");
   const [data, setData] = useState({
     nome: "",
-    email: "",
     userId: null,
   });
 
   const navigate = useNavigate();
   const token = localStorage.getItem("token") || sessionStorage.getItem("token");
   useEffect(() => {
-
+    const token = localStorage.getItem("token") || sessionStorage.getItem("token");
 
     if (!token) {
       navigate("/login");
     } else {
       try {
+        // Decodificando o token
         const tokenDecodificado = jwtDecode(token);
-        setData({
-          nome: tokenDecodificado.nome.split(" ")[0],
-          email: tokenDecodificado.email,
-          userId: tokenDecodificado.id_usuario,
-        });
+        const userId = tokenDecodificado.id_usuario;
+
+        // Atualizando apenas o id no estado
+        setData((prevData) => ({
+          ...prevData,
+          userId: userId,
+        }));
+
+        const currentTime = Date.now() / 1000;
+        if (tokenDecodificado.exp && tokenDecodificado.exp < currentTime) {
+          console.log("Token expirado");
+          navigate("/login");
+        }
+
       } catch (error) {
         console.error("Erro ao decodificar o token:", error);
       }
@@ -43,34 +52,39 @@ function LoginEseguranca() {
 
   // Função para desativar a conta
   const handleDesativarConta = async (senha) => {
-    const response = await axios.post("http://localhost:3000/usuario/deletar", {
-      senha,
-      id: data.userId,
-    });
-    localStorage.removeItem("token");
-    sessionStorage.removeItem("token");
-    navigate("/login"); // Navega para a página inicial após deletar a conta
-  };
+    if (!senha) {
+        console.error("A senha não foi fornecida.");
+        return;
+    }
 
-  // Função para alterar o e-mail
-  const handleAlterarEmail = async (senha, novoEmail) => {
-    const response = await axios.put(
-      `http://localhost:3000/usuario/${data.userId}/email`,
-      {
-        senha,
-        email: novoEmail,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`, // Passando o token na requisição
-        }
-      }
-    );
-  };
+    try {
+        const response = await axios.delete(
+            `http://localhost:3000/users/${data.userId}`,  // A URL da requisição
+            {
+                data: { senha }, // Passando a senha no corpo da requisição
+                headers: {
+                    Authorization: `Bearer ${token}`,  // Passando o token na requisição
+                }
+            }
+        );
+
+        // Se a resposta for bem-sucedida
+        localStorage.removeItem("token");
+        sessionStorage.removeItem("token");
+        navigate("/login");  // Navega para a página de login após desativar a conta
+    } catch (error) {
+        console.error("Erro ao desativar conta:", error);
+        // Lidar com erros aqui
+    }
+};
+
+  
+
+ 
   const handleAlterarSenha = async (senha, novaSenha) => {
     const response = await axios.put(
-      `http://localhost:3000/usuario/${data.userId}/senha`,
-      { senhaAtual:senha,
+      `http://localhost:3000/users/senha/${data.userId}`,
+      { senha:senha,
         novaSenha:novaSenha
       },
       {
@@ -107,12 +121,7 @@ function LoginEseguranca() {
               Desativar
             </button>
           </div>
-          <div className="my-4">
-            Email
-            <button className="btn btn-primary btn-seg" onClick={() => setShowModalAlterarEmail(true)}>
-              Alterar E-mail
-            </button>
-          </div>
+          
         </div>
       </div>
 
@@ -127,16 +136,7 @@ function LoginEseguranca() {
         tipo="deletar" // Passa o tipo para identificar a ação (deletar conta)
       />
 
-      <ModalConfirmacao
-        show={showModalAlterarEmail}
-        onClose={() => setShowModalAlterarEmail(false)}
-        onConfirm={handleAlterarEmail}
-        titulo="Alterar Email"
-        mensagem="Digite sua senha e o novo email para continuar."
-        erro={erro}
-        setErro={setErro}
-        tipo="alterar-email" // Passa o tipo para identificar a ação (alterar e-mail)
-      />
+      
       <ModalConfirmacao
         show={showModalAlterarSenha}
         onClose={() => setShowModalAlterarSenha(false)}

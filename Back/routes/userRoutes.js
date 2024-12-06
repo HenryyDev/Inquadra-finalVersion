@@ -9,6 +9,7 @@ router.post('/login', userController.loginUser);
 router.get('/', userController.getUser);
 router.get('/:id', userController.getUserID);
 router.put('/:id', authenticateJWT, userController.updateUser);
+router.put('/senha/:id', authenticateJWT, userController.trocarSenha);
 router.delete('/:id', authenticateJWT, userController.deleteUser);
 
 module.exports = router;

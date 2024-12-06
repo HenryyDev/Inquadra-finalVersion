@@ -12,13 +12,14 @@ app.use(cors({ origin: "*" }));
 const userRoutes = require('./routes/userRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const quadraRoutes = require('./routes/quadraRoutes');
+const reservaRoutes = require('./routes/reservaRoutes');
 app.use("/img", express.static("img"));
 
 // Usar as rotas
 app.use('/users', userRoutes);
 app.use('/admins', adminRoutes);
 app.use('/quadras', quadraRoutes);
-
+app.use('/reservas', reservaRoutes);
 
 // Aquí importaremos y usaremos las rutas más adelante
 // Ejemplo:

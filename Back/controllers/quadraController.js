@@ -222,22 +222,28 @@ exports.getQuadraID = async (req, res) => {
     }
 };
 
-exports.getQuadraEsporte = (req, res) => {
-  const termoPesquisa = req.query.termo || ""; // Termo de pesquisa
-  const modalidade = req.query.modalidade || "futebol"; // Modalidade, por padrão 'futebol'
+exports.getQuadraEsporte = async (req, res) => {
+  // Obter os parâmetros de consulta
+  const modalidade = req.query.modalidade || null;  // Modalidade recebida via query
+  const termo = req.query.termo || "";  // Termo de pesquisa para o nome ou descrição
 
-  // Valida se a modalidade fornecida é válida
+  // Valida se tanto 'termo' quanto 'modalidade' são passados na requisição
+  if (termo && modalidade) {
+    return res.status(400).json({ error: "Você pode buscar apenas por termo ou por modalidade, mas não pelos dois." });
+  }
+
   const modalidadesValidas = [
     "basquete", "futebol", "volei", "tenis", "golfe", 
     "natacao", "skate", "futsal", "outros", "pong",
   ];
 
-  if (!modalidadesValidas.includes(modalidade)) {
+  // Valida se a modalidade fornecida é válida
+  if (modalidade && !modalidadesValidas.includes(modalidade)) {
     return res.status(400).json({ error: "Modalidade inválida fornecida." });
   }
 
-  // Array para os parâmetros de pesquisa
-  let queryParams = [`%${termoPesquisa}%`, `%${termoPesquisa}%`]; // Parâmetros para o termo de pesquisa
+  // Array de parâmetros para a consulta
+  let queryParams = [];
   let query = `
     SELECT 
       q.id_quadra, 
@@ -249,7 +255,7 @@ exports.getQuadraEsporte = (req, res) => {
       (SELECT i.caminho 
        FROM Imagem i 
        WHERE i.fk_quadra = q.id_quadra
-       LIMIT 1) AS imagem
+       LIMIT 1) AS Imagem
     FROM 
       Quadra q
     LEFT JOIN 
@@ -259,31 +265,43 @@ exports.getQuadraEsporte = (req, res) => {
     LEFT JOIN
       Esportes e ON r.fk_esporte = e.id_esporte
     WHERE 
-      (q.nome LIKE ? OR q.descricao LIKE ?)
   `;
 
-  // Adiciona o filtro para a modalidade
-  query += ` AND e.${modalidade} = 1`;
+  // Se o termo for fornecido, procura no nome ou na descrição
+  if (termo) {
+    query += ` (q.nome LIKE ? OR q.descricao LIKE ?) `;
+    queryParams.push(`%${termo}%`, `%${termo}%`);  // Adiciona os parâmetros para o LIKE
+  }
 
-  // Adiciona a modalidade ao array de parâmetros
-  queryParams.push(1); // Adiciona o valor 1 para a modalidade
+  // Se a modalidade for fornecida, a busca será feita somente por modalidade
+  if (modalidade) {
+    // A condição de modalidade será adicionada à consulta
+    query += ` e.${modalidade} = 1 `;
+  }
 
   // Exibe a consulta gerada para depuração
   console.log("Consulta gerada:", query);
   console.log("Parâmetros SQL:", queryParams);
 
-  // Executa a consulta no banco de dados
-  db.query(query, queryParams, (err, results) => {
-    if (err) {
-      console.error("Erro ao executar a query:", err);
-      return res.status(500).json({ error: "Erro ao buscar quadras." });
-    }
-
+  try {
+    // Executa a consulta no banco de dados com Promise
+    const [results] = await db.query(query, queryParams);  // Usando `await` para aguardar a execução
     // Retorna os resultados para o cliente
     res.json(results);
     console.log("Resultados:", results);
-  });
+  } catch (err) {
+    console.error("Erro ao executar a query:", err);
+    return res.status(500).json({ error: "Erro ao buscar quadras." });
+  }
 };
+
+
+
+
+
+
+
+
 
 
 

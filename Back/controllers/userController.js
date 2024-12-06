@@ -128,9 +128,9 @@ exports.getUserID = async (req, res) => {
 // Atualizar um usuario
 exports.updateUser = async (req, res) => {
     const { id_usuario } = req.params;
-    const { nome, email, senha } = req.body;
+    const { nome, email } = req.body;
 
-    if (!nome || !email || !senha) {
+    if (!nome || !email) {
         return res.status(400).json({ error: 'Todos os campos são obrigatórios' });
     }
 
@@ -139,8 +139,8 @@ exports.updateUser = async (req, res) => {
         await connection.beginTransaction();
 
         const [userResult] = await connection.execute(
-            'UPDATE Usuario SET nome = ?, email = ?, senha = ? WHERE id_usuario = ?',
-            [nome, email, senha, id_usuario]
+            'UPDATE Usuario SET nome = ?, email = ? WHERE id_usuario = ?',
+            [nome, email, id_usuario]
         );
 
         await connection.commit();
@@ -159,26 +159,107 @@ exports.updateUser = async (req, res) => {
     }
 };
 
-// Deletar um usuario
-exports.deleteUser = async (req, res) => {
-    const { id } = req.params;
+// Atualizar senha
+exports.trocarSenha = async (req, res) => {
+    const { id_usuario } = req.user;
+    const { senha, novaSenha } = req.body;
+    console.log(id_usuario, novaSenha)
+
+    if (!novaSenha) {
+        return res.status(400).json({ error: 'Todos os campos são obrigatórios' });
+    }
+
     const connection = await db.getConnection();
     try {
+
         await connection.beginTransaction();
 
-        const [deletarUser] = await connection.execute('DELETE FROM Usuario WHERE id = ?', [id]);
+        const [user] = await db.execute('SELECT * FROM Usuario WHERE id_usuario = ?', [id_usuario]);
+
+        if (user.length === 0) {
+            return res.status(400).json({ error: 'Usuário não encontrado' });
+        }
+
+        const isPasswordValid = await bcrypt.compare(senha, user[0].senha);
+
+        console.log("Senha válida?", isPasswordValid);
+
+        if (!isPasswordValid) {
+            return res.status(400).json({ error: 'Senha incorreta' });
+        }
+
+        const hashedPassword = await bcrypt.hash(novaSenha, 10);  // 10 é o "salting rounds", ou número de iterações
+
+        const [userResult] = await connection.execute(
+            'UPDATE Usuario SET senha = ? WHERE id_usuario = ?',
+            [hashedPassword, id_usuario]
+        );
 
         await connection.commit();
 
-        if (deletarUser.affectedRows > 0) {
-            res.status(200).json({ message: 'Usuario deletado com sucesso' });
+        if (userResult.affectedRows > 0) {
+            res.status(200).json({ message: 'Usuario atualizado com sucesso' });
         } else {
             res.status(404).json({ error: 'Usuario não encontrado' });
         }
     } catch (error) {
         await connection.rollback();
         console.error(error);
-        res.status(500).json({ error: 'Erro ao deletar o usuario' });
+        res.status(500).json({ error: 'Erro ao atualizar o usuario' });
+    } finally {
+        connection.release();
+    }
+};
+
+
+
+
+// Deletar um usuario
+exports.deleteUser = async (req, res) => {
+    const { id_usuario } = req.user;  // Extrai o ID do usuário do token
+    const { senha } = req.body;  // Extrai a senha do corpo da requisição
+    console.log("Senha recebida:", senha, id_usuario);
+
+    if (!senha) {
+        return res.status(400).json({ error: 'Senha não fornecida' });
+    }
+
+    const connection = await db.getConnection();
+
+    try {
+        await connection.beginTransaction();
+
+        const [user] = await db.execute('SELECT * FROM Usuario WHERE id_usuario = ?', [id_usuario]);
+
+        if (user.length === 0) {
+            return res.status(400).json({ error: 'Usuário não encontrado' });
+        }
+
+        const isPasswordValid = await bcrypt.compare(senha, user[0].senha);
+
+        console.log("Senha válida?", isPasswordValid);
+
+        if (!isPasswordValid) {
+            return res.status(400).json({ error: 'Senha incorreta' });
+        }
+
+        // Deletar o usuário
+        const [deletarTelefone] = await connection.execute('DELETE FROM Telefone WHERE fk_usuario = ?', [id_usuario]);
+
+        const [deletarUser] = await connection.execute('DELETE FROM Usuario WHERE id_usuario = ?', [id_usuario]);
+
+        await connection.commit();
+
+        if (deletarUser.affectedRows > 0 || deletarTelefone.affectedRows > 0
+            ) {
+            res.status(200).json({ message: 'Usuário deletado com sucesso' });
+        } else {
+            res.status(404).json({ error: 'Usuário não encontrado' });
+        }
+    } catch (error) {
+        await connection.rollback();
+        console.error(error);
+        res.status(500).json({ error: 'Erro ao deletar o usuário' });
     } finally {
         connection.release();
     }
