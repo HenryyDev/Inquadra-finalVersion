@@ -17,20 +17,90 @@ function Anuncio() {
   const [data, setData] = useState(new Date());
   const [checkinTime, setCheckinTime] = useState(null);
   const [checkoutTime, setCheckoutTime] = useState(null);
+  const [dados,setDados]=useState({
+    data_reserva:"",
+    horario_inicio:"",
+    horario_final:"",
+    id_quadra:""
+})
+const reservar = async () => {
+   const token = localStorage.getItem("token") || sessionStorage.getItem("token");
+  if (!token) {
+    console.error("Token não encontrado");
+    return;
+  }
+  // Verificar se o horário de check-in e check-out são válidos
+  if (!checkinTime || !checkoutTime || !dados.id_quadra) {
+    console.error("Erro: Todos os campos são obrigatórios.");
+    return;
+  }
 
-  useEffect(() => {
-    axios
-      .get(`http://localhost:3000/quadras/id/${id}`)
-      .then((resposta) => {
-        console.log("Resposta da API:", resposta); // Verifique a resposta aqui
+  // Função para formatar a data para o formato YYYY-MM-DD
+  const formatarData = (data) => {
+    if (!data) return null;
+    const ano = data.getFullYear();
+    const mes = (data.getMonth() + 1).toString().padStart(2, '0'); // Mês começa em 0, então somamos 1
+    const dia = data.getDate().toString().padStart(2, '0');
+    return `${ano}-${mes}-${dia}`;
+  };
 
-        setQuadra(resposta.data);
-      })
-      .catch((erro) => {
-        console.log("Erro ao buscar quadra:", erro);
-        setQuadra(null); // Se ocorrer um erro, defina quadra como null
+  // Formatar os horários para o formato HH:mm
+  const formatarHorario = (data) => {
+    if (!data) return null;
+    // Formatar para o formato HH:mm
+    const horas = data.getHours().toString().padStart(2, '0'); // Garantir dois dígitos para as horas
+    const minutos = data.getMinutes().toString().padStart(2, '0'); // Garantir dois dígitos para os minutos
+    return `${horas}:${minutos}`;
+  };
+
+  const reservaData = {
+    data_reserva: formatarData(data), // Se você quiser manter a data completa, pode deixar assim
+    horario_inicio: formatarHorario(checkinTime), // Formatar o horário de check-in
+    horario_final: formatarHorario(checkoutTime), // Formatar o horário de check-out
+    id_quadra: dados.id_quadra, // Usar o ID da quadra atualizado
+  };
+  if (!token) {
+    console.error("Token não encontrado");
+    return;
+  }
+  try {
+    console.log(reservaData); // Verifique os dados antes de enviar
+    const response = await axios.post("http://localhost:3000/reservas/cadastro", reservaData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    
+    console.log("Reserva criada com sucesso:", response.data);
+  } catch (error) {
+    console.error("Erro ao criar a reserva:", error.response ? error.response.data : error.message);
+  }
+};
+
+useEffect(() => {
+  
+ 
+  axios
+    .get(`http://localhost:3000/quadras/id/${id}`)
+    .then((resposta) => {
+      console.log("Resposta da API:", resposta); // Verifique a resposta aqui
+
+      // Atualizando corretamente o estado de dados com a id_quadra
+      setQuadra(resposta.data);
+      setDados({
+        data_reserva: data,
+        horario_inicio: checkinTime,
+        horario_final: checkoutTime,
+        id_quadra: resposta.data.id // Agora definindo corretamente id_quadra
       });
-  }, [id]);
+    })
+    .catch((erro) => {
+      console.log("Erro ao buscar quadra:", erro);
+      setQuadra(null); // Se ocorrer um erro, defina quadra como null
+    });
+}, [id, data, checkinTime, checkoutTime]); // Incluindo as dependências necessárias
+
 
   // Horário atual
   const horario = new Date();
@@ -169,7 +239,7 @@ function Anuncio() {
             className="btn btn-primary"
             type="button"
             onClick={() => {
-              console.log(quadra);
+              reservar()
             }}
           >
             Reservar

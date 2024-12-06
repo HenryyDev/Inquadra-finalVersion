@@ -2,8 +2,8 @@ const db = require('../db');
 
 // Criar uma nova reserva
 exports.createReserva = async (req, res) => {
-    const { data_reserva, horario_inicio, horario_final } = req.body
-    const { id_usuario, id_quadra } = req.user
+    const { data_reserva, horario_inicio, horario_final, id_quadra } = req.body
+    const { id_usuario } = req.user
 
     if (!data_reserva || !horario_inicio || !horario_final) {
         return res.status(400).json({ error: 'Todos os campos são obrigatórios' });
@@ -20,9 +20,26 @@ exports.createReserva = async (req, res) => {
 
         const id_reserva = reserva.insertId;
 
+        const [precoHora] = await connection.execute(
+            'SELECT preco_hora FROM Quadra WHERE id_quadra = ?',
+            [id_quadra]
+        )
+        console.log(precoHora.preco_hora)
+            
+        const extrairHora = (horario_final, horario_inicio) => {
+            const [hora_final] = horario_final.split(":").map(Number);
+            const [hora_inicial] = horario_inicio.split(":").map(Number);
+            const diferencaHora = hora_final - hora_inicial;
+            return diferencaHora;
+        }
+        console.log(extrairHora(horario_final,horario_inicio))
+            
+        const [quantia] = (extrairHora(horario_final,horario_inicio)) * precoHora
+        console.log(quantia)
+
         const [pago] = await connection.execute(
-            'INSERT INTO Pago (fk_reserva) VALUES (?)',
-            [id_reserva]
+            'INSERT INTO Pago (fk_reserva, quantia) VALUES (?, ?)',
+            [id_reserva, quantia]
         );
 
         await connection.commit();

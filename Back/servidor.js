@@ -6,7 +6,7 @@ const port = 3000; // Puerto donde correrá el servidor
 
 // Middleware para parsear JSON
 app.use(express.json());
-app.use(cors({ origin: "*" }));
+app.use(cors());
 // Rotas
 // Importar as rotas
 const userRoutes = require('./routes/userRoutes');
