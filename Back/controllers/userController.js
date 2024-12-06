@@ -4,10 +4,10 @@ const db = require('../db');
 
 // Criar um novo usuario
 exports.createUser = async (req, res) => {
-    const { nome, email, senha, numero_t } = req.body;
+    const { nome, email, senha, numero_t,ddd } = req.body;
 
     // Verifica se os campos obrigatórios foram fornecidos
-    if (!nome || !email || !senha || !numero_t) {
+    if (!nome || !email || !senha || !numero_t || !ddd) {
         return res.status(400).json({ error: 'Todos os campos são obrigatórios' });
     }
 
@@ -35,8 +35,8 @@ exports.createUser = async (req, res) => {
         const id_usuario = cadastroUser.insertId;  // Captura o ID gerado para o novo usuário
 
         const [cadastroTelefone] = await connection.execute(
-            'INSERT INTO Telefone (numero, fk_usuario) VALUES (?, ?)',
-            [numero_t, id_usuario]
+            'INSERT INTO Telefone (numero,ddd, fk_usuario) VALUES (?, ?,?)',
+            [numero_t,ddd, id_usuario]
         );
 
         // Commit da transação

@@ -19,7 +19,9 @@ const PesquisarPai = () => {
       if (termo.trim() || modalidade.trim()) {
         try {
           const response = await axios.get(
-            `http://localhost:3000/quadras/esporte?termo=${termo}&modalidade=${modalidade}`
+            `http://localhost:3000/quadras/esporte`, {
+              params: { termo, modalidade } 
+            }
           );
         
           

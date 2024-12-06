@@ -14,6 +14,7 @@ const CadUsuario = () => {
     email: "",
     senha: "",
     numero_t:"",
+    ddd:"",
     confirmarSenha: "",
     termos: false,
   });
@@ -38,23 +39,40 @@ const CadUsuario = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!validateForm()) {
-      toast.error("corrija os erros!")
-      return
+      toast.error("Corrija os erros!");
+      return;
     }
-    axios.post("http://localhost:3000/users", values, {
-    headers: {
-        'Content-Type': 'application/json',
-    }
-})
-.then((resposta) => {
-    console.log("Resposta da requisição:", resposta);
-    navigate("/login");
-})
-.catch((erro) => {
-    console.log("Erro na requisição:", erro.response ? erro.response.data : erro.message);
-    toast.error("Erro ao criar conta");
-});
-
+  
+    // Processar o número telefônico
+    const numeroCompleto = values.numero_t.replace(/\D/g, ""); 
+    const ddd = numeroCompleto.slice(0, 2); 
+    const numero = numeroCompleto.slice(2); 
+  
+    // Atualizar o estado com os valores processados
+    setValues((prevValues) => {
+      const updatedValues = { ...prevValues, ddd: ddd, numero_t: numero };
+      console.log(updatedValues)
+      // Enviar os valores atualizados para o backend
+      axios
+        .post("http://localhost:3000/users", updatedValues, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+        .then((resposta) => {
+          console.log("Resposta da requisição:", resposta);
+          navigate("/login");
+        })
+        .catch((erro) => {
+          console.log(
+            "Erro na requisição:",
+            erro.response ? erro.response.data : erro.message
+          );
+          toast.error("Erro ao criar conta");
+        });
+  
+      return updatedValues; 
+    });
   };
 
   return (
