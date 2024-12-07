@@ -84,6 +84,14 @@ export default function ModalConfirmacao({
                         
                         {tipo === "alterar-senha" && (
                             <div className="mt-2">
+                                <label>Senha atual:</label>
+                                 <input
+                                    required
+                                    type="password"
+                                    value={senha}
+                                    onChange={(e) => setSenha(e.target.value)}
+                                    className="form-control"
+                                />
                                 <label>Nova senha:</label>
                                 <input
                                     required
