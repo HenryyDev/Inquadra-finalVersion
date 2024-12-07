@@ -43,7 +43,7 @@ const PesquisarPai = () => {
     fetchResults();
   }, [termo, modalidade]); // Recarrega os resultados sempre que mudar o termo ou a modalidade
 
-  console.log("resultados:", resultados);
+
 
   return (
     <div>

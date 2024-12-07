@@ -2,7 +2,7 @@ const db = require('../db');
 
 // Criar uma nova reserva
 exports.createReserva = async (req, res) => {
-    const { data_reserva, horario_inicio, horario_final, id_quadra } = req.body
+    const { data_reserva, horario_inicio, horario_final, id_quadra,preco_hora } = req.body
     const { id_usuario } = req.user
 
     if (!data_reserva || !horario_inicio || !horario_final) {
@@ -20,11 +20,6 @@ exports.createReserva = async (req, res) => {
 
         const id_reserva = reserva.insertId;
 
-        const [precoHora] = await connection.execute(
-            'SELECT preco_hora FROM Quadra WHERE id_quadra = ?',
-            [id_quadra]
-        )
-        console.log(precoHora.preco_hora)
             
         const extrairHora = (horario_final, horario_inicio) => {
             const [hora_final] = horario_final.split(":").map(Number);
@@ -32,10 +27,10 @@ exports.createReserva = async (req, res) => {
             const diferencaHora = hora_final - hora_inicial;
             return diferencaHora;
         }
-        console.log(extrairHora(horario_final,horario_inicio))
-            
-        const [quantia] = (extrairHora(horario_final,horario_inicio)) * precoHora
-        console.log(quantia)
+        
+        const preco_quadra=parseFloat(preco_hora)
+        console.log(preco_quadra)
+        const quantia = (extrairHora(horario_final,horario_inicio)) * preco_quadra
 
         const [pago] = await connection.execute(
             'INSERT INTO Pago (fk_reserva, quantia) VALUES (?, ?)',
@@ -44,10 +39,7 @@ exports.createReserva = async (req, res) => {
 
         await connection.commit();
 
-        res.status(201).json({
-            message: 'Reserva criada com sucesso',
-            id_quadra: reserva.insertId
-        });
+        
     } catch (error) {
         await connection.rollback();
         console.error(error);

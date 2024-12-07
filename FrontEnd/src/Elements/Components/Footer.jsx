@@ -6,7 +6,7 @@ function Footer() {
       <footer>
         <div className="footer-container ">
           <ul className="my-4">
-            <h3>INquadra</h3>
+            <h3>INquadra&reg;</h3>
             <h5>Seu espaço para o esporte e a diversão!</h5>
             Oferecemos quadras de alta qualidade para você praticar seu esporte
             favorito com conforto e praticidade. Seja para treino, lazer ou

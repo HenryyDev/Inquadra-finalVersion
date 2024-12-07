@@ -279,9 +279,7 @@ exports.getQuadraEsporte = async (req, res) => {
     query += ` e.${modalidade} = 1 `;
   }
 
-  // Exibe a consulta gerada para depuração
-  console.log("Consulta gerada:", query);
-  console.log("Parâmetros SQL:", queryParams);
+
 
   try {
     // Executa a consulta no banco de dados com Promise

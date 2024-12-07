@@ -6,11 +6,12 @@ import "../../../Elements/Css/anuncio.css";
 import "bootstrap/dist/js/bootstrap.min.js";
 import { useState, useEffect } from "react";
 import Carrossel from "../CarrosselImg/Carrossel.jsx";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link,useNavigate } from "react-router-dom";
 import axios from "axios";
-
+import { ToastContainer, toast } from 'react-toastify';
 function Anuncio() {
   const { id } = useParams(); // Captura o ID da URL
+  const navigate = useNavigate();
 
   const [quadra, setQuadra] = useState(null);
 
@@ -21,17 +22,18 @@ function Anuncio() {
     data_reserva:"",
     horario_inicio:"",
     horario_final:"",
-    id_quadra:""
+    id_quadra:"",
+    preco_hora:""
 })
 const reservar = async () => {
    const token = localStorage.getItem("token") || sessionStorage.getItem("token");
   if (!token) {
-    console.error("Token não encontrado");
+    navigate("/login")
     return;
   }
   // Verificar se o horário de check-in e check-out são válidos
   if (!checkinTime || !checkoutTime || !dados.id_quadra) {
-    console.error("Erro: Todos os campos são obrigatórios.");
+    toast.error("Erro: Todos os campos são obrigatórios.");
     return;
   }
 
@@ -58,9 +60,10 @@ const reservar = async () => {
     horario_inicio: formatarHorario(checkinTime), // Formatar o horário de check-in
     horario_final: formatarHorario(checkoutTime), // Formatar o horário de check-out
     id_quadra: dados.id_quadra, // Usar o ID da quadra atualizado
+    preco_hora:dados.preco_hora
   };
   if (!token) {
-    console.error("Token não encontrado");
+    navigate("/login")
     return;
   }
   try {
@@ -84,16 +87,18 @@ useEffect(() => {
   axios
     .get(`http://localhost:3000/quadras/id/${id}`)
     .then((resposta) => {
-      console.log("Resposta da API:", resposta); // Verifique a resposta aqui
+     
 
-      // Atualizando corretamente o estado de dados com a id_quadra
+      console.log(resposta)
       setQuadra(resposta.data);
       setDados({
         data_reserva: data,
         horario_inicio: checkinTime,
         horario_final: checkoutTime,
-        id_quadra: resposta.data.id // Agora definindo corretamente id_quadra
+        id_quadra: resposta.data.id,
+        preco_hora:parseFloat(resposta.data.preco_por_hora)
       });
+      
     })
     .catch((erro) => {
       console.log("Erro ao buscar quadra:", erro);
@@ -142,6 +147,7 @@ useEffect(() => {
 
   return (
     <>
+     <ToastContainer />
       <h1 className="title-quadra">{quadra.titulo}</h1>
       <div className="imagem-anuncio">
         <Carrossel imagens={quadra.fotos}  />
@@ -186,7 +192,7 @@ useEffect(() => {
 
           <span id="aval">
             <img src={estrela} alt="" width="20px" />{" "}
-            {quadra.media_avaliacao}
+             {quadra.media_avaliacao==null ? "0.0" :quadra.media_avaliacao}
           </span>
 
           <div className="calendario">
