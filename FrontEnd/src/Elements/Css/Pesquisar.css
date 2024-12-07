@@ -15,6 +15,8 @@ ul {
   border-radius: 25px;
   height: auto;
   margin: 0;
+  margin-right: 20px;
+  margin-bottom: 40px;
 }
 .anuncio {
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
@@ -47,9 +49,7 @@ ul {
 ul {
   padding: 0;
 }
-.no-result{
-  margin-left: 20px;
-}
+
 
 @media (max-width: 1200px) {
   .anun {

@@ -1,31 +1,88 @@
-.card-anuncio{
-    display: flex;
-    flex-direction: row;
-    margin-bottom: 40px;
-    border-radius: 25px;
-    background-color: #cacaca;
+/* Estilos gerais */
+.page-title {
+  margin-left: 40px;
+  margin-top: 40px;
 }
-.anuncio-ativo{
-    width: 800px;
-    padding: 40px;
-    display: flex;
-    flex-direction: column;
-    
-    list-style-type: none;
+
+.main-title {
+  margin-left: 40px;
+  margin-top: 10px;
 }
-.txt-card{
-    width: 50%;
-    margin: 20px;
-    display: flex;
-    text-align: center;
+
+.account-link {
+  color: #0000ff;
 }
-.wrap-btn{
-    display: flex;
-    flex-direction: column;
-    margin: 20px;
-   
+
+.wrap-anuncio-ativo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 30px;
 }
-.btn-card{
-    margin-bottom: 10px !important;
-    padding: 10 !important;
+
+.grid-anuncio {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 4 colunas por padrão */
+  gap: 20px; /* Espaçamento entre os cards */
+  width: 100%;
+  max-width: 1200px; /* Limite de largura */
+}
+
+.card-anuncio {
+  background-color:#cacaca;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.card-image {
+  width: 100%;
+  max-width: 200px;
+  border-radius: 25px;
+}
+
+.txt-card {
+  margin-top: 10px;
+}
+
+.wrap-btn {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.btn-card {
+  margin-top: 10px;
+  padding: 10px 20px;
+}
+
+/* Estilos responsivos */
+@media (max-width: 1200px) {
+  .grid-anuncio {
+    grid-template-columns: repeat(3, 1fr); /* 3 colunas em telas médias */
+  }
+}
+
+@media (max-width: 768px) {
+  .grid-anuncio {
+    grid-template-columns: repeat(2, 1fr); /* 2 colunas em telas menores */
+  }
+}
+
+@media (max-width: 480px) {
+  .grid-anuncio {
+    grid-template-columns: 1fr; /* 1 coluna em telas pequenas */
+  }
+}
+
+@media (max-width: 400px) {
+  .page-title,
+  .main-title {
+    font-size: 16px; /* Reduz o tamanho da fonte em telas pequenas */
+  }
+
+  .card-anuncio {
+    padding: 15px;
+  }
 }

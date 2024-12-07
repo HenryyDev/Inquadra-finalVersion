@@ -122,6 +122,12 @@ const Login = () => {
                   <span style={{ color: " #0000FF" }}> Criar conta</span>
                 </Link>
               </p>
+              <p className="txt">
+                Esqueceu a senha?
+                <Link to={"/recuperar-senha"}>
+                  <span style={{ color: " #0000FF" }}> Redefinir senha</span>
+                </Link>
+              </p>
             </div>
 
             {error && (

@@ -11,7 +11,6 @@ export default function ModalConfirmacao({
     tipo,
 }) {
     const [senha, setSenha] = useState("");
-    const [novoEmail, setNovoEmail] = useState("");
     const [novaSenha, setNovaSenha] = useState("");
     const [formErro, setFormErro] = useState("");  // Erro do formulário
 
@@ -19,7 +18,6 @@ export default function ModalConfirmacao({
     useEffect(() => {
         if (!show) {
             setSenha("");
-            setNovoEmail("");
             setNovaSenha("");
             setFormErro("");  // Limpa o erro de formulário
         }
@@ -31,11 +29,6 @@ export default function ModalConfirmacao({
             return;
         }
 
-        if (tipo === "alterar-email" && novoEmail.trim() === "") {
-            setFormErro("O novo e-mail é obrigatório.");
-            return;
-        }
-
         if (tipo === "alterar-senha" && novaSenha.trim() === "") {
             setFormErro("A nova senha é obrigatória.");
             return;
@@ -44,10 +37,10 @@ export default function ModalConfirmacao({
         try {
             if (tipo === "deletar") {
                 await onConfirm(senha); // Para desativar a conta, enviamos a senha
-            } else if (tipo === "alterar-email") {
-                await onConfirm(senha, novoEmail); // Para alterar e-mail, passamos senha e novo e-mail
             } else if (tipo === "alterar-senha") {
                 await onConfirm(senha, novaSenha); // Para alterar senha, passamos senha e nova senha
+            } else if (tipo === "excluir-anuncio") {
+                await onConfirm(senha); // Para excluir o anúncio, passamos apenas a senha
             }
             onClose(); // Fecha o modal após confirmação
         } catch (error) {
@@ -72,31 +65,23 @@ export default function ModalConfirmacao({
                         <button type="button" className="btn-close" aria-label="Close" onClick={onClose}></button>
                     </div>
                     <div className="modal-body">
-                        {mensagem}
-                        <div className="mt-2">
-                            <label>Digite sua senha para continuar:</label>
-                            <input
-                                required
-                                type="password"
-                                value={senha}
-                                onChange={(e) => setSenha(e.target.value)}
-                                className="form-control"
-                            />
-                        </div>
+                       
+                        <p>{mensagem}</p>
 
-                        {tipo === "alterar-email" && (
+                        {(tipo === "deletar" || tipo === "excluir-anuncio") && (
                             <div className="mt-2">
-                                <label>Novo Email:</label>
+                                <label>Digite sua senha para continuar:</label>
                                 <input
                                     required
-                                    type="email"
-                                    value={novoEmail}
-                                    onChange={(e) => setNovoEmail(e.target.value)}
+                                    type="password"
+                                    value={senha}
+                                    onChange={(e) => setSenha(e.target.value)}
                                     className="form-control"
                                 />
                             </div>
                         )}
 
+                        
                         {tipo === "alterar-senha" && (
                             <div className="mt-2">
                                 <label>Nova senha:</label>
@@ -110,7 +95,7 @@ export default function ModalConfirmacao({
                             </div>
                         )}
 
-                        {/* Exibe erro de formulário, se houver */}
+                      
                         {formErro && <p style={{ color: "red" }}>{formErro}</p>}
                     </div>
                     {erro && <p style={{ color: "red" }}>{erro}</p>}

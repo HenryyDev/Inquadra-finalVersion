@@ -124,6 +124,42 @@ exports.getUserID = async (req, res) => {
          connection.release();
     }
 };
+exports.getPerfil = async (req, res) => {
+    const { id } = req.params;
+    let connection;
+    try {
+      connection = await db.getConnection();
+      const [usuario] = await db.execute(
+        `SELECT u.nome AS usuario_nome,q.id_quadra,q.descricao, q.nome AS quadra_nome, q.preco_hora AS preco_por_hora,e.municipio,
+      e.bairro,
+       (SELECT i.caminho 
+       FROM Imagem i 
+       WHERE i.fk_quadra = q.id_quadra 
+       LIMIT 1) AS imagem_caminho
+  FROM 
+      Usuario u
+  JOIN 
+      Quadra q ON u.id_usuario = q.fk_usuario
+  JOIN 
+      Endereco e ON q.fk_endereco = e.id_endereco
+  LEFT JOIN 
+      Imagem i ON q.id_quadra = i.fk_quadra
+  WHERE 
+      u.id_usuario = ?;`,
+        [id]
+      );
+      if (usuario.length > 0) {
+        res.status(200).json(usuario);  // Retorna todas as quadras encontradas
+      } else {
+        res.status(404).json({ error: "Usuario não encontrado" });
+      }
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Erro ao obter o usuario" });
+    } finally {
+      connection.release();
+    }
+  };
 
 // Atualizar um usuario
 exports.updateUser = async (req, res) => {
@@ -206,6 +242,58 @@ exports.trocarSenha = async (req, res) => {
         await connection.rollback();
         console.error(error);
         res.status(500).json({ error: 'Erro ao atualizar o usuario' });
+    } finally {
+        connection.release();
+    }
+};
+
+exports.redefinirSenha = async (req, res) => {
+    const { token, novaSenha } = req.body;
+
+    if (!token || !novaSenha) {
+        return res.status(400).json({ error: 'Todos os campos são obrigatórios' });
+    }
+
+    const connection = await db.getConnection();
+    try {
+        await connection.beginTransaction();
+
+        // Decodifica o token para obter o ID do usuário
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+        const id_usuario = decoded.id; // Supondo que o ID do usuário esteja armazenado no token
+
+        const [user] = await connection.execute('SELECT * FROM Usuario WHERE id_usuario = ?', [id_usuario]);
+
+        if (user.length === 0) {
+            return res.status(404).json({ error: 'Usuário não encontrado' });
+        }
+
+        // Criptografa a nova senha
+        const hashedPassword = await bcrypt.hash(novaSenha, 10); // 10 é o "salting rounds"
+
+        // Atualiza a senha do usuário
+        const [userResult] = await connection.execute(
+            'UPDATE Usuario SET senha = ? WHERE id_usuario = ?',
+            [hashedPassword, id_usuario]
+        );
+
+        await connection.commit();
+
+        if (userResult.affectedRows > 0) {
+            res.status(200).json({ message: 'Senha redefinida com sucesso' });
+        } else {
+            res.status(404).json({ error: 'Erro ao redefinir a senha' });
+        }
+    } catch (error) {
+        await connection.rollback();
+        console.error(error);
+
+        if (error.name === 'JsonWebTokenError' || error.name === 'TokenExpiredError') {
+            return res.status(400).json({ error: 'Token inválido ou expirado' });
+        }
+
+        res.status(500).json({ error: 'Erro interno do servidor' });
     } finally {
         connection.release();
     }

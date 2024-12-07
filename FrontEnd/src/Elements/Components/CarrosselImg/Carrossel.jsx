@@ -51,7 +51,7 @@ const Carrossel = ({ imagens }) => {
             >
               <img
                 src={`http://localhost:3000${img}`}
-                className=" imagem-car "
+                className="imagem-car"
                 alt={`Imagem ${index + 1}`}
               />
             </div>
@@ -67,8 +67,9 @@ const Carrossel = ({ imagens }) => {
         )}
       </div>
 
+      {/* Botões de navegação */}
       <a
-        className="carousel-control-prev"
+        className={`carousel-control-prev ${currentIndex === 0 ? 'disabled' : ''}`}
         href="#carouselExampleIndicators"
         role="button"
         data-bs-slide="prev"
@@ -78,7 +79,7 @@ const Carrossel = ({ imagens }) => {
         <span className="visually-hidden">Previous</span>
       </a>
       <a
-        className="carousel-control-next"
+        className={`carousel-control-next ${currentIndex === imagensValidas.length - 1 ? 'disabled' : ''}`}
         href="#carouselExampleIndicators"
         role="button"
         data-bs-slide="next"

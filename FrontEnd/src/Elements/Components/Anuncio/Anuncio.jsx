@@ -104,7 +104,7 @@ useEffect(() => {
       console.log("Erro ao buscar quadra:", erro);
       setQuadra(null); // Se ocorrer um erro, defina quadra como null
     });
-}, [id, data, checkinTime, checkoutTime]); // Incluindo as dependências necessárias
+}, [id]); // Incluindo as dependências necessárias
 
 
   // Horário atual
@@ -185,7 +185,7 @@ useEffect(() => {
             Cep:{quadra.cep} | Município: {quadra.municipio} | Bairro:{" "}
             {quadra.bairro}
           </p>
-          <Link><p style={{color:"#0000FF"}}>Ver perfil anunciante</p></Link>
+          <Link to={`/perfil/${quadra.usuario_id}`}><p style={{color:"#0000FF"}}>Ver perfil anunciante</p></Link>
         </div>
         <div className="check-in">
           <h2>R${quadra.preco_por_hora}/hora</h2>

@@ -9,6 +9,7 @@ router.post('/', authenticateJWT, upload.array('imagens'), quadraController.crea
 // router.get('/', authenticateJWT, quadraController.getQuadra);
 router.get('/id/:id', quadraController.getQuadraID);
 router.get('/esporte', quadraController.getQuadraEsporte);
+router.get("/anuncio-ativo",authenticateJWT,quadraController.getanunciosAtivos)
 router.put('/:id', authenticateJWT, quadraController.updateQuadra);
 router.delete('/:id', authenticateJWT, quadraController.deleteQuadra);
 router.get('/quadras-destaque', quadraController.getDestaque);

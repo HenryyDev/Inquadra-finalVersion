@@ -1,65 +1,80 @@
 import "../../Css/perfilUser.css";
-import React, { useState } from "react";
-import golfimg from "../../../assets/golf.jpg";
-const quadrasData = [
-  {
-    id: 1,
-    nome: "Quadra 1",
-    descricao: "Quadra de Futebol",
-    imagem: "./assets/golf.jpg",
-    preco: 29.25,
-  },
-  {
-    id: 2,
-    nome: "Quadra 2",
-    descricao: "Quadra de Tênis",
-    imagem: "./assets/golf.jpg",
-    preco: 20,
-  },
-  {
-    id: 3,
-    nome: "Quadra 3",
-    descricao: "Quadra Poliesportiva",
-    imagem: "./assets/golf.jpg",
-    preco: 14.25,
-  },
-  {
-    id: 4,
-    nome: "Quadra 4",
-    descricao: "Quadra de Vôlei",
-    imagem: "./assets/golf.jpg",
-    preco: 50.25,
-  },
-  { id: 5, nome: "Quadra 5", descricao: "Quadra de Basquete", imagem: "" },
-  { id: 6, nome: "Quadra 6", descricao: "Quadra de Futebol", imagem: "" },
-];
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { useParams, Link } from "react-router-dom";
+
+import loc from "../../../assets/pin.png"
+const fetchQuadrasData = async (id) => {
+  try {
+    console.log(id);
+    const response = await axios.get(`http://localhost:3000/users/perfil/${id}`);
+    console.log(response.data)
+    return response.data; // Retorna os dados das quadras, que pode ser um único objeto ou array
+  } catch (error) {
+    console.error("Erro ao buscar as quadras:", error);
+    return null; // Retorna null em caso de erro
+  }
+};
+
 export default function PerfilUser() {
-  const [quadras, setQuadras] = useState(quadrasData);
+  const { id } = useParams();
+  console.log(id);
+  const [quadras, setQuadras] = useState([]);
+
+  useEffect(() => {
+    const carregarQuadras = async () => {
+      const quadrasData = await fetchQuadrasData(id);
+
+      if (quadrasData) {
+        // Se os dados forem um único objeto, coloque-os dentro de um array
+        setQuadras(Array.isArray(quadrasData) ? quadrasData : [quadrasData]);
+      }
+    };
+
+    if (id) {
+      carregarQuadras();
+    }
+  }, [id]);
+
   return (
     <>
-      <h1
-        className="nome-user"
-        style={{ marginLeft: "40px", marginTop: "40px" }}
-      >
-        nomeuser
-      </h1>
-      <h5 style={{ marginLeft: "40px" }}>cidade</h5>
-      <p style={{ margin: "40px" }}>Anuncios do perfil</p>
+      {quadras.length > 0 && (
+        <>
+          <h1 className="nome-user" style={{ marginLeft: "40px", marginTop: "40px" }}>
+            {quadras[0].usuario_nome} {/* Nome do usuário */}
+          </h1>
+          
+          <p style={{ margin: "40px" }}>Anúncios do perfil</p>
 
-      <ul className="wrap-anuncio">
-        {quadras.slice(0, 4).map((quadra) => (
-          <li key={quadra.id} style={{ paddingBottom: "40px" }}>
-            <div className="card">
-              <a href="pags/anuncio/index.html">
-                <img src={golfimg} alt="" width={"300px"} />
-                <h1 className="txt-anuncio">R$ {quadra.preco}/H</h1>
-                <h5 className="txt-anuncio">{quadra.nome}</h5>
-                <p className="txt-anuncio">{quadra.descricao}</p>
-              </a>
-            </div>
-          </li>
-        ))}
-      </ul>
+          <div className="anun-perfil">
+            <ul className="grid">
+              {quadras.map((quadra) => (
+                <li key={quadra.id_quadra} className="quadra-item">
+                  <div className="quadra-perfil">
+                    <Link to={`/anuncio/${quadra.id_quadra}`}>
+                      <img
+                        src={`http://localhost:3000${quadra.imagem_caminho}` } // Se não tiver imagem, usa a imagem padrão
+                        alt={quadra.nome}
+                        className="img-res img-fluid"
+                        width="100%"
+                       style={{borderRadius:"25px"}}/>
+                      <div className="quadra-left">
+                      <h5>{quadra.quadra_nome.length > 15 ? `${quadra.quadra_nome.slice(0, 15)}...` : quadra.quadra_nome}
+                      </h5>
+                        <p ><img src={loc} alt="" width={"20px"} />{quadra.municipio}, {quadra.bairro}</p>
+                      </div>
+                      <div className="quadra-right">
+                        <h5>R$ {quadra.preco_por_hora}/h</h5> {/* Preço da quadra */}
+                      </div>
+                    </Link>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </>
+      )}
+      {quadras.length === 0 && <p>Não há anuncios disponíveis.</p>}
     </>
   );
 }

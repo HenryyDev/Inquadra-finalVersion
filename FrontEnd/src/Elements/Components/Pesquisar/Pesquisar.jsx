@@ -21,14 +21,14 @@ const Pesquisar = ({ termo,modalidade, resultados }) => {
   
   return (
     <div className="wrap-anuncio">
-  <h3>{verificaPesquisa()}</h3>
+  <h3 className="mt-4">{verificaPesquisa()}</h3>
   <div className="anun">
     <ul className="row">
       {resultados.length === 0 ? (
         <li className="no-result" style={{ minHeight: "400px" }}>
           <div className="d-flex  align-items-center h-100 text-center">
-            <img src={erro} width={"150px"} alt="Erro" style={{ marginRight: "15px" }} />
-            <p style={{ fontWeight: "bold", marginTop: 0 ,fontSize:"25px"}}>Resultado não encontrado</p>
+           
+            <p style={{ fontWeight: "bold", marginTop: 0 ,fontSize:"25px",marginLeft:"20px"}}>Resultado não encontrado</p>
           </div>
         </li>
 

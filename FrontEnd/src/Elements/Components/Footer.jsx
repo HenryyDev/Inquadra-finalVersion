@@ -33,7 +33,7 @@ function Footer() {
           <ul className="my-4">
             <h3>Contatos</h3>
             <li>+55 41 99999-99999</li>
-            <li>henry4i20@gmail.com</li>
+            <li>inquadra2024@gmail.com</li>
             <li>Brasil</li>
           </ul>
         </div>

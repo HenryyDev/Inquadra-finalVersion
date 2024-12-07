@@ -16,7 +16,6 @@ const GerenciarConta = () => {
   });
   
   const navigate = useNavigate();
-
   useEffect(() => {
     const token = localStorage.getItem("token") || sessionStorage.getItem("token");
 
@@ -70,7 +69,7 @@ const GerenciarConta = () => {
           console.error("Erro ao buscar dados do usuário:", erro);
         });
     }
-  }, [data.id]); // A requisição será feita apenas quando o 'id' for alterado
+  }, [data.id]); 
 
   return (
     <>
@@ -78,7 +77,11 @@ const GerenciarConta = () => {
         <h5>Conta</h5>
         <p>
           {data.nome}, {data.email},
-          <Link to={"/perfil"} className="acesso-perfil"> Acessar perfil</Link>
+          {data.id ? (
+            <Link to={`/perfil/${data.id}`} className="acesso-perfil"> Acessar perfil</Link>
+          ) : (
+            <span>Carregando perfil...</span>
+          )}
         </p>
       </div>
 

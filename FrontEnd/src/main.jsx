@@ -11,6 +11,8 @@ import PageGerenciarReserva from "./pags/PageGerenciarReserva";
 import PageAnunciosAtivos from "./pags/PageAnunciosAtivos";
 import PagePerfilUser from "./pags/PagePerfilUser";
 import PagePesquisa from "./pags/PagePesquisa";
+import PageSolicitaRec from "./pags/PageSolicitaRec";
+import PageRedefinirSenha from "./pags/PageRedefinirSenha";
 import { createRoot } from "react-dom/client";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./Elements/Css/main.css"
@@ -61,13 +63,23 @@ const router = createBrowserRouter([
   },
   
   {
-    path:"/perfil",
+    path:"/perfil/:id",
     element:<PagePerfilUser/>
   },
   {
     path:"/busca",
     element:<PagePesquisa/>
   },
+  {
+    path:"/recuperar-senha",
+    element:<PageSolicitaRec/>
+  },
+  {
+    path:"/redefinir-senha/:token",
+    element:<PageRedefinirSenha/>
+  },
+  
+  
   {
     path:"/anuncio/:id",
     element:<PageAnuncio/>
