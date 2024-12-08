@@ -242,7 +242,7 @@ const CadAnuncio = () => {
             </div>
 
             <label htmlFor="preco_hora" className="form-label">
-              Preço R$<span className="error-text">*</span>
+              Preço por hora R$<span className="error-text">*</span>
             </label>
             {errors.preco_hora && (
               <div className="alert alert-danger" role="alert">
@@ -255,7 +255,7 @@ const CadAnuncio = () => {
               name="preco_hora"
               value={formData.preco_hora}
               onChange={handleChange}
-              placeholder="Digite o Preço que deseja cobrar POR HORA"
+              placeholder="Digite o Preço que deseja cobrar"
             />
 
             <label htmlFor="cep" className="form-label">

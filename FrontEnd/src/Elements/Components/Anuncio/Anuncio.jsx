@@ -171,7 +171,7 @@ useEffect(() => {
                 <div key={esporte} style={{backgroundColor:"#94B0B3", borderRadius:"25px", marginLeft:"10px"}}>
                   <li key={index} style={{ margin: "0 10px" }}>
                   
-                    {esporte}
+                    <Link to={`/busca/?modalidade=${esporte}`}>{esporte}</Link>
                   </li>
                 </div>
               ))

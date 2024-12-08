@@ -6,12 +6,12 @@
   }
 
 .wrap-user{
-    width: 100%;
+
     display: flex;
     justify-content: center;
     align-items: center;
     margin: 0;
-    height: 100%;
+   
     background-color: var(--transparence-primary)
 }
 :root{

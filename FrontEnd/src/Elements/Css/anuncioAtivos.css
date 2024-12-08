@@ -16,8 +16,10 @@
 .wrap-anuncio-ativo {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: start;
   margin-top: 30px;
+  margin-left: 20px;
+  margin-right: 20px;
 }
 
 .grid-anuncio {
@@ -34,8 +36,12 @@
   padding: 20px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   text-align: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
-
+.card-anuncio:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
 .card-image {
   width: 100%;
   max-width: 200px;
@@ -47,9 +53,14 @@
 }
 
 .wrap-btn {
-  display: flex;
-  justify-content: center;
-  margin-top: 10px;
+  .card-button {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
 }
 
 .btn-card {
@@ -62,6 +73,11 @@
   .grid-anuncio {
     grid-template-columns: repeat(3, 1fr); /* 3 colunas em telas médias */
   }
+  .card-anuncio {
+   
+    margin: 20px;
+  }
+  
 }
 
 @media (max-width: 768px) {
@@ -84,5 +100,6 @@
 
   .card-anuncio {
     padding: 15px;
+
   }
 }

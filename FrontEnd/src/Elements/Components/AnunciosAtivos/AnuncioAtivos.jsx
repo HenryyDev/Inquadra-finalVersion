@@ -8,6 +8,7 @@ export default function AnunciosAtivos() {
   const [showModal, setShowModal] = useState(false);
   const [erro, setErro] = useState("");
   const [idAnuncioParaExcluir, setIdAnuncioParaExcluir] = useState(null);
+  
   const token =
     localStorage.getItem("token") || sessionStorage.getItem("token");
   // Função para buscar os dados das quadras
@@ -72,16 +73,18 @@ export default function AnunciosAtivos() {
           {quadras.length > 0 ? (
             quadras.map((quadra) => (
               <div key={quadra.id_quadra} className="card-anuncio mb-4">
-                <img
-                  src={`http://localhost:3000${quadra.imagem}`}
-                  alt={`Imagem da quadra ${quadra.nome}`}
-                  className="card-image"
-                />
+                <Link to={`/anuncio/${quadra.id_quadra}`}>
+                  <img
+                    src={`http://localhost:3000${quadra.imagem}`}
+                    alt={`Imagem da quadra ${quadra.nome}`}
+                    className="card-image"
+                  />
+                </Link>
 
                 <h5 className="txt-card">
                   {quadra.quadra_nome.length > 15
                     ? `${quadra.quadra_nome.slice(0, 15)}...`
-                    : quadra.nome}
+                    : quadra.quadra_nome}
                 </h5>
                 <p className="txt-card">
                   {quadra.descricao.length > 15
@@ -92,7 +95,7 @@ export default function AnunciosAtivos() {
 
                 <div className="wrap-btn">
                   <button
-                    className="btn btn-primary btn-card"
+                    className="  card-button btn-card"
                     onClick={() => handleAbrirModalExcluir(quadra.id_quadra)}
                   >
                     Excluir
