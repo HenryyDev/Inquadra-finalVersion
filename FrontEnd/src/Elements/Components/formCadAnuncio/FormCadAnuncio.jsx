@@ -82,7 +82,7 @@ const CadAnuncio = () => {
         });
       }
     }
-   
+
   };
   const validateForm = () => {
     const newErrors = {}; // Objeto para armazenar os erros de validação
@@ -92,7 +92,7 @@ const CadAnuncio = () => {
     if (!formData.preco_hora) newErrors.preco_hora = "Preço é obrigatório."; // Verifica se o preço está vazio
     if (!formData.logradouro) newErrors.logradouro = "Endereço é obrigatório."; // Verifica se o endereço está vazio
     if (!formData.cep) newErrors.cep = "CEP é obrigatório."; // Verifica se o CEP está vazio
-   
+
 
     // Verifica se pelo menos um esporte foi selecionado
     const esporteSelecionado = Object.values(formData.esporte).some(
@@ -139,22 +139,22 @@ const CadAnuncio = () => {
     formData.imagens.forEach((image) => {
       formDataToSend.append("imagens", image);
     });
-   
+
 
     axios
-  .post("http://localhost:3000/quadras", formDataToSend, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  })
-  .then((resposta) => {
-    console.log("Resposta da requisição:", resposta);
-    navigate("/");
-  })
-  .catch((erro) => {
-    console.log("Erro na requisição:", erro.response?.data || erro);
-    toast.error("Erro ao criar anúncio");
-  });
+      .post("http://localhost:3000/quadras", formDataToSend, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((resposta) => {
+        console.log("Resposta da requisição:", resposta);
+        navigate("/");
+      })
+      .catch((erro) => {
+        console.log("Erro na requisição:", erro.response?.data || erro);
+        toast.error("Erro ao criar anúncio");
+      });
 
   };
 
@@ -276,6 +276,12 @@ const CadAnuncio = () => {
               value={formData.cep}
               onBlur={handleBlurCEP}
               onChange={handleChange}
+              onFocus={(e) => {
+                // Usando setTimeout para garantir que o foco seja processado
+                setTimeout(() => {
+                  e.target.setSelectionRange(0, 0); // Força o cursor para o início
+                }, 0);
+              }}
               placeholder="Digite o cep da quadra"
             />
 
@@ -306,14 +312,15 @@ const CadAnuncio = () => {
               value={formData.numero_e}
               onChange={handleChange}
               placeholder="Digite o número do endereço"
+              
             />
 
-          
-           
+
+
 
             <label htmlFor="imagens" className="form-label">
               Imagens<span className="error-text">*</span>
-              
+
             </label>
             <div id="emailHelp" className="form-text">
               formatos suportados:jpeg, png e jpg
@@ -331,7 +338,7 @@ const CadAnuncio = () => {
               multiple
               onChange={handleChange}
             />
-            
+
 
             <button type="submit" className="btn btn-primary">
               Criar anúncio

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer, toast } from "react-toastify";
 import "../../Css/CadUsuario.css";
 import logo from "../../../assets/logo.png";
 import ver from "../../../assets/ver.png";
@@ -23,7 +23,8 @@ const CadUsuario = () => {
   const [viewSenha, setViewSenha] = useState(true);
 
   const validatePassword = (senha) => {
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    // A nova expressão regular inclui os caracteres especiais #/-+*_-\|
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#\/\-+*_\\|@$!%*?&])[A-Za-z\d#\/\-+*_\\|@$!%*?&]{8,}$/;
     return passwordRegex.test(senha);
   };
 
@@ -151,9 +152,16 @@ const CadUsuario = () => {
                 onChange={(e) =>
                   setValues({ ...values, numero_t: e.target.value })
                 }
+                onFocus={(e) => {
+                  // Pausa curta para garantir que a máscara esteja aplicada
+                  setTimeout(() => {
+                    e.target.setSelectionRange(0, 0);
+                  }, 50);
+                }}
                 placeholder="Digite um número telefônico para contato"
               />
             </div>
+
             <div className="mb-3" style={{ position: "relative" }}>
               <label htmlFor="senha" className="form-label">
                 Senha
@@ -187,6 +195,7 @@ const CadUsuario = () => {
                 />
               </div>
             </div>
+
             <div className="mb-3" style={{ position: "relative" }}>
               <label htmlFor="confirmarSenha" className="form-label">
                 Confirmar senha
@@ -206,6 +215,7 @@ const CadUsuario = () => {
                 }
               />
             </div>
+
             <div className="mb-3 form-check">
               <input
                 type="checkbox"
