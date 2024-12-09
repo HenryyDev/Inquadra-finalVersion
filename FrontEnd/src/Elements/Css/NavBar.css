@@ -120,4 +120,7 @@ a {
     height: 50px;
     border-radius: 20px;
   }
+  .nome-user{
+    display: none;
+  }
 }

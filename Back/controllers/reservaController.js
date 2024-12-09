@@ -87,11 +87,9 @@ exports.getReservaID = async (req, res) => {
     );
 
     if (reservas.length > 0) {
-      res.status(200).json(reservas); // Retorna as reservas encontradas
+      res.status(200).json(reservas); // Retorna a reserva encontrada
     } else {
-      res
-        .status(404)
-        .json({ error: "Nenhuma reserva encontrada para este usuário" });
+      res.status(204).json(); // Retorna 204 se não houver reservas
     }
   } catch (error) {
     console.error(error);

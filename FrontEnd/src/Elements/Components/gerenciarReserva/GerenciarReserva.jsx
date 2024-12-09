@@ -2,7 +2,7 @@ import "../../Css/gerenciarReserva.css";
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom"; // Importa o hook useNavigate
 import axios from "axios";
-import golfimg from "../../../assets/golf.jpg";
+
 
 export default function GerenciarReserva() {
   const [quadras, setQuadras] = useState([]); // Estado inicial vazio
