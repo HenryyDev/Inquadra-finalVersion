@@ -15,6 +15,13 @@ const RedefinirSenha = () => {
 
   const navigate = useNavigate(); // useNavigate deve ser chamado dentro do componente
 
+  // Função para validar a senha
+  const validatePassword = (senha) => {
+    // A nova expressão regular inclui os caracteres especiais #/-+*_-\|
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#\/\-+*_\\|@$!%*?&])[A-Za-z\d#\/\-+*_\\|@$!%*?&]{8,}$/;
+    return passwordRegex.test(senha);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -28,6 +35,13 @@ const RedefinirSenha = () => {
     // Verifica se a nova senha não está vazia
     if (!novaSenha) {
       setError("A senha não pode ser vazia");
+      setMessage("");
+      return;
+    }
+
+    // Verifica se a senha atende aos critérios de segurança
+    if (!validatePassword(novaSenha)) {
+      setError("A senha deve ter no mínimo 8 caracteres, incluindo letras maiúsculas, minúsculas, números e caracteres especiais.");
       setMessage("");
       return;
     }
