@@ -2,8 +2,7 @@ const db = require("../db");
 
 // Criar uma nova reserva
 exports.createReserva = async (req, res) => {
-  const { data_reserva, horario_inicio, horario_final, id_quadra, preco_hora } =
-    req.body;
+  const { data_reserva, horario_inicio, horario_final, id_quadra, preco_hora } = req.body;
   const { id_usuario } = req.user;
 
   if (!data_reserva || !horario_inicio || !horario_final) {
@@ -14,6 +13,7 @@ exports.createReserva = async (req, res) => {
   try {
     await connection.beginTransaction();
 
+    // Insert reservation
     const [reserva] = await connection.execute(
       "INSERT INTO Reserva (data_reserva, horario_inicio, horario_final, fk_quadra, fk_usuario) VALUES (?, ?, ?, ?, ?)",
       [data_reserva, horario_inicio, horario_final, id_quadra, id_usuario]
@@ -21,23 +21,26 @@ exports.createReserva = async (req, res) => {
 
     const id_reserva = reserva.insertId;
 
+    // Calculate the time difference in hours (accounting for minutes)
     const extrairHora = (horario_final, horario_inicio) => {
-      const [hora_final] = horario_final.split(":").map(Number);
-      const [hora_inicial] = horario_inicio.split(":").map(Number);
-      const diferencaHora = hora_final - hora_inicial;
+      const [hora_final, minuto_final] = horario_final.split(":").map(Number);
+      const [hora_inicial, minuto_inicial] = horario_inicio.split(":").map(Number);
+
+      const diferencaHora = (hora_final - hora_inicial) + (minuto_final - minuto_inicial) / 60;
       return diferencaHora;
     };
 
     const preco_quadra = parseFloat(preco_hora);
-    console.log(preco_quadra);
     const quantia = extrairHora(horario_final, horario_inicio) * preco_quadra;
 
+    // Insert payment record
     const [pago] = await connection.execute(
       "INSERT INTO Pago (fk_reserva, quantia) VALUES (?, ?)",
       [id_reserva, quantia]
     );
 
     await connection.commit();
+    res.status(201).json({ message: "Reserva criada com sucesso" });
   } catch (error) {
     await connection.rollback();
     console.error(error);
@@ -136,15 +139,23 @@ exports.updateReserva = async (req, res) => {
 // Deletar uma reservação
 exports.deleteReserva = async (req, res) => {
   const { id_reserva } = req.params;
+
+  // Verificar se o ID da reserva foi fornecido
+  if (!id_reserva) {
+    return res.status(400).json({ error: "ID da reserva não fornecido" });
+  }
+
   const connection = await db.getConnection();
   try {
     await connection.beginTransaction();
 
+    // Deletar primeiro os registros na tabela Pago
     const [deletarPago] = await connection.execute(
       "DELETE FROM Pago WHERE fk_reserva = ?",
       [id_reserva]
     );
 
+    // Deletar depois da reserva na tabela Reserva
     const [deletarReserva] = await connection.execute(
       "DELETE FROM Reserva WHERE id_reserva = ?",
       [id_reserva]
@@ -152,6 +163,7 @@ exports.deleteReserva = async (req, res) => {
 
     await connection.commit();
 
+    // Verificar se as exclusões foram realizadas com sucesso
     if (deletarPago.affectedRows > 0 && deletarReserva.affectedRows > 0) {
       res.status(200).json({ message: "Reserva deletada com sucesso" });
     } else {
@@ -165,3 +177,4 @@ exports.deleteReserva = async (req, res) => {
     connection.release();
   }
 };
+

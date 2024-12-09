@@ -8,6 +8,6 @@ router.post('/cadastro',authenticateJWT, reservaController.createReserva);
 router.get('/', authenticateJWT, reservaController.getReserva);
 router.get('/id', authenticateJWT, reservaController.getReservaID);
 router.put('/:id', authenticateJWT, reservaController.updateReserva);
-router.delete('/:id', authenticateJWT, reservaController.deleteReserva);
+router.delete('/:id_reserva', authenticateJWT, reservaController.deleteReserva);
 
 module.exports = router;

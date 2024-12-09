@@ -75,7 +75,8 @@ const reservar = async () => {
       },
     });
     
-    console.log("Reserva criada com sucesso:", response.data);
+
+    toast.success("Reserva Criada!")
   } catch (error) {
     console.error("Erro ao criar a reserva:", error.response ? error.response.data : error.message);
   }
