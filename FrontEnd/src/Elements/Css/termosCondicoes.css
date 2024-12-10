@@ -1,0 +1,71 @@
+:root {
+    --blue-primary: #00BBC9;
+    --cinza-primary: #324B4E;
+    --cinza-secondary: #94B0B3;
+    --blue-secondary: #3A8FD7;
+    --transparence-primary: #cacaca;
+  }
+  
+  * {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+  }
+  
+  .termos-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+   
+    background-color:#cacaca;
+  }
+  
+  .termos {
+    padding: 20px;
+    background: none;
+    width: 60%;
+    border-radius: 25px;
+  }
+  
+  .termos div {
+    padding: 20px;
+    background-color: #cacaca;
+    border-radius: 25px;
+  }
+  
+  .termos p {
+    padding-top: 10px;
+  }
+  
+  .termos h1 {
+    font-size: 24px;
+    font-weight: bold;
+  }
+  
+  .termos .logo {
+    display: block;
+    margin: 0 auto;
+  }
+  
+  @media (max-width: 1200px) {
+    .termos {
+      width: 90%;
+    }
+  
+    .termos-container {
+      padding-top: 20px;
+    }
+  
+    .logo {
+      width: 200px;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .termos {
+      width: 100%;
+      padding: 15px;
+    }
+  }
+  

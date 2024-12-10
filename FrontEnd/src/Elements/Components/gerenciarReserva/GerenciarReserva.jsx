@@ -1,19 +1,22 @@
 import "../../Css/gerenciarReserva.css";
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom"; // Importa o hook useNavigate
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import golfimg from "../../../assets/golf.jpg";
+import { ToastContainer, toast } from "react-toastify";
+import ModalConfirmacao from "../Modal";
 
 export default function GerenciarReserva() {
-  const [quadras, setQuadras] = useState([]); // Estado inicial vazio
-  const [loading, setLoading] = useState(true); // Estado de carregamento
-  const [error, setError] = useState(null); // Estado para erro
-  const navigate = useNavigate(); // Hook para navegação
+  const [quadras, setQuadras] = useState([]); 
+  const [loading, setLoading] = useState(true); 
+  const [error, setError] = useState(null); 
+  const [showModal, setShowModal] = useState(false); 
+  const [quadraSelecionada, setQuadraSelecionada] = useState(null); 
+  const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem("token") || sessionStorage.getItem("token");
     if (!token) {
-      navigate("/login"); // Redireciona para a página de login se o token não estiver presente
+      navigate("/login");
       return;
     }
 
@@ -21,87 +24,93 @@ export default function GerenciarReserva() {
       try {
         const response = await axios.get("http://localhost:3000/reservas/id", {
           headers: {
-            Authorization: `Bearer ${token}`, // Adiciona o token no cabeçalho
+            Authorization: `Bearer ${token}`,
           },
         });
 
-        // Garantir que response.data seja um array válido
         if (Array.isArray(response.data)) {
-          setQuadras(response.data); // Atualiza o estado com os dados da API
+          setQuadras(response.data);
         } else {
-          setQuadras([]); // Se não for um array, inicializa como um array vazio
+          setQuadras([]);
         }
-
-        console.log(response.data); // Exibe os dados no console para depuração
       } catch (err) {
         setError("Erro ao buscar reservas. Tente novamente mais tarde.");
       } finally {
-        setLoading(false); // Finaliza o carregamento
+        setLoading(false);
       }
     };
 
     fetchReservas();
-  }, [navigate]); // Inclui `navigate` nas dependências para evitar warnings
+  }, [navigate]);
 
-  if (loading) {
-    return <p>Carregando...</p>;
-  }
+  if (loading) return <p>Carregando...</p>;
+  if (error) return <p>{error}</p>;
 
-  if (error) {
-    return <p>{error}</p>;
-  }
-
-  // Função para remover reservas duplicadas com base no id_reserva
   const removeDuplicateReservations = (reservas) => {
     const seen = new Set();
     return reservas.filter((quadra) => {
-      if (seen.has(quadra.id_reserva)) {
-        return false; // Ignora reservas com id_reserva duplicados
-      }
+      if (seen.has(quadra.id_reserva)) return false;
       seen.add(quadra.id_reserva);
-      return true; // Mantém reservas com id_reserva únicos
+      return true;
     });
   };
 
-  // Filtra as reservas duplicadas
   const uniqueQuadras = removeDuplicateReservations(quadras);
 
-  // Função para excluir uma reserva
-  const handleDelete = async (id_reserva) => {
-    const token = localStorage.getItem("token") || sessionStorage.getItem("token");
-    if (!token) {
-      navigate("/login"); // Redireciona para login caso o token não esteja presente
-      return;
-    }
+  const handleDelete = (quadra) => {
+    setQuadraSelecionada(quadra); // Define a reserva a ser avaliada
+    setShowModal(true); // Exibe o modal
+  };
 
-    // Confirmação antes de excluir
-    const confirmation = window.confirm("Tem certeza que deseja excluir esta reserva?");
-    if (!confirmation) return; // Se o usuário cancelar, não faz nada
-
+  const handleConfirm = async (nota) => {
+    // Aqui você avalia a quadra antes de excluir
     try {
-      const response = await axios.delete(`http://localhost:3000/reservas/${id_reserva}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const token = localStorage.getItem("token") || sessionStorage.getItem("token");
+      if (!token) {
+        navigate("/login");
+        return;
+      }
+
+      // Envia a avaliação
+      await axios.post(
+        `http://localhost:3000/reservas/avaliacao`,
+        { fk_quadra: quadraSelecionada.fk_quadra, nota },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      // Após avaliar, exclui a reserva
+      const response = await axios.delete(
+        `http://localhost:3000/reservas/${quadraSelecionada.id_reserva}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       if (response.status === 200) {
-        // Atualiza o estado para remover a reserva excluída da lista
         setQuadras((prevQuadras) =>
-          prevQuadras.filter((quadra) => quadra.id_reserva !== id_reserva)
+          prevQuadras.filter((quadra) => quadra.id_reserva !== quadraSelecionada.id_reserva)
         );
-        alert("Reserva excluída com sucesso");
+        toast.success("Reserva excluída e quadra avaliada com sucesso.");
       } else {
-        alert("Falha ao excluir a reserva");
+        toast.error("Falha ao excluir a reserva.");
       }
     } catch (err) {
-      console.error("Erro ao excluir reserva", err);
-      alert("Erro ao excluir a reserva. Tente novamente mais tarde.");
+      console.error("Erro ao avaliar e excluir reserva:", err);
+      alert("Erro ao processar sua solicitação. Tente novamente mais tarde.");
+    } finally {
+      setShowModal(false); // Fecha o modal
     }
   };
 
   return (
     <>
+    <ToastContainer/>
       <h2 className="page-title">
         <Link to="/gerenciar-conta">
           <span className="account-link">Conta</span>
@@ -128,7 +137,7 @@ export default function GerenciarReserva() {
               <h5>R$ {quadra.preco}</h5>
               <button
                 className="card-button"
-                onClick={() => handleDelete(quadra.id_reserva)} // Chama a função de exclusão
+                onClick={() => handleDelete(quadra)} // Exibe o modal para avaliar e excluir
               >
                 Excluir
               </button>
@@ -136,6 +145,18 @@ export default function GerenciarReserva() {
           ))
         )}
       </div>
+
+      
+      {showModal && (
+        <ModalConfirmacao
+          show={showModal}
+          onClose={() => setShowModal(false)} 
+          onConfirm={handleConfirm} 
+          titulo="Avaliar Quadra"
+          mensagem="Por favor, avalie a quadra antes de excluir a reserva."
+          tipo="avaliar"
+        />
+      )}
     </>
   );
 }

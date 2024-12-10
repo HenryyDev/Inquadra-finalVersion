@@ -13,6 +13,7 @@ import PagePerfilUser from "./pags/PagePerfilUser";
 import PagePesquisa from "./pags/PagePesquisa";
 import PageSolicitaRec from "./pags/PageSolicitaRec";
 import PageRedefinirSenha from "./pags/PageRedefinirSenha";
+import TermosCondicoes from "./Elements/Components/TermosEcondicoes";
 import { createRoot } from "react-dom/client";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./Elements/Css/main.css"
@@ -78,7 +79,10 @@ const router = createBrowserRouter([
     path:"/redefinir-senha/:token",
     element:<PageRedefinirSenha/>
   },
-  
+  {
+    path:"/termosEcondicoes",
+    element:<TermosCondicoes/>
+  },
   
   {
     path:"/anuncio/:id",

@@ -128,7 +128,12 @@
   
   margin-right: 40px;
   border-radius: 25px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
  }
+ .config li:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
 
  @media (max-width:1200px) {
  .config ul{

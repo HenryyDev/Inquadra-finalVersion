@@ -178,3 +178,32 @@ exports.deleteReserva = async (req, res) => {
   }
 };
 
+// Rota para enviar a avaliação
+exports.createAvaliacao = async (req, res) => {
+  const { fk_quadra, nota } = req.body;  // Obtém os dados do corpo da requisição
+  const { id_usuario } = req.user;  
+
+  if (!fk_quadra || !nota) {
+    return res.status(400).json({ error: "ID da quadra e nota são obrigatórios" });
+  }
+
+  const connection = await db.getConnection();
+  try {
+    // Inserir a avaliação na tabela Avaliacao
+    const [result] = await connection.execute(
+      "INSERT INTO Avaliacao (qualificacao, data_avaliacao, fk_quadra, fk_usuario) VALUES (?, ?, ?, ?)",
+      [nota, new Date(), fk_quadra, id_usuario]
+    );
+
+    if (result.affectedRows > 0) {
+      res.status(201).json({ message: "Avaliação registrada com sucesso!" });
+    } else {
+      res.status(500).json({ error: "Erro ao registrar avaliação" });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Erro ao registrar avaliação. Tente novamente mais tarde." });
+  } finally {
+    connection.release();
+  }
+};

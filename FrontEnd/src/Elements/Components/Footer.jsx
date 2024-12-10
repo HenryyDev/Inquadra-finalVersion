@@ -1,5 +1,5 @@
 import "../Css/footer.css";
-
+import { Link } from "react-router-dom";
 function Footer() {
   return (
     <>
@@ -17,9 +17,9 @@ function Footer() {
           <ul className="link my-4">
             <h3>Link</h3>
             <li>
-              <a href="pags/Termos/index.html" target="_self">
-                Termos e condições
-              </a>
+              
+                <Link to={"/termosEcondicoes"}>Termos e condições</Link>
+              
             </li>
             <li>
               <a href="#section02">O que somos</a>

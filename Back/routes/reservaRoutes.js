@@ -9,5 +9,6 @@ router.get('/', authenticateJWT, reservaController.getReserva);
 router.get('/id', authenticateJWT, reservaController.getReservaID);
 router.put('/:id', authenticateJWT, reservaController.updateReserva);
 router.delete('/:id_reserva', authenticateJWT, reservaController.deleteReserva);
+router.post('/avaliacao',authenticateJWT,reservaController.createAvaliacao)
 
 module.exports = router;
