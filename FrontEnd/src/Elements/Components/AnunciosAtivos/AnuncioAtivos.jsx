@@ -104,7 +104,7 @@ export default function AnunciosAtivos() {
               </div>
             ))
           ) : (
-            <p>Nenhum anunico ativo</p>
+            <p>Nenhum anúncio ativo</p>
           )}
         </div>
       </div>
