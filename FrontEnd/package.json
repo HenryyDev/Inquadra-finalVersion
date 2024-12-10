@@ -7,7 +7,7 @@
     "node": "14.x"
   },
   "scripts": {
-    "start": "npm servidor.js",
+    "start": "node servidor.js",
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
