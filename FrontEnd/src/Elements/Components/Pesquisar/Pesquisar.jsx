@@ -1,5 +1,5 @@
 import React from "react";
-import "../../Css/pesquisar.css";
+import "../../Css/Pesquisar.css";
 import loc from "../../../assets/pin.png"
 import { Link } from "react-router-dom";
 import erro from "../../../assets/nao-encontrado.png"
