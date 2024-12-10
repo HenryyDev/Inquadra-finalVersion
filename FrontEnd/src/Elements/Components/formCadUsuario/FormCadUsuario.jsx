@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
-import "../../Css/CadUsuario.css";
+import "../../Css/cadUsuario.css";
 import logo from "../../../assets/logo.png";
 import ver from "../../../assets/ver.png";
 import ocultar from "../../../assets/ocultar.png";

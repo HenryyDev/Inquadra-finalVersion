@@ -3,7 +3,7 @@ import axios from "axios";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import MaskInput from "react-maskinput";
-import "../../Css/CadAnuncio.css";
+import "../../Css/cadAnuncio.css";
 import logo from "../../../assets/logo.png";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import CheckCEP from "../CheckCep";
