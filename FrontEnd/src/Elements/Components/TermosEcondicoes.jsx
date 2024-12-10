@@ -1,6 +1,6 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import '../Css/TermosCondicoes.css'; 
+import '../Css/termosCondicoes.css'; 
 import logo from "../../assets/logo.png";
 import { Link } from 'react-router-dom';
 const TermosCondicoes = () => {
