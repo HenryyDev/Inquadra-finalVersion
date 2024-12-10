@@ -1,16 +1,23 @@
 {
-    "version":2,
-    "builds":[
-        {
-        "src": "../Back/servidor.js",
-        "use":"@vercel/node"
+    "version": 2,
+    "builds": [
+      {
+        "src": "frontend/package.json",  
+        "use": "@vercel/static-build",    
+        "config": {
+          "distDir": "dist"             
         }
+      },
+      {
+        "src": "../Back/servidor.js",    
+        "use": "@vercel/node"            
+      }
     ],
     "routes": [
-        {
-            "src":"/(.*)",
-            "dest":"/"
-        }
+      {
+        "src": "/(.*)",
+        "dest": "/index.html"  
+      }
     ]
-
-}
+  }
+  
