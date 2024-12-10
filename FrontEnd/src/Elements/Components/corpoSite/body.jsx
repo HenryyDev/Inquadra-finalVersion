@@ -100,12 +100,11 @@ const Body = () => {
              <img src={`http://localhost:3000${quadra.fotos[0]}`} alt=""  style={{height:"150px"}}/>
              <div className="txt-anuncio">
                <h5 className="txt-anuncio" >
-               {quadra.titulo.length > 20
+             {quadra.titulo.length > 20
                  ? quadra.titulo.substring(0, 17) + "..."
                  : quadra.titulo}
              </h5>
                <h5 className="txt-anuncio" >R${quadra.preco}/H</h5>
-               
              </div>
              <h5  style={{fontSize:"14px",display:"flex",marginTop:"10px",justifyContent:"space-between",marginLeft:"5px"}}><div><img src={loc} style={{height:"20px", width:"20px"}} alt=""  />{quadra.municipio},{quadra.bairro} </div> <img src={estrela} style={{height:"15px", width:"15px",marginLeft:"20px"}} alt="" /><div style={{marginRight:"20px"}}>{quadra.media_avaliacao!=null ? quadra.media_avaliacao :"0.00"}</div></h5>
            </Link>
