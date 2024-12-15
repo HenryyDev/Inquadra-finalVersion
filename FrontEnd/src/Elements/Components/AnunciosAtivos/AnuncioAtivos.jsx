@@ -22,7 +22,7 @@ export default function AnunciosAtivos() {
           },
         }
       );
-      console.log(response.data)
+
       setQuadras(response.data);
     } catch (error) {
       console.error("Erro ao carregar as quadras:", error);
@@ -104,7 +104,7 @@ export default function AnunciosAtivos() {
               </div>
             ))
           ) : (
-            <p>Nenhum anunico ativo</p>
+            <p>Nenhum anúncio ativo</p>
           )}
         </div>
       </div>

@@ -229,7 +229,7 @@ const CadUsuario = () => {
               />
               <label className="form-check-label" htmlFor="exampleCheck1">
                 Eu aceito os{" "}
-                <a href="../Termos/index.html">termos e condições.</a>
+                <Link to={"/termosEcondicoes"}><span style={{color:"#0000FF "}}>termos e condições.</span></Link>
               </label>
             </div>
             <button type="submit" className="btn btn-primary">
