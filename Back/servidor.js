@@ -6,19 +6,8 @@ require('dotenv').config({ path: './bd.env' }); // Carrega as variáveis de ambi
 
 // Middleware para parsear JSON
 app.use(express.json());
+app.use(cors)
 
-
-
-const allowedOrigins = process.env.CORS_ORIGINS.split(',');  // Lê a variável do .env
-
-const corsOptions = {
-  origin: allowedOrigins,
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true, // Se precisar de cookies e credenciais
-};
-
-app.use(cors(corsOptions));
 
 
 // Rotas
