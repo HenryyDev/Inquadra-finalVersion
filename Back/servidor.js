@@ -7,14 +7,21 @@ require('dotenv').config({ path: './bd.env' }); // Carrega as variáveis do bd.e
 
 // Middleware para parsear JSON
 app.use(express.json());
+const cors = require("cors");
+
 const corsOptions = {
   origin: [
-    'https://inquadra-final-version-fd577uotl-henrys-projects-75c338a9.vercel.app', // Produção
-    'http://localhost:5173',  // Desenvolvimento local
+    'https://inquadra-final-version-72wxmkif3-henrys-projects-75c338a9.vercel.app',  // URL do frontend na Vercel
+    'http://localhost:5173'  // URL para desenvolvimento local, se necessário
   ],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true, // Permite enviar cookies, se necessário
 };
+
+app.use(cors(corsOptions));
+
+app.options('*', cors(corsOptions)); 
 
 app.use(cors(corsOptions));
 
