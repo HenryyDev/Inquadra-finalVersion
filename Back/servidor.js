@@ -6,7 +6,14 @@ const app = express(); // Crear una instancia de Express
 
 // Middleware para parsear JSON
 app.use(express.json());
-app.use(cors());
+const corsOptions = {
+  origin: 'https://inquadra-final-version-fd577uotl-henrys-projects-75c338a9.vercel.app', // Defina a URL do seu frontend aqui
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Métodos permitidos
+  allowedHeaders: ['Content-Type', 'Authorization'], // Cabeçalhos permitidos
+};
+
+// Ativar o CORS
+app.use(cors(corsOptions));
 // Rotas
 // Importar as rotas
 const userRoutes = require('./routes/userRoutes');
