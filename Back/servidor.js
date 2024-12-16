@@ -2,15 +2,24 @@ const express = require('express');
 const cors= require ("cors")
 const db = require('./db'); // Importa la configuración de la base de datos
 const app = express(); // Crear una instancia de Express
+require('dotenv').config({ path: './bd.env' }); // Carrega as variáveis do bd.env
 
 
 // Middleware para parsear JSON
 app.use(express.json());
 const corsOptions = {
-  origin: 'https://inquadra-final-version-fd577uotl-henrys-projects-75c338a9.vercel.app', // Defina a URL do seu frontend aqui
-  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Métodos permitidos
-  allowedHeaders: ['Content-Type', 'Authorization'], // Cabeçalhos permitidos
+  origin: [
+    'https://inquadra-final-version-fd577uotl-henrys-projects-75c338a9.vercel.app', // Produção
+    'http://localhost:5173',  // Desenvolvimento local
+  ],
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
 };
+
+app.use(cors(corsOptions));
+
+
+
 
 // Ativar o CORS
 app.use(cors(corsOptions));
@@ -40,7 +49,7 @@ app.get('/', (req, res) => {
   console.log("opa")
   res.send('¡Bienvenido al backend de InQuadra!');
 });
-const port = 3000 || process.env.PORT; // Puerto donde correrá el servidor
+const port = process.env.MYSQL_PORT; // Puerto donde correrá el servidor
 // Iniciar el servidor
 app.listen(port, () => {
   console.log(`Servidor corriendo en http://localhost:${port}`);
